@@ -1,5 +1,13 @@
 # Tutor Support System - Backend API
 
+[![NestJS](https://img.shields.io/badge/NestJS-v10.0.0-red.svg)](https://nestjs.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-v5.5.0-2D3748.svg)](https://www.prisma.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-v5.1.3-blue.svg)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14+-336791.svg)](https://www.postgresql.org/)
+
+> 🎓 **Software Engineering Project (CO3001) - HCMUT**  
+> Backend API hệ thống hỗ trợ Tutor/Mentor tại Trường Đại học Bách Khoa - ĐHQG TP.HCM
+
 ## 📋 Mô tả Dự án
 
 Hệ thống backend cho **Tutor Support System** của Trường Đại học Bách Khoa - ĐHQG TP.HCM (HCMUT). Dự án được xây dựng bằng **NestJS**, **Prisma ORM**, **PostgreSQL**, và **JWT Authentication**.
@@ -263,6 +271,15 @@ CREATE DATABASE tutor_support_db;
 # Regenerate Prisma Client
 npm run prisma:generate
 ```
+
+---
+
+## 📞 Liên hệ & Hỗ trợ
+
+- **Môn học:** Công Nghệ Phần Mềm (CO3001)
+- **Trường:** Đại học Bách Khoa - ĐHQG TP.HCM
+- **Học kỳ:** HK251
+- **Repository:** [GitHub](https://github.com/ThanhCongNguyen-2310373/Tutor-Support-System)
 
 ---
 
