@@ -1,0 +1,219 @@
+// ./prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==============
+// MIỀN 1: LÕI & XÁC THỰC
+// (UC_GENERAL_01, UC_GENERAL_02)
+// ==============
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique // Dùng để đăng nhập (mô phỏng SSO)
+  mssv      String?  @unique
+  fullName  String
+  role      Role     @default(STUDENT) // Phân quyền
+  createdAt DateTime @default(now())
+
+  // Quan hệ 1-1: Nếu role là TUTOR, sẽ có profile ở đây
+  tutorProfile TutorProfile?
+
+  // Quan hệ 1-N (Nghiệp vụ Student)
+  studentMeetings     Meeting[]          @relation("StudentMeetings")
+  studentRatings      Rating[]
+  studentComplaints   Complaint[]        @relation("StudentComplaints")
+  studentApplications TutorApplication[] @relation("StudentApplications")
+  progressRecords     ProgressRecord[]   @relation("StudentProgress")
+
+  // Quan hệ 1-N (Nghiệp vụ TBM)
+  roadmaps        LearningRoadmap[]
+
+  // Quan hệ 1-N (Nghiệp vụ Admin/Coordinator)
+  adminApplications   TutorApplication[] @relation("AdminApplications")
+  coordinatorComplaints Complaint[]      @relation("CoordinatorComplaints")
+  tbmApplications     TutorApplication[] @relation("TBMApplications")
+
+  // Quan hệ 1-N (Chung)
+  notifications   Notification[]
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  COORDINATOR
+  TBM         // Trưởng bộ môn
+  OAA         // Phòng đào tạo
+  OSA         // Phòng công tác sinh viên
+  ADMIN
+}
+
+// (UC_TUT_01, 03) Hồ sơ mở rộng của Tutor
+model TutorProfile {
+  id        Int      @id @default(autoincrement())
+  available Boolean  @default(true)
+  bio       String?  // Mô tả
+  expertise String[] // Chuyên môn
+
+  // Quan hệ 1-1 ngược lại với User
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+
+  // Quan hệ 1-N (Nghiệp vụ Tutor)
+  availabilitySlots AvailabilitySlot[]
+  tutorMeetings     Meeting[]          @relation("TutorMeetings")
+  tutorProgress     ProgressRecord[]   @relation("TutorProgress")
+}
+
+// ==============
+// MIỀN 2: LỊCH HẸN & TIẾN ĐỘ
+// (UC_STU_01, 05 | UC_TUT_01, 02, 03)
+// ==============
+
+// (UC_TUT_01) Lịch rảnh do Tutor đăng ký
+model AvailabilitySlot {
+  id        Int      @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime
+  isBooked  Boolean  @default(false)
+
+  tutor   TutorProfile @relation(fields: [tutorId], references: [id])
+  tutorId Int
+
+  // 1 Slot có thể được đặt bởi 1 Meeting
+  meeting Meeting?
+}
+
+// (UC_STU_01) Buổi hẹn
+model Meeting {
+  id        Int           @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime
+  status    MeetingStatus @default(PENDING)
+  topic     String?       // Chủ đề buổi hẹn
+
+  // Quan hệ N-1 với Student
+  student   User   @relation("StudentMeetings", fields: [studentId], references: [id])
+  studentId Int
+
+  // Quan hệ N-1 với Tutor
+  tutor     TutorProfile @relation("TutorMeetings", fields: [tutorId], references: [id])
+  tutorId   Int
+
+  // Quan hệ 1-1 với Lịch rảnh (khi 1 slot được đặt)
+  slot      AvailabilitySlot @relation(fields: [slotId], references: [id])
+  slotId    Int              @unique
+
+  // Quan hệ 1-1 với Đánh giá
+  rating     Rating?
+  // Quan hệ 1-N với Khiếu nại
+  complaints Complaint[]
+}
+
+enum MeetingStatus {
+  PENDING     // Student vừa đặt
+  CONFIRMED   // Tutor đã duyệt
+  CANCELED    // Bị hủy
+  COMPLETED   // Đã hoàn thành
+}
+
+// (UC_STU_05) Đánh giá của Student
+model Rating {
+  id        Int      @id @default(autoincrement())
+  score     Int      // 1-5 sao
+  comment   String?
+  createdAt DateTime @default(now())
+
+  student   User @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  // Quan hệ 1-1 ngược lại
+  meeting   Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int     @unique
+}
+
+// (UC_TUT_03) Theo dõi tiến độ
+model ProgressRecord {
+  id        Int      @id @default(autoincrement())
+  note      String
+  createdAt DateTime @default(now())
+
+  student   User @relation("StudentProgress", fields: [studentId], references: [id])
+  studentId Int
+
+  tutor     TutorProfile @relation("TutorProgress", fields: [tutorId], references: [id])
+  tutorId   Int
+}
+
+// ==============
+// MIỀN 3: QUẢN TRỊ & HỌC VỤ
+// (UC_COO_02 | UC_TBM_01, 02 | UC_ADMIN_01, 02 | UC_OAA_01, 02 | UC_OSA_01, 02)
+// ==============
+
+// (UC_COO_02) Xử lý khiếu nại
+model Complaint {
+  id          Int      @id @default(autoincrement())
+  description String
+  status      String   @default("OPEN") // OPEN, RESOLVED
+  createdAt   DateTime @default(now())
+
+  // Người gửi khiếu nại
+  student   User @relation("StudentComplaints", fields: [studentId], references: [id])
+  studentId Int
+
+  // (Tùy chọn) Liên kết với buổi hẹn
+  meeting   Meeting? @relation(fields: [meetingId], references: [id])
+  meetingId Int?
+
+  // Người xử lý (Coordinator)
+  resolvedBy    User? @relation("CoordinatorComplaints", fields: [coordinatorId], references: [id])
+  coordinatorId Int?
+}
+
+// (UC_TBM_01) Lộ trình học
+model LearningRoadmap {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  documentUrl String? // Mô phỏng HCMUT_LIBRARY (UC_GENERAL_03)
+
+  // TBM tạo
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+
+// (UC_TBM_02 & UC_ADMIN_02) Yêu cầu duyệt Tutor
+model TutorApplication {
+  id     Int    @id @default(autoincrement())
+  status String @default("PENDING") // PENDING, APPROVED, REJECTED
+
+  // Student được đề cử
+  student   User @relation("StudentApplications", fields: [studentId], references: [id])
+  studentId Int
+
+  // TBM đề cử
+  tbm   User @relation("TBMApplications", fields: [tbmId], references: [id])
+  tbmId Int
+
+  // Admin duyệt
+  approvedBy User? @relation("AdminApplications", fields: [adminId], references: [id])
+  adminId    Int?
+}
+
+// (UC_SYS_01) Thông báo
+model Notification {
+  id        Int      @id @default(autoincrement())
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  recipient   User @relation(fields: [recipientId], references: [id])
+  recipientId Int
+}
