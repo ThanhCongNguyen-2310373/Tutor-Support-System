@@ -20,7 +20,7 @@ model User {
   mssv      String?  @unique
   fullName  String
   role      Role     @default(STUDENT) // Phân quyền
-  password  String
+  password  String?
   createdAt DateTime @default(now())
 
   // Quan hệ 1-1: Nếu role là TUTOR, sẽ có profile ở đây
