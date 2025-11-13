@@ -20,6 +20,7 @@ model User {
   mssv      String?  @unique
   fullName  String
   role      Role     @default(STUDENT) // Phân quyền
+  password  String?
   createdAt DateTime @default(now())
 
   // Quan hệ 1-1: Nếu role là TUTOR, sẽ có profile ở đây
@@ -60,6 +61,7 @@ model TutorProfile {
   available Boolean  @default(true)
   bio       String?  // Mô tả
   expertise String[] // Chuyên môn
+  averageRating   Float            @default(0.0)
 
   // Quan hệ 1-1 ngược lại với User
   user   User @relation(fields: [userId], references: [id])
@@ -160,7 +162,7 @@ model ProgressRecord {
 model Complaint {
   id          Int      @id @default(autoincrement())
   description String
-  status      String   @default("OPEN") // OPEN, RESOLVED
+  status      ComplaintStatus @default(OPEN) // OPEN, RESOLVED
   createdAt   DateTime @default(now())
 
   // Người gửi khiếu nại
@@ -191,7 +193,8 @@ model LearningRoadmap {
 // (UC_TBM_02 & UC_ADMIN_02) Yêu cầu duyệt Tutor
 model TutorApplication {
   id     Int    @id @default(autoincrement())
-  status String @default("PENDING") // PENDING, APPROVED, REJECTED
+  status    TutorApplicationStatus  @default(PENDING) // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
 
   // Student được đề cử
   student   User @relation("StudentApplications", fields: [studentId], references: [id])
@@ -216,4 +219,15 @@ model Notification {
 
   recipient   User @relation(fields: [recipientId], references: [id])
   recipientId Int
+}
+
+enum ComplaintStatus {
+  OPEN
+  RESOLVED
+}
+
+enum TutorApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

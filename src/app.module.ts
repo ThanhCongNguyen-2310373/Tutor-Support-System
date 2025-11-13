@@ -10,6 +10,7 @@ import { MeetingsModule } from './meetings/meetings.module';
 import { ManagementModule } from './management/management.module';
 import { AcademicModule } from './academic/academic.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ExternalModule } from './external/external.module';
 
 @Module({
   imports: [
@@ -18,6 +19,9 @@ import { NotificationsModule } from './notifications/notifications.module';
     
     // Module Lõi (Prisma)
     CoreModule,
+    
+    // External APIs (HCMUT_SSO, DATACORE, LIBRARY)
+    ExternalModule,
     
     // Các Module Nghiệp vụ
     AuthModule,

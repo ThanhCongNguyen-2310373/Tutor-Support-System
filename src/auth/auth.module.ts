@@ -6,10 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ExternalModule } from '../external/external.module';
 
 @Module({
   imports: [
     PassportModule,
+    ExternalModule, // Import để sử dụng HCMUT_SSO và DATACORE services
     // Đăng ký JwtModule
     JwtModule.registerAsync({
       imports: [ConfigModule],
