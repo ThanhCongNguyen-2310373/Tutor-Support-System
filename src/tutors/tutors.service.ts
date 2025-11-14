@@ -183,6 +183,7 @@ export class TutorsService {
             fullName: true,
             email: true,
             mssv: true,
+            role:true,
           },
         },
         availabilitySlots: {

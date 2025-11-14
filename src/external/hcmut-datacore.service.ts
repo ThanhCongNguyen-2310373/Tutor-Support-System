@@ -165,7 +165,7 @@ export class HcmutDatacoreService {
     let department = 'Computer Science & Engineering';
     let status = 'active';
 
-    if (userId.startsWith('GV')) {
+    if (userId.startsWith('GV') || (userId.startsWith('TUTOR'))) {
       role = Role.TUTOR;
       department = 'Software Engineering Department';
       status = 'teaching';

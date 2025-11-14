@@ -63,7 +63,7 @@ export class TutorsController {
   @ApiResponse({ status: 400, description: 'Thời gian không hợp lệ hoặc bị trùng' })
   @ApiResponse({ status: 404, description: 'Tutor profile không tồn tại' })
   async createAvailability(@Request() req, @Body() dto: CreateAvailabilityDto) {
-    return this.tutorsService.createAvailability(req.user.userId, dto);
+    return this.tutorsService.createAvailability(req.user.id, dto);
   }
 
   /**
@@ -77,7 +77,7 @@ export class TutorsController {
   @ApiResponse({ status: 403, description: 'Không có quyền xóa slot này' })
   @ApiResponse({ status: 404, description: 'Slot không tồn tại' })
   async deleteAvailability(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return this.tutorsService.deleteAvailability(req.user.userId, id);
+    return this.tutorsService.deleteAvailability(req.user.id, id);
   }
 
   /**
@@ -89,7 +89,7 @@ export class TutorsController {
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   @ApiResponse({ status: 404, description: 'Tutor profile không tồn tại' })
   async getMyAvailability(@Request() req) {
-    return this.tutorsService.getAvailability(req.user.userId);
+    return this.tutorsService.getAvailability(req.user.id);
   }
 
   /**
@@ -115,7 +115,7 @@ export class TutorsController {
   @ApiResponse({ status: 403, description: 'Không có quyền confirm booking này' })
   @ApiResponse({ status: 404, description: 'Booking không tồn tại' })
   async confirmBooking(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return this.meetingsService.confirmBooking(req.user.userId, id);
+    return this.meetingsService.confirmBooking(req.user.id, id);
   }
 
   /**
@@ -133,7 +133,7 @@ export class TutorsController {
     @Param('id', ParseIntPipe) id: number,
     @Body('reason') reason?: string,
   ) {
-    return this.meetingsService.rejectBooking(req.user.userId, id, reason);
+    return this.meetingsService.rejectBooking(req.user.id, id, reason);
   }
 
   /**
@@ -145,7 +145,7 @@ export class TutorsController {
   @ApiResponse({ status: 201, description: 'Ghi nhận thành công' })
   @ApiResponse({ status: 404, description: 'Student hoặc tutor profile không tồn tại' })
   async createProgressRecord(@Request() req, @Body() dto: CreateProgressRecordDto) {
-    return this.tutorsService.createProgressRecord(req.user.userId, dto);
+    return this.tutorsService.createProgressRecord(req.user.id, dto);
   }
 
   /**
@@ -160,7 +160,7 @@ export class TutorsController {
     @Request() req,
     @Param('studentId', ParseIntPipe) studentId: number,
   ) {
-    return this.tutorsService.getStudentProgress(req.user.userId, studentId);
+    return this.tutorsService.getStudentProgress(req.user.id, studentId);
   }
 
   /**
@@ -172,6 +172,6 @@ export class TutorsController {
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   @ApiResponse({ status: 404, description: 'Tutor profile không tồn tại' })
   async getMyStudents(@Request() req) {
-    return this.tutorsService.getMyStudents(req.user.userId);
+    return this.tutorsService.getMyStudents(req.user.id);
   }
 }
