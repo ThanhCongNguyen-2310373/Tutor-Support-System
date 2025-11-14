@@ -95,13 +95,13 @@ export class TutorsController {
   /**
    * UC_TUT_02: Get booking requests
    */
-  @Get('booking-requests')
+  @Get('me/meet_list')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Xem danh sách yêu cầu đặt lịch' })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   @ApiResponse({ status: 404, description: 'Tutor profile không tồn tại' })
   async getBookingRequests(@Request() req) {
-    return this.meetingsService.getBookingRequests(req.user.userId);
+    return this.meetingsService.getBookingRequests(req.user.id);
   }
 
   /**
