@@ -14,6 +14,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, // Loại bỏ các thuộc tính thừa
     transform: true, // Tự động chuyển đổi kiểu dữ liệu (vd: string -> number)
+    transformOptions: { enableImplicitConversion: true }, // không có cái này, Nest chỉ chuyển đổi kiểu khi dùng @Type(() => Number) (class-transformer), còn query params thì vẫn giữ nguyên dạng string
   }));
 
   // Cấu hình Swagger
