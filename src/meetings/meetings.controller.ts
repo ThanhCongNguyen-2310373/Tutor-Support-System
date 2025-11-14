@@ -53,7 +53,7 @@ export class MeetingsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: CreateRatingDto,
   ) {
-    return this.meetingsService.submitRating(req.user.userId, id, dto);
+    return this.meetingsService.submitRating(req.user.id, id, dto);
   }
 
   /**
@@ -64,7 +64,7 @@ export class MeetingsController {
   @ApiOperation({ summary: 'Xem danh sách meetings của mình' })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   async getMyMeetings(@Request() req) {
-    return this.meetingsService.getMyMeetings(req.user.userId, req.user.role);
+    return this.meetingsService.getMyMeetings(req.user.id, req.user.role);
   }
 
   /**
@@ -76,7 +76,7 @@ export class MeetingsController {
   @ApiResponse({ status: 403, description: 'Không có quyền xem meeting này' })
   @ApiResponse({ status: 404, description: 'Meeting không tồn tại' })
   async getMeetingById(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return this.meetingsService.getMeetingById(id, req.user.userId, req.user.role);
+    return this.meetingsService.getMeetingById(id, req.user.id, req.user.role);
   }
 
   /**
@@ -90,6 +90,6 @@ export class MeetingsController {
   @ApiResponse({ status: 403, description: 'Không có quyền hủy meeting này' })
   @ApiResponse({ status: 404, description: 'Meeting không tồn tại' })
   async cancelMeeting(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return this.meetingsService.cancelMeeting(req.user.userId, req.user.role, id);
+    return this.meetingsService.cancelMeeting(req.user.id, req.user.role, id);
   }
 }
