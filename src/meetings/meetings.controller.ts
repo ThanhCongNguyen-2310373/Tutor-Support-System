@@ -35,7 +35,7 @@ export class MeetingsController {
   @ApiResponse({ status: 400, description: 'Slot không available hoặc dữ liệu không hợp lệ' })
   @ApiResponse({ status: 404, description: 'Slot hoặc tutor không tồn tại' })
   async createBooking(@Request() req, @Body() dto: CreateBookingDto) {
-    return this.meetingsService.createBooking(req.user.userId, dto);
+    return this.meetingsService.createBooking(req.user.id, dto);
   }
 
   /**
