@@ -117,81 +117,81 @@ export class MeetingsService {
 //###########################################
 //## UC_STU_05: Student đánh giá buổi học ###
 //###########################################
-  async submitRating(studentId: number, meetingId: number, dto: CreateRatingDto) {
-    // 1. Check meeting exists
-    const meeting = await this.prisma.meeting.findUnique({
-      where: { id: meetingId },
-      include: {
-        rating: true,
-        student: true,
-        tutor: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    });
+	async submitRating(userId: number, role: Role, meetingId: number, dto: CreateRatingDto) {
+	  if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền rating meeting này'); }
 
-    if (!meeting) {
-      throw new NotFoundException('Meeting không tồn tại');
-    }
+	  // 1. Check meeting exists
+	  const meeting = await this.prisma.meeting.findUnique({
+		where: { id: meetingId },
+		include: {
+		  rating: true,
+		  student: true,
+		  tutor: {
+		    include: {
+		      user: true,
+		    },
+		  },
+		},
+	  });
 
-    // 2. Check ownership
-    if (meeting.studentId !== studentId) {
-      throw new ForbiddenException('Bạn không có quyền đánh giá meeting này');
-    }
+	  if (!meeting) {
+		throw new NotFoundException('Meeting không tồn tại');
+	  }
 
-    // 3. Check meeting completed
-    if (meeting.status !== MeetingStatus.COMPLETED) {
-      throw new BadRequestException('Chỉ có thể đánh giá meeting đã hoàn thành');
-    }
+	  // 2. Check ownership
+	  if (meeting.studentId !== userId) {
+		throw new ForbiddenException('Bạn không có quyền rating meeting này');
+	  }
 
-    // 4. Prevent duplicate rating
-    if (meeting.rating) {
-      throw new BadRequestException('Meeting này đã được đánh giá');
-    }
+	  // 3. Check meeting completed
+	  if (meeting.status !== MeetingStatus.COMPLETED) {
+		throw new BadRequestException('Chỉ có thể rating meeting đã Complete');
+	  }
 
-    // 5. Create rating and update tutor average rating
-    const rating = await this.prisma.$transaction(async (prisma) => {
-      // Create rating
-      const newRating = await prisma.rating.create({
-        data: {
-          studentId,
-          meetingId,
-          score: dto.score,
-          comment: dto.comment,
-        },
-      });
+	  // 4. Prevent duplicate rating
+	  if (meeting.rating) {
+		throw new BadRequestException('Meeting này đã được rating');
+	  }
 
-      // Calculate new average rating for tutor
-      const ratings = await prisma.rating.findMany({
-        where: {
-          meeting: {
-            tutorId: meeting.tutorId,
-          },
-        },
-      });
+	  // 5. Create rating and update tutor average rating
+	  const rating = await this.prisma.$transaction(async (prisma) => {
+		// Create rating
+		const newRating = await prisma.rating.create({
+		  data: {
+		    studentId: userId,
+		    meetingId,
+		    score: dto.score,
+		    comment: dto.comment,
+		  },
+		});
 
-      const avgRating = ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length;
+		// Calculate new average rating for tutor
+		const ratings = await prisma.rating.findMany({
+		  where: {
+		    meeting: { tutorId: meeting.tutorId },
+		  },
+		});
 
-      // Update tutor profile (optional: add rating field to TutorProfile)
-      // For now, we just log it
-      console.log(`Tutor ${meeting.tutorId} new average rating: ${avgRating}`);
+		const avgRating = ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length;
 
-      // Send notification to tutor
-      await prisma.notification.create({
-        data: {
-          recipientId: meeting.tutor.userId,
-          title: 'Đánh giá mới',
-          message: `${meeting.student.fullName} đã đánh giá buổi học: ${dto.score}/5 sao. ${dto.comment || ''}`,
-        },
-      });
+		// Update tutor profile (optional: add rating field to TutorProfile)
+		console.log(`Tutor ${meeting.tutorId} new average rating: ${avgRating}`);
 
-      return newRating;
-    });
+		// Send notification to tutor
+		await prisma.notification.create({
+		  data: {
+		    recipientId: meeting.tutor.userId,
+		    title: 'Đánh giá mới',
+		    message: `${meeting.student.fullName} đã đánh giá buổi học: ${dto.score}/5 sao. ${dto.comment || ''}`,
+		  },
+		});
 
-    return rating;
-  }
+		return newRating;
+	  });
+
+	  return rating;
+	}
+
 
 
 
