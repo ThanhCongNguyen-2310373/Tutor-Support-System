@@ -9,10 +9,12 @@ import { Role } from '@prisma/client';
 export class ManagementService {
   constructor(private prisma: PrismaService) {}
 
-  // ==========================================
-  // UC_COO_01: Coordinator - Manual Pairing
-  // ==========================================
 
+
+
+//###############################################
+//##  UC_COO_01: Coordinator - Manual Pairing ###
+//###############################################
   async manualPair(dto: ManualPairDto) {
     // Check slot availability
     const slot = await this.prisma.availabilitySlot.findUnique({
@@ -97,11 +99,14 @@ export class ManagementService {
     return meeting;
   }
 
-  // ==========================================
-  // UC_COO_02: Coordinator - Complaints
-  // ==========================================
 
-  async createComplaint(studentId: number, dto: CreateComplaintDto) {
+
+
+//##########################################
+//## UC_COO_02: Student create complaint ###
+//##########################################
+  async createComplaint(userId: number, role: Role, dto: CreateComplaintDto) {
+	if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền complaint meeting này'); }
     // Check meeting if provided
     if (dto.meetingId) {
       const meeting = await this.prisma.meeting.findUnique({
@@ -112,14 +117,14 @@ export class ManagementService {
         throw new NotFoundException('Meeting không tồn tại');
       }
 
-      if (meeting.studentId !== studentId) {
+      if (meeting.studentId !== userId) {
         throw new ForbiddenException('Không có quyền khiếu nại meeting này');
       }
     }
 
     const complaint = await this.prisma.complaint.create({
       data: {
-        studentId,
+        studentId: userId,
         meetingId: dto.meetingId,
         description: dto.description,
         status: 'OPEN',
@@ -145,6 +150,12 @@ export class ManagementService {
     return complaint;
   }
 
+
+
+
+//###############################################
+//## UC_COO_02: Coordinator get all complaint ###
+//###############################################
   async getAllComplaints() {
     const complaints = await this.prisma.complaint.findMany({
       include: {
@@ -178,6 +189,12 @@ export class ManagementService {
     return complaints;
   }
 
+
+
+
+//###############################################
+//## UC_COO_02: Coordinator resolve complaint ###
+//###############################################
   async resolveComplaint(coordinatorId: number, complaintId: number, dto: ResolveComplaintDto) {
     const complaint = await this.prisma.complaint.findUnique({
       where: { id: complaintId },
@@ -223,10 +240,12 @@ export class ManagementService {
     return updated;
   }
 
-  // ==========================================
-  // UC_ADMIN_01: Admin - User Management
-  // ==========================================
 
+
+
+//########################################
+//## UC_ADMIN_01: Admin - get all user ###
+//########################################
   async getAllUsers(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
 
@@ -255,6 +274,12 @@ export class ManagementService {
     };
   }
 
+
+
+
+//##########################################
+//## UC_ADMIN_01: Admin - get user by id ###
+//##########################################
   async getUserById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -288,6 +313,12 @@ export class ManagementService {
     return user;
   }
 
+
+
+
+//#######################################
+//## UC_ADMIN_01: Admin - create user ###
+//#######################################
   async createUser(dto: CreateUserDto) {
     // Check email exists
     const existing = await this.prisma.user.findUnique({
@@ -326,6 +357,12 @@ export class ManagementService {
     return user;
   }
 
+
+
+
+//#######################################
+//## UC_ADMIN_01: Admin - update user ###
+//#######################################
   async updateUser(id: number, dto: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -377,6 +414,12 @@ export class ManagementService {
     return updated;
   }
 
+
+
+
+//#######################################
+//## UC_ADMIN_01: Admin - delete user ###
+//#######################################
   async deleteUser(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -417,10 +460,12 @@ export class ManagementService {
     return { message: 'Email reset password đã được gửi' };
   }
 
-  // ==========================================
-  // UC_ADMIN_02: Admin - Tutor Applications
-  // ==========================================
 
+
+
+//##################################################
+//## UC_ADMIN_02: Admin - Get Tutor Applications ###
+//##################################################
   async getTutorApplications() {
     const applications = await this.prisma.tutorApplication.findMany({
       include: {
@@ -455,6 +500,12 @@ export class ManagementService {
     return applications;
   }
 
+
+
+
+//#####################################################
+//## UC_ADMIN_02: Admin - approve Tutor Application ###
+//#####################################################
   async approveTutorApplication(adminId: number, applicationId: number) {
     const application = await this.prisma.tutorApplication.findUnique({
       where: { id: applicationId },
@@ -521,6 +572,12 @@ export class ManagementService {
     return updated;
   }
 
+
+
+
+//####################################################
+//## UC_ADMIN_02: Admin - reject Tutor Application ###
+//####################################################
   async rejectTutorApplication(adminId: number, applicationId: number, reason?: string) {
     const application = await this.prisma.tutorApplication.findUnique({
       where: { id: applicationId },
