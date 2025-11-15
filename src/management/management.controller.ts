@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Query,
+  Request,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
@@ -28,10 +29,12 @@ import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 export class ManagementController {
   constructor(private readonly managementService: ManagementService) {}
 
-  // ==========================================
-  // UC_COO_01: Coordinator - Manual Pairing
-  // ==========================================
 
+
+
+//######################
+//## manual pair api ###
+//######################
   @Post('manual-pair')
   @Roles(Role.COORDINATOR)
   @ApiOperation({ summary: 'Ghép cặp thủ công student với tutor' })
@@ -42,21 +45,26 @@ export class ManagementController {
     return this.managementService.manualPair(dto);
   }
 
-  // ==========================================
-  // UC_COO_02: Coordinator - Complaints
-  // ==========================================
 
+
+
+//###########################
+//## create complaint api ###
+//###########################
   @Post('complaints')
-  @Roles(Role.STUDENT)
+  @Roles(Role.STUDENT, Role.TUTOR)
   @ApiOperation({ summary: 'Tạo khiếu nại' })
   @ApiResponse({ status: 201, description: 'Khiếu nại đã được tạo' })
-  async createComplaint(
-    @GetUser('userId') studentId: number,
-    @Body() dto: CreateComplaintDto,
-  ) {
-    return this.managementService.createComplaint(studentId, dto);
+  async createComplaint(@Request() req,  @Body() dto: CreateComplaintDto){
+    return this.managementService.createComplaint(req.user.id, req.user.role, dto);
   }
 
+
+
+
+//########################
+//## get complaint api ###
+//########################
   @Get('complaints')
   @Roles(Role.COORDINATOR, Role.ADMIN)
   @ApiOperation({ summary: 'Xem tất cả khiếu nại' })
@@ -65,53 +73,72 @@ export class ManagementController {
     return this.managementService.getAllComplaints();
   }
 
+
+
+
+//############################
+//## resolve complaint api ###
+//############################
   @Patch('complaints/:id/resolve')
   @Roles(Role.COORDINATOR)
   @ApiOperation({ summary: 'Giải quyết khiếu nại' })
   @ApiResponse({ status: 200, description: 'Khiếu nại đã được giải quyết' })
   @ApiResponse({ status: 404, description: 'Khiếu nại không tồn tại' })
   @ApiResponse({ status: 400, description: 'Khiếu nại đã được giải quyết trước đó' })
-  async resolveComplaint(
-    @GetUser('userId') coordinatorId: number,
-    @Param('id', ParseIntPipe) complaintId: number,
-    @Body() dto: ResolveComplaintDto,
-  ) {
+  async resolveComplaint(@GetUser('userId') coordinatorId: number,  @Param('id', ParseIntPipe) complaintId: number,  @Body() dto: ResolveComplaintDto) {
     return this.managementService.resolveComplaint(coordinatorId, complaintId, dto);
   }
 
-  // ==========================================
-  // UC_ADMIN_01: Admin - User Management
-  // ==========================================
 
+
+
+//#######################
+//## get all user api ###
+//#######################
   @Get('users')
   @Roles(Role.ADMIN, Role.COORDINATOR)
   @ApiOperation({ summary: 'Xem tất cả users' })
   @ApiResponse({ status: 200, description: 'Danh sách users' })
-  async getAllUsers(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '20',
-  ) {
+  async getAllUsers(@Query('page') page: string = '1',  @Query('limit') limit: string = '20'){
     return this.managementService.getAllUsers(parseInt(page), parseInt(limit));
   }
 
+
+
+
+//#########################
+//## get user by id api ###
+//#########################
   @Get('users/:id')
   @Roles(Role.ADMIN, Role.COORDINATOR)
   @ApiOperation({ summary: 'Xem chi tiết user' })
   @ApiResponse({ status: 200, description: 'Chi tiết user' })
   @ApiResponse({ status: 404, description: 'User không tồn tại' })
-  async getUserById(@Param('id', ParseIntPipe) id: number) {
+  async getUserById(@Param('id', ParseIntPipe) id: number){
     return this.managementService.getUserById(id);
   }
 
+
+
+
+//######################
+//## create user api ###
+//######################
   @Post('users')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Tạo user mới' })
   @ApiResponse({ status: 201, description: 'User đã được tạo' })
   @ApiResponse({ status: 400, description: 'Email đã tồn tại' })
-  async createUser(@Body() dto: CreateUserDto) {
+  async createUser(@Body() dto: CreateUserDto){
     return this.managementService.createUser(dto);
   }
 
+
+
+
+//######################
+//## update user api ###
+//######################
   @Patch('users/:id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Cập nhật thông tin user' })
@@ -124,6 +151,12 @@ export class ManagementController {
     return this.managementService.updateUser(id, dto);
   }
 
+
+
+
+//######################
+//## delete user api ###
+//######################
   @Delete('users/:id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Xóa user' })
@@ -133,6 +166,12 @@ export class ManagementController {
     return this.managementService.deleteUser(id);
   }
 
+
+
+
+//#############################
+//## rest user password api ###
+//#############################
   @Post('users/:id/reset-password')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Reset mật khẩu user' })
@@ -142,10 +181,12 @@ export class ManagementController {
     return this.managementService.resetPassword(id);
   }
 
-  // ==========================================
-  // UC_ADMIN_02: Admin - Tutor Applications
-  // ==========================================
 
+
+
+//######################################
+//## get all tutors applications api ###
+//######################################
   @Get('tutor-applications')
   @Roles(Role.ADMIN, Role.COORDINATOR)
   @ApiOperation({ summary: 'Xem tất cả đơn xin làm tutor' })
@@ -154,30 +195,39 @@ export class ManagementController {
     return this.managementService.getTutorApplications();
   }
 
+
+
+
+//####################################
+//## approve tutor application api ###
+//####################################
   @Patch('tutor-applications/:id/approve')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Duyệt đơn xin làm tutor' })
   @ApiResponse({ status: 200, description: 'Application đã được duyệt' })
   @ApiResponse({ status: 404, description: 'Application không tồn tại' })
   @ApiResponse({ status: 400, description: 'Application đã được xử lý' })
-  async approveTutorApplication(
-    @GetUser('userId') adminId: number,
-    @Param('id', ParseIntPipe) applicationId: number,
-  ) {
+  async approveTutorApplication(@GetUser('userId') adminId: number,  @Param('id', ParseIntPipe) applicationId: number){
     return this.managementService.approveTutorApplication(adminId, applicationId);
   }
 
+
+
+
+//###################################
+//## reject tutor application api ###
+//###################################
   @Patch('tutor-applications/:id/reject')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Từ chối đơn xin làm tutor' })
   @ApiResponse({ status: 200, description: 'Application đã bị từ chối' })
   @ApiResponse({ status: 404, description: 'Application không tồn tại' })
   @ApiResponse({ status: 400, description: 'Application đã được xử lý' })
-  async rejectTutorApplication(
-    @GetUser('userId') adminId: number,
-    @Param('id', ParseIntPipe) applicationId: number,
-    @Body('reason') reason?: string,
-  ) {
+  async rejectTutorApplication(@GetUser('userId') adminId: number,  @Param('id', ParseIntPipe) applicationId: number,  @Body('reason') reason?: string){
     return this.managementService.rejectTutorApplication(adminId, applicationId, reason);
   }
+
+
+
+
 }
