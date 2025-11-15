@@ -44,22 +44,18 @@ export class MeetingsController {
 
 
 
-//###############################################
-//## UC_STU_05: Student đánh giá buổi học api ###
-//###############################################
+//#############################################
+//## UC_STU_05: Student rating buổi học api ###
+//#############################################
   @Post(':id/rating')
-  @Roles(Role.STUDENT)
-  @ApiOperation({ summary: 'Student đánh giá buổi học đã hoàn thành' })
+  @Roles(Role.STUDENT, Role.TUTOR)
+  @ApiOperation({ summary: 'Student đánh giá buổi học đã Complete' })
   @ApiResponse({ status: 201, description: 'Đánh giá thành công' })
-  @ApiResponse({ status: 400, description: 'Meeting chưa hoàn thành hoặc đã được đánh giá' })
-  @ApiResponse({ status: 403, description: 'Không có quyền đánh giá meeting này' })
+  @ApiResponse({ status: 400, description: 'Meeting chưa Complete hoặc đã được rating' })
+  @ApiResponse({ status: 403, description: 'Không có quyền rating meeting này' })
   @ApiResponse({ status: 404, description: 'Meeting không tồn tại' })
-  async submitRating(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateRatingDto,
-  ) {
-    return this.meetingsService.submitRating(req.user.id, id, dto);
+  async submitRating(@Request() req,  @Param('id', ParseIntPipe) id: number,  @Body() dto: CreateRatingDto){
+    return this.meetingsService.submitRating(req.user.id, req.user.role, id, dto);
   }
 
 
