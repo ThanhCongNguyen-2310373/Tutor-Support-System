@@ -7,9 +7,12 @@ import { CreateProgressRecordDto } from './dto/create-progress-record.dto';
 export class TutorsService {
   constructor(private prisma: PrismaService) {}
 
-  /**
-   * Get tutor profile by user ID
-   */
+
+
+
+//###################################
+//## Get tutor profile by user ID ###
+//###################################
   async getTutorProfileByUserId(userId: number) {
     const tutor = await this.prisma.tutorProfile.findUnique({
       where: { userId },
@@ -33,9 +36,12 @@ export class TutorsService {
     return tutor;
   }
 
-  /**
-   * UC_TUT_01: Create availability slot
-   */
+
+
+
+//##########################################
+//## UC_TUT_01: Create availability slot ###
+//##########################################
   async createAvailability(tutorUserId: number, dto: CreateAvailabilityDto) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
@@ -102,9 +108,12 @@ export class TutorsService {
     return slot;
   }
 
-  /**
-   * UC_TUT_01: Delete availability slot
-   */
+
+
+
+//##########################################
+//## UC_TUT_01: Delete availability slot ###
+//##########################################
   async deleteAvailability(tutorUserId: number, slotId: number) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
@@ -142,9 +151,12 @@ export class TutorsService {
     return { message: 'Xóa slot thành công' };
   }
 
-  /**
-   * UC_TUT_01: Get tutor's availability slots
-   */
+
+
+
+//################################################
+//## UC_TUT_01: Get tutor's availability slots ###
+//################################################
   async getAvailability(tutorUserId: number) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
@@ -168,9 +180,12 @@ export class TutorsService {
     return slots;
   }
 
-  /**
-   * Get all available tutors (for students to browse)
-   */
+
+
+
+//########################################################
+//## Get all available tutors (for students to browse) ###
+//########################################################
   async getAllTutors() {
     const tutors = await this.prisma.tutorProfile.findMany({
       where: {
@@ -203,9 +218,12 @@ export class TutorsService {
     return tutors;
   }
 
-  /**
-   * Get tutor detail by ID
-   */
+
+
+
+//#############################
+//## Get tutor detail by ID ###
+//#############################
   async getTutorById(tutorId: number) {
     const tutor = await this.prisma.tutorProfile.findUnique({
       where: { id: tutorId },
@@ -239,9 +257,12 @@ export class TutorsService {
     return tutor;
   }
 
-  /**
-   * UC_TUT_03: Create progress record
-   */
+
+
+
+//########################################
+//## UC_TUT_03: Create progress record ###
+//########################################
   async createProgressRecord(tutorUserId: number, dto: CreateProgressRecordDto) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
@@ -292,9 +313,12 @@ export class TutorsService {
     return record;
   }
 
-  /**
-   * UC_TUT_03: Get student progress records
-   */
+
+
+
+//##############################################
+//## UC_TUT_03: Get student progress records ###
+//##############################################
   async getStudentProgress(tutorUserId: number, studentId: number) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
@@ -329,9 +353,12 @@ export class TutorsService {
     return records;
   }
 
-  /**
-   * Get all students tutored by this tutor
-   */
+
+
+
+//#############################################
+//## Get all students tutored by this tutor ###
+//#############################################
   async getMyStudents(tutorUserId: number) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
