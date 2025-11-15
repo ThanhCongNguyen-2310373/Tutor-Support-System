@@ -30,9 +30,12 @@ export class TutorsController {
     private readonly meetingsService: MeetingsService,
   ) {}
 
-  /**
-   * Get all available tutors (public for students)
-   */
+
+
+
+//##########################################################
+//##  Get all available tutors (public for students) api ###
+//##########################################################
   @Get()
   @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
   @ApiOperation({ summary: 'Xem danh sách tất cả tutors' })
@@ -41,9 +44,12 @@ export class TutorsController {
     return this.tutorsService.getAllTutors();
   }
 
-  /**
-   * Get tutor detail by ID
-   */
+
+
+
+//##################################
+//##  Get tutor detail by ID api ###
+//##################################
   @Get(':id')
   @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
   @ApiOperation({ summary: 'Xem chi tiết tutor' })
@@ -53,9 +59,12 @@ export class TutorsController {
     return this.tutorsService.getTutorById(id);
   }
 
-  /**
-   * UC_TUT_01: Create availability slot
-   */
+
+
+
+//#########################################
+//## Tutor Create availability slot api ###
+//#########################################
   @Post('availability')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Tutor tạo lịch rảnh' })
@@ -66,9 +75,12 @@ export class TutorsController {
     return this.tutorsService.createAvailability(req.user.id, dto);
   }
 
-  /**
-   * UC_TUT_01: Delete availability slot
-   */
+
+
+
+//#########################################
+//## Tutor Delete availability slot api ###
+//#########################################
   @Delete('availability/:id')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Tutor xóa lịch rảnh' })
@@ -80,9 +92,12 @@ export class TutorsController {
     return this.tutorsService.deleteAvailability(req.user.id, id);
   }
 
-  /**
-   * UC_TUT_01: Get my availability slots
-   */
+
+
+
+//#######################################
+//## Tutor Get availability slots api ###
+//#######################################
   @Get('me/availability')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Xem lịch rảnh của tôi' })
@@ -92,9 +107,12 @@ export class TutorsController {
     return this.tutorsService.getAvailability(req.user.id);
   }
 
-  /**
-   * UC_TUT_02: Get booking requests
-   */
+
+
+
+//#####################################
+//## Tutor Get booking requests api ###
+//#####################################
   @Get('me/meet_list')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Xem danh sách yêu cầu đặt lịch' })
@@ -104,9 +122,12 @@ export class TutorsController {
     return this.meetingsService.getBookingRequests(req.user.id);
   }
 
-  /**
-   * UC_TUT_02: Confirm booking
-   */
+
+
+
+//################################
+//## Tutor Confirm booking api ###
+//################################
   @Patch('bookings/:id/confirm')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Tutor xác nhận booking' })
@@ -118,9 +139,12 @@ export class TutorsController {
     return this.meetingsService.confirmBooking(req.user.id, id);
   }
 
-  /**
-   * UC_TUT_02: Reject booking
-   */
+
+
+
+//###############################
+//## Tutor Reject booking api ###
+//###############################
   @Patch('bookings/:id/reject')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Tutor từ chối booking' })
@@ -136,9 +160,12 @@ export class TutorsController {
     return this.meetingsService.rejectBooking(req.user.id, id, reason);
   }
 
-  /**
-   * UC_TUT_03: Create progress record
-   */
+
+
+
+//#######################################
+//## Tutor Create progress record api ###
+//#######################################
   @Post('progress')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Tutor ghi nhận tiến độ sinh viên' })
@@ -148,9 +175,12 @@ export class TutorsController {
     return this.tutorsService.createProgressRecord(req.user.id, dto);
   }
 
-  /**
-   * UC_TUT_03: Get student progress
-   */
+
+
+
+//###############################
+//## Get student progress api ###
+//###############################
   @Get('students/:studentId/progress')
   @Roles(Role.TUTOR, Role.TBM, Role.COORDINATOR)
   @ApiOperation({ summary: 'Xem tiến độ của sinh viên' })
@@ -163,9 +193,12 @@ export class TutorsController {
     return this.tutorsService.getStudentProgress(req.user.id, studentId);
   }
 
-  /**
-   * Get my students
-   */
+
+
+
+//#############################
+//## Get tutor students api ###
+//#############################
   @Get('me/students')
   @Roles(Role.TUTOR)
   @ApiOperation({ summary: 'Xem danh sách sinh viên của tôi' })
@@ -174,4 +207,8 @@ export class TutorsController {
   async getMyStudents(@Request() req) {
     return this.tutorsService.getMyStudents(req.user.id);
   }
+
+
+
+
 }
