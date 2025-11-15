@@ -8,9 +8,12 @@ import { MeetingStatus, Role } from '@prisma/client';
 export class MeetingsService {
   constructor(private prisma: PrismaService) {}
 
-  /**
-   * UC_STU_01: Student đặt lịch hẹn
-   */
+
+
+
+//######################################
+//## UC_STU_01: Student đặt lịch hẹn ###
+//######################################
   async createBooking(studentId: number, dto: CreateBookingDto) {
     // 1. Check slot availability
     const slot = await this.prisma.availabilitySlot.findUnique({
@@ -108,9 +111,12 @@ export class MeetingsService {
     return meeting;
   }
 
-  /**
-   * UC_STU_05: Student đánh giá buổi học
-   */
+
+
+
+//###########################################
+//## UC_STU_05: Student đánh giá buổi học ###
+//###########################################
   async submitRating(studentId: number, meetingId: number, dto: CreateRatingDto) {
     // 1. Check meeting exists
     const meeting = await this.prisma.meeting.findUnique({
@@ -187,9 +193,12 @@ export class MeetingsService {
     return rating;
   }
 
-  /**
-   * Get my meetings (Student or Tutor view)
-   */
+
+
+
+//##############################################
+//## Get my meetings (Student or Tutor view) ###
+//##############################################
   async getMyMeetings(userId: number, role: Role) {
     const where = role === Role.STUDENT 
       ? { studentId: userId }
@@ -230,9 +239,12 @@ export class MeetingsService {
     return meetings;
   }
 
-  /**
-   * Get meeting detail
-   */
+
+
+
+//#########################
+//## Get meeting detail ###
+//#########################
   async getMeetingById(id: number, userId: number, role: Role) {
     const meeting = await this.prisma.meeting.findUnique({
       where: { id },
@@ -277,6 +289,10 @@ export class MeetingsService {
     return meeting;
   }
 
+
+//##################################
+//## UC_TUT_02: Complete meeting ###
+//##################################
   /**
    * Cancel meeting (Student or Tutor)
    */
@@ -349,9 +365,12 @@ export class MeetingsService {
     return updatedMeeting;
   }
 
-  /**
-   * UC_TUT_02: Tutor confirm booking
-   */
+
+
+
+//#######################################
+//## UC_TUT_02: Tutor confirm booking ###
+//#######################################
   async confirmBooking(tutorUserId: number, meetingId: number) {
     const meeting = await this.prisma.meeting.findUnique({
       where: { id: meetingId },
@@ -403,9 +422,12 @@ export class MeetingsService {
     return updatedMeeting;
   }
 
-  /**
-   * UC_TUT_02: Tutor reject booking
-   */
+
+
+
+//######################################
+//## UC_TUT_02: Tutor reject booking ###
+//######################################
   async rejectBooking(tutorUserId: number, meetingId: number, reason?: string) {
     const meeting = await this.prisma.meeting.findUnique({
       where: { id: meetingId },
@@ -463,63 +485,74 @@ export class MeetingsService {
     return updatedMeeting;
   }
 
-  /**
-   * UC_TUT_02: Complete meeting
-   */
-  async completeMeeting(tutorUserId: number, meetingId: number) {
-    const meeting = await this.prisma.meeting.findUnique({
-      where: { id: meetingId },
-      include: {
-        student: true,
-        tutor: {
-          include: { user: true },
-        },
-      },
-    });
 
-    if (!meeting) {
-      throw new NotFoundException('Meeting không tồn tại');
-    }
 
-    // Check permission
-    if (meeting.tutor.userId !== tutorUserId) {
-      throw new ForbiddenException('Bạn không có quyền complete meeting này');
-    }
+  
+//##################################
+//## UC_TUT_02: Complete meeting ###
+//##################################
+	async completeMeeting(userId: number, role: Role, meetingId: number) {
+	  const meeting = await this.prisma.meeting.findUnique({
+		where: { id: meetingId },
+		include: {
+		  student: true,
+		  tutor: {
+		    include: { user: true },
+		  },
+		},
+	  });
 
-    // Check status
-    if (meeting.status !== MeetingStatus.CONFIRMED) {
-      throw new BadRequestException('Chỉ có thể complete meeting đã CONFIRMED');
-    }
+	  if (!meeting) {
+		throw new NotFoundException('Meeting không tồn tại');
+	  }
 
-    // Complete meeting
-    const updatedMeeting = await this.prisma.$transaction(async (prisma) => {
-      const updated = await prisma.meeting.update({
-        where: { id: meetingId },
-        data: { status: MeetingStatus.COMPLETED },
-        include: {
-          student: true,
-          tutor: { include: { user: true } },
-        },
-      });
+	  // Only tutors can complete meetings
+	  if (role !== Role.TUTOR || meeting.tutor.userId !== userId) {
+		throw new ForbiddenException('Bạn không có quyền complete meeting này');
+	  }
 
-      // Send notification to student (remind to rate)
-      await prisma.notification.create({
-        data: {
-          recipientId: meeting.studentId,
-          title: 'Meeting đã hoàn thành',
-          message: `Meeting với tutor ${meeting.tutor.user.fullName} đã hoàn thành. Hãy đánh giá buổi học!`,
-        },
-      });
+	  // Can't complete cancelled or pending meetings
+	  if (meeting.status === MeetingStatus.CANCELED || meeting.status === MeetingStatus.PENDING) {
+		throw new BadRequestException('Không thể Complete meeting đã Cancel hoặc Pending');
+	  }
 
-      return updated;
-    });
+	  // Already completed
+	  if (meeting.status === MeetingStatus.COMPLETED) {
+		return meeting;
+	  }
 
-    return updatedMeeting;
-  }
+	  // Complete meeting
+	  const updatedMeeting = await this.prisma.$transaction(async (prisma) => {
+		const updated = await prisma.meeting.update({
+		  where: { id: meetingId },
+		  data: { status: MeetingStatus.COMPLETED },
+		  include: {
+		    student: true,
+		    tutor: { include: { user: true } },
+		  },
+		});
 
-  /**
-   * UC_TUT_02: Get booking requests for tutor
-   */
+		// Notify student
+		await prisma.notification.create({
+		  data: {
+		    recipientId: meeting.studentId,
+		    title: 'Meeting đã hoàn thành',
+		    message: `Meeting với tutor ${meeting.tutor.user.fullName} đã hoàn thành. Hãy đánh giá buổi học!`,
+		  },
+		});
+
+		return updated;
+	  });
+
+	  return updatedMeeting;
+	}
+
+
+
+
+//################################################
+//## UC_TUT_02: Get booking requests for tutor ###
+//################################################
   async getBookingRequests(tutorUserId: number) {
     // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
