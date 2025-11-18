@@ -1,11 +1,15 @@
 // src/users/users.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
+import { UploadService } from '../upload/upload.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private uploadService: UploadService,
+  ) {}
 
   async getProfile(userId: number) {
     const user = await this.prisma.user.findUnique({
@@ -72,5 +76,64 @@ export class UsersService {
     }
 
     return updatedUser;
+  }
+
+  async uploadAvatar(
+    userId: number,
+    file: Express.Multer.File,
+  ): Promise<string> {
+    // Get current user
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Delete old avatar if exists
+    if (user.avatarUrl) {
+      const publicId = this.uploadService.extractPublicId(user.avatarUrl);
+      if (publicId) {
+        await this.uploadService.deleteFile(publicId);
+      }
+    }
+
+    // Upload new avatar
+    const avatarUrl = await this.uploadService.uploadAvatar(file, userId);
+
+    // Update user avatar URL in database
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+    });
+
+    return avatarUrl;
+  }
+
+  async deleteAvatar(userId: number): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.avatarUrl) {
+      throw new NotFoundException('No avatar to delete');
+    }
+
+    // Delete from Cloudinary
+    const publicId = this.uploadService.extractPublicId(user.avatarUrl);
+    if (publicId) {
+      await this.uploadService.deleteFile(publicId);
+    }
+
+    // Remove avatar URL from database
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl: null },
+    });
   }
 }

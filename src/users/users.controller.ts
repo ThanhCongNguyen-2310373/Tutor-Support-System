@@ -1,6 +1,26 @@
 // src/users/users.controller.ts
-import { Controller, Get, Put, Body, Request, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Put,
+  Delete,
+  Post,
+  Body,
+  Request,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -31,5 +51,54 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User không tồn tại' })
   async updateMyProfile(@Request() req, @Body() updateDto: UpdateProfileDto) {
     return this.usersService.updateProfile(req.user.id, updateDto);
+  }
+
+  @Post('me/avatar')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload avatar' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: {
+          type: 'string',
+          format: 'binary',
+          description: 'Avatar image file (JPG, PNG, WEBP, max 5MB)',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Upload thành công' })
+  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
+  @ApiResponse({ status: 401, description: 'Chưa đăng nhập' })
+  async uploadAvatar(
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    const avatarUrl = await this.usersService.uploadAvatar(req.user.id, file);
+    return {
+      message: 'Avatar uploaded successfully',
+      avatarUrl,
+    };
+  }
+
+  @Delete('me/avatar')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xóa avatar' })
+  @ApiResponse({ status: 200, description: 'Xóa thành công' })
+  @ApiResponse({ status: 401, description: 'Chưa đăng nhập' })
+  async deleteAvatar(@Request() req) {
+    await this.usersService.deleteAvatar(req.user.id);
+    return {
+      message: 'Avatar deleted successfully',
+    };
   }
 }

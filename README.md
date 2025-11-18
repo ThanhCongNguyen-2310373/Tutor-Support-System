@@ -443,6 +443,17 @@ npx prisma db push
 ---
 
 
+## 📚 Tài liệu bổ sung
+
+- **📊 Tổng kết Backend:** [`TONG_KET_BACKEND.md`](TONG_KET_BACKEND.md) - Báo cáo chi tiết về tiến độ và kế hoạch
+- **🎤 Presentation Summary:** [`PRESENTATION_SUMMARY.md`](PRESENTATION_SUMMARY.md) - Tóm tắt cho team meeting (10 phút)
+- **✅ Development Checklist:** [`DEVELOPMENT_CHECKLIST.md`](DEVELOPMENT_CHECKLIST.md) - Checklist công việc 8 tuần
+- **🎨 Frontend Integration:** [`FRONTEND_INTEGRATION.md`](FRONTEND_INTEGRATION.md) - Hướng dẫn tích hợp Frontend (React/React Native)
+- **⚡ Frontend Quick Reference:** [`FRONTEND_QUICKREF.md`](FRONTEND_QUICKREF.md) - Cheat sheet nhanh cho Frontend
+- **📖 Documentation:** [`/documentation`](documentation/) - Tài liệu kỹ thuật chi tiết
+
+---
+
 ## 📞 Liên hệ & Hỗ trợ
 
 - **Môn học:** Công Nghệ Phần Mềm (CO3001)
