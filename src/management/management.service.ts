@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
+import { EmailService } from '../email/email.service';
 import { ManualPairDto } from './dto/manual-pair.dto';
 import { CreateComplaintDto, ResolveComplaintDto } from './dto/complaint.dto';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -7,7 +8,10 @@ import { Role } from '@prisma/client';
 
 @Injectable()
 export class ManagementService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
 
 
@@ -145,6 +149,11 @@ export class ManagementService {
           },
         },
       },
+    });
+
+    // Send email to all coordinators (don't await)
+    this.notifyCoordinatorsOfComplaint(complaint).catch(err => {
+      console.error('Failed to send complaint notification emails:', err.message);
     });
 
     return complaint;
@@ -578,6 +587,41 @@ export class ManagementService {
 //####################################################
 //## UC_ADMIN_02: Admin - reject Tutor Application ###
 //####################################################
+  /**
+   * Helper: Send complaint notification to all coordinators
+   */
+  private async notifyCoordinatorsOfComplaint(complaint: any) {
+    // Get all coordinators
+    const coordinators = await this.prisma.user.findMany({
+      where: { role: Role.COORDINATOR },
+      select: { email: true, fullName: true },
+    });
+
+    // Send email to each coordinator
+    const emailPromises = coordinators.map(coordinator =>
+      this.emailService.sendComplaintNotification(coordinator.email, {
+        coordinatorName: coordinator.fullName,
+        studentName: complaint.student.fullName,
+        studentEmail: complaint.student.email,
+        description: complaint.description,
+        complaintId: complaint.id.toString(),
+        createdAt: complaint.createdAt.toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        dashboardLink: `${process.env.FRONTEND_URL}/management/complaints/${complaint.id}`,
+        meetingInfo: complaint.meeting
+          ? `Meeting ID ${complaint.meeting.id} với tutor ${complaint.meeting.tutor.user.fullName}`
+          : 'Không liên quan đến meeting cụ thể',
+      })
+    );
+
+    await Promise.allSettled(emailPromises);
+  }
+
   async rejectTutorApplication(adminId: number, applicationId: number, reason?: string) {
     const application = await this.prisma.tutorApplication.findUnique({
       where: { id: applicationId },

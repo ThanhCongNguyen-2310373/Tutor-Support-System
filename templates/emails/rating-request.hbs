@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đánh giá buổi học</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .rating-card {
+      background: linear-gradient(135deg, #fff5e615 0%, #ffdd5715 100%);
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .stars {
+      font-size: 48px;
+      margin: 20px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .meeting-summary {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">⭐</div>
+      <h1>Đánh giá buổi học</h1>
+    </div>
+    
+    <div class="content">
+      <h2>Xin chào {{studentName}}! 👋</h2>
+      
+      <p>Cảm ơn bạn đã tham gia buổi học với <strong>{{tutorName}}</strong>!</p>
+      
+      <div class="meeting-summary">
+        <strong>📅 Buổi học:</strong> {{meetingDate}}<br>
+        <strong>👨‍🏫 Tutor:</strong> {{tutorName}}
+      </div>
+      
+      <div class="rating-card">
+        <h3 style="color: #667eea; margin-top: 0;">Buổi học của bạn như thế nào?</h3>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>Đánh giá của bạn sẽ giúp chúng tôi cải thiện chất lượng dịch vụ và hỗ trợ các bạn sinh viên khác tìm được Tutor phù hợp!</p>
+        
+        <a href="http://localhost:3000/api-docs#/3.%20Meetings/MeetingsController_rateMeeting" class="button">
+          ⭐ Đánh giá ngay
+        </a>
+      </div>
+      
+      <p><strong>💡 Bạn có thể đánh giá:</strong></p>
+      <ul>
+        <li>⭐ Mức độ hài lòng (1-5 sao)</li>
+        <li>💬 Nhận xét chi tiết về buổi học</li>
+        <li>🎯 Hiệu quả của Tutor</li>
+        <li>📚 Chất lượng nội dung</li>
+      </ul>
+      
+      <p><strong>📌 Lưu ý:</strong> Đánh giá của bạn sẽ được giữ bí mật và chỉ được sử dụng để cải thiện chất lượng dịch vụ.</p>
+      
+      <p>Cảm ơn bạn đã sử dụng dịch vụ! 🙏</p>
+    </div>
+    
+    <div class="footer">
+      <p>
+        <strong>HCMUT Tutor Support System</strong><br>
+        Trường Đại học Bách Khoa - ĐHQG TP.HCM<br>
+        📧 cong.nguyen10082005@hcmut.edu.vn
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Email này được gửi tự động. Vui lòng không trả lời email này.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../core/prisma.service';
 import { HcmutSsoService } from '../external/hcmut-sso.service';
 import { HcmutDatacoreService } from '../external/hcmut-datacore.service';
+import { EmailService } from '../email/email.service';
 import { LoginDto } from './dto/login.dto';
 
 /**
@@ -28,6 +29,7 @@ export class AuthService {
     private jwtService: JwtService,
     private ssoService: HcmutSsoService,
     private datacoreService: HcmutDatacoreService,
+    private emailService: EmailService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -63,6 +65,16 @@ export class AuthService {
           },
         });
         this.logger.log(`✅ Created new user: ${user.email} (${user.role})`);
+
+        // Send welcome email (don't await to avoid blocking login)
+        this.emailService.sendWelcomeEmail(user.email, {
+          fullName: user.fullName || 'User',
+          email: user.email,
+          role: user.role,
+          mssv: user.mssv || 'N/A',
+        }).catch(err => {
+          this.logger.error(`Failed to send welcome email to ${user.email}:`, err.message);
+        });
       } else {
         // Cập nhật thông tin nếu đã tồn tại (sync lại từ DATACORE)
         user = await this.prisma.user.update({

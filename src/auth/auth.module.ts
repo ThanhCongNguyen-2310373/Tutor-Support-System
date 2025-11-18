@@ -7,11 +7,13 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ExternalModule } from '../external/external.module';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     PassportModule,
     ExternalModule, // Import để sử dụng HCMUT_SSO và DATACORE services
+    EmailModule, // Import để gửi welcome email
     // Đăng ký JwtModule
     JwtModule.registerAsync({
       imports: [ConfigModule],

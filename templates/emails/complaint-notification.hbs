@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khiếu nại mới cần xử lý</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .urgent-box {
+      background-color: #ffe3e3;
+      border-left: 4px solid #ff6b6b;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .complaint-card {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .complaint-card h3 {
+      color: #c92a2a;
+      margin-top: 0;
+    }
+    .detail-row {
+      padding: 10px 0;
+      border-bottom: 1px solid #eeeeee;
+      display: flex;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: bold;
+      color: #666666;
+      width: 120px;
+    }
+    .detail-value {
+      color: #333333;
+      flex: 1;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">🚨</div>
+      <h1>Khiếu nại mới cần xử lý</h1>
+    </div>
+    
+    <div class="content">
+      <h2>Xin chào {{coordinatorName}}! 👋</h2>
+      
+      <div class="urgent-box">
+        ⚠️ <strong>Yêu cầu xử lý khẩn:</strong> Có một khiếu nại mới cần được xem xét và giải quyết.
+      </div>
+      
+      <p>Vừa có một khiếu nại mới được gửi đến hệ thống. Vui lòng xem xét và xử lý sớm nhất có thể.</p>
+      
+      <div class="complaint-card">
+        <h3>📋 Thông tin khiếu nại</h3>
+        
+        <div class="detail-row">
+          <div class="detail-label">🆔 ID:</div>
+          <div class="detail-value">#{{complaintId}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">👨‍🎓 Sinh viên:</div>
+          <div class="detail-value">{{studentName}} ({{studentEmail}})</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">📌 Meeting:</div>
+          <div class="detail-value">{{meetingInfo}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">📝 Nội dung:</div>
+          <div class="detail-value">{{description}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">📅 Thời gian:</div>
+          <div class="detail-value">{{createdAt}}</div>
+        </div>
+      </div>
+      
+      <p style="text-align: center;">
+        <a href="{{dashboardLink}}" class="button">
+          Xử lý khiếu nại
+        </a>
+      </p>
+      
+      <p><strong>📌 Quy trình xử lý:</strong></p>
+      <ol>
+        <li>🔍 Xem xét chi tiết khiếu nại</li>
+        <li>🗣️ Liên hệ với các bên liên quan</li>
+        <li>⚖️ Đánh giá và đưa ra phương án xử lý</li>
+        <li>✅ Cập nhật trạng thái và giải quyết</li>
+      </ol>
+      
+      <p><strong>⏰ Lưu ý:</strong> Vui lòng xử lý trong vòng <strong>24-48 giờ</strong> để đảm bảo trải nghiệm tốt cho người dùng.</p>
+      
+      <p>Cảm ơn bạn đã hỗ trợ! 🙏</p>
+    </div>
+    
+    <div class="footer">
+      <p>
+        <strong>HCMUT Tutor Support System</strong><br>
+        Trường Đại học Bách Khoa - ĐHQG TP.HCM<br>
+        📧 cong.nguyen10082005@hcmut.edu.vn
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Email này được gửi tự động. Vui lòng không trả lời email này.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

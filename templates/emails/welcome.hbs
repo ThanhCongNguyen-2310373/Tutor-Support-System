@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chào mừng đến với HCMUT Tutor System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .content h2 {
+      color: #667eea;
+      margin-top: 0;
+    }
+    .info-box {
+      background-color: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .info-box strong {
+      color: #667eea;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">🎓</div>
+      <h1>Chào mừng đến với HCMUT Tutor System</h1>
+    </div>
+    
+    <div class="content">
+      <h2>Xin chào {{fullName}}! 👋</h2>
+      
+      <p>Chúc mừng bạn đã tham gia <strong>HCMUT Tutor Support System</strong> - Hệ thống hỗ trợ Tutor/Mentor tại Trường Đại học Bách Khoa TP.HCM!</p>
+      
+      <div class="info-box">
+        <strong>📧 Email:</strong> {{email}}<br>
+        <strong>🆔 MSSV:</strong> {{mssv}}<br>
+        <strong>👤 Vai trò:</strong> {{role}}
+      </div>
+      
+      <p><strong>Bạn có thể làm gì với hệ thống?</strong></p>
+      <ul>
+        {{#if (eq role "STUDENT")}}
+          <li>🔍 Tìm kiếm và đặt lịch hẹn với Tutor phù hợp</li>
+          <li>⭐ Đánh giá và phản hồi sau mỗi buổi học</li>
+          <li>📊 Theo dõi tiến độ học tập của bản thân</li>
+          <li>📢 Gửi khiếu nại nếu cần thiết</li>
+        {{else if (eq role "TUTOR")}}
+          <li>📅 Quản lý lịch rảnh và lịch hẹn</li>
+          <li>✅ Duyệt hoặc từ chối booking requests</li>
+          <li>📝 Ghi nhận tiến độ học tập của sinh viên</li>
+          <li>👥 Quản lý danh sách sinh viên được giao</li>
+        {{else}}
+          <li>🛠️ Quản lý và điều phối hệ thống</li>
+          <li>👥 Xử lý các yêu cầu và khiếu nại</li>
+          <li>📊 Xem báo cáo và thống kê</li>
+        {{/if}}
+      </ul>
+      
+      <p style="text-align: center;">
+        <a href="http://localhost:3000/api-docs" class="button">
+          Truy cập hệ thống ngay
+        </a>
+      </p>
+      
+      <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email này.</p>
+      
+      <p>Chúc bạn có trải nghiệm tốt! 🚀</p>
+    </div>
+    
+    <div class="footer">
+      <p>
+        <strong>HCMUT Tutor Support System</strong><br>
+        Trường Đại học Bách Khoa - ĐHQG TP.HCM<br>
+        📧 cong.nguyen10082005@hcmut.edu.vn
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Email này được gửi tự động. Vui lòng không trả lời email này.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

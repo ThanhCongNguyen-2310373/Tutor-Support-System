@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buổi hẹn đã được xác nhận</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .meeting-card {
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border: 2px solid #11998e;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+    .meeting-card h3 {
+      color: #11998e;
+      margin-top: 0;
+    }
+    .detail-row {
+      display: flex;
+      padding: 10px 0;
+      border-bottom: 1px solid #eeeeee;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: bold;
+      color: #666666;
+      width: 120px;
+    }
+    .detail-value {
+      color: #333333;
+      flex: 1;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .success-icon {
+      font-size: 64px;
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">✅</div>
+      <h1>Buổi hẹn đã được xác nhận</h1>
+    </div>
+    
+    <div class="content">
+      <div class="success-icon">🎉</div>
+      
+      <h2>Xin chào {{studentName}}!</h2>
+      
+      <p>Buổi hẹn của bạn với <strong>{{tutorName}}</strong> đã được xác nhận thành công!</p>
+      
+      <div class="meeting-card">
+        <h3>📅 Thông tin buổi hẹn</h3>
+        
+        <div class="detail-row">
+          <div class="detail-label">👨‍🏫 Tutor:</div>
+          <div class="detail-value">{{tutorName}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">📚 Chủ đề:</div>
+          <div class="detail-value">{{topic}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">📅 Ngày:</div>
+          <div class="detail-value">{{meetingDate}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">⏰ Giờ:</div>
+          <div class="detail-value">{{meetingTime}}</div>
+        </div>
+        
+        {{#if location}}
+        <div class="detail-row">
+          <div class="detail-label">📍 Địa điểm:</div>
+          <div class="detail-value">{{location}}</div>
+        </div>
+        {{/if}}
+      </div>
+      
+      <p><strong>📌 Lưu ý quan trọng:</strong></p>
+      <ul>
+        <li>Vui lòng có mặt đúng giờ</li>
+        <li>Chuẩn bị câu hỏi và tài liệu trước buổi học</li>
+        <li>Liên hệ Tutor nếu cần thay đổi lịch</li>
+        <li>Đánh giá sau buổi học để cải thiện chất lượng</li>
+      </ul>
+      
+      <p>Chúc bạn có buổi học hiệu quả! 📖</p>
+    </div>
+    
+    <div class="footer">
+      <p>
+        <strong>HCMUT Tutor Support System</strong><br>
+        Trường Đại học Bách Khoa - ĐHQG TP.HCM<br>
+        📧 cong.nguyen10082005@hcmut.edu.vn
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Email này được gửi tự động. Vui lòng không trả lời email này.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

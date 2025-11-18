@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhắc nhở buổi hẹn</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 40px 30px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .alert-box {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .meeting-info {
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .info-item {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    .info-item strong {
+      width: 100px;
+      color: #666666;
+    }
+    .emoji {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="emoji">⏰</div>
+      <h1>Nhắc nhở buổi hẹn</h1>
+    </div>
+    
+    <div class="content">
+      <h2>Xin chào {{recipientName}}! 👋</h2>
+      
+      <div class="alert-box">
+        ⚠️ <strong>Nhắc nhở:</strong> Bạn có buổi hẹn vào <strong>ngày mai</strong>!
+      </div>
+      
+      <p>Đây là lời nhắc về buổi hẹn sắp tới của bạn:</p>
+      
+      <div class="meeting-info">
+        <h3 style="margin-top: 0; color: #667eea;">📅 Chi tiết buổi hẹn</h3>
+        
+        <div class="info-item">
+          <strong>{{#if (eq role "student")}}👨‍🏫 Tutor:{{else}}👨‍🎓 Sinh viên:{{/if}}</strong>
+          <span>{{withWhom}}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📚 Chủ đề:</strong>
+          <span>{{topic}}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📅 Ngày:</strong>
+          <span>{{meetingDate}}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>⏰ Giờ:</strong>
+          <span>{{meetingTime}}</span>
+        </div>
+        
+        {{#if location}}
+        <div class="info-item">
+          <strong>📍 Địa điểm:</strong>
+          <span>{{location}}</span>
+        </div>
+        {{/if}}
+      </div>
+      
+      <p><strong>📝 Chuẩn bị cho buổi học:</strong></p>
+      <ul>
+        {{#if (eq role "student")}}
+          <li>✅ Chuẩn bị câu hỏi và tài liệu cần thiết</li>
+          <li>✅ Xem lại kiến thức liên quan</li>
+          <li>✅ Đến đúng giờ hoặc sớm 5-10 phút</li>
+          <li>✅ Mang theo bút và vở ghi chép</li>
+        {{else}}
+          <li>✅ Xem lại lộ trình học tập của sinh viên</li>
+          <li>✅ Chuẩn bị tài liệu và bài tập</li>
+          <li>✅ Đến đúng giờ</li>
+          <li>✅ Sẵn sàng ghi nhận tiến độ sau buổi học</li>
+        {{/if}}
+      </ul>
+      
+      <p>Nếu bạn cần thay đổi lịch, vui lòng thông báo sớm!</p>
+      
+      <p>Chúc bạn có buổi học hiệu quả! 🚀</p>
+    </div>
+    
+    <div class="footer">
+      <p>
+        <strong>HCMUT Tutor Support System</strong><br>
+        Trường Đại học Bách Khoa - ĐHQG TP.HCM<br>
+        📧 cong.nguyen10082005@hcmut.edu.vn
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        Email này được gửi tự động. Vui lòng không trả lời email này.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

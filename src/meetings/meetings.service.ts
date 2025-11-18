@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
+import { EmailService } from '../email/email.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { MeetingStatus, Role } from '@prisma/client';
 
 @Injectable()
 export class MeetingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
 
 
@@ -419,6 +423,23 @@ export class MeetingsService {
       return updated;
     });
 
+    // Send confirmation email (don't await to avoid blocking response)
+    this.emailService.sendMeetingConfirmation(meeting.student.email, {
+      studentName: meeting.student.fullName,
+      tutorName: meeting.tutor.user.fullName,
+      meetingDate: meeting.startTime.toLocaleDateString('vi-VN', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }),
+      meetingTime: `${meeting.startTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} - ${meeting.endTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`,
+      topic: meeting.topic || 'Không có chủ đề cụ thể',
+      meetingLink: `${process.env.FRONTEND_URL}/meetings/${meetingId}`,
+    }).catch(err => {
+      console.error(`Failed to send confirmation email to ${meeting.student.email}:`, err.message);
+    });
+
     return updatedMeeting;
   }
 
@@ -542,6 +563,23 @@ export class MeetingsService {
 		});
 
 		return updated;
+	  });
+
+	  // Send rating request email (don't await)
+	  this.emailService.sendRatingRequest(meeting.student.email, {
+	    studentName: meeting.student.fullName,
+	    tutorName: meeting.tutor.user.fullName,
+	    meetingDate: meeting.startTime.toLocaleDateString('vi-VN', { 
+	      weekday: 'long', 
+	      year: 'numeric', 
+	      month: 'long', 
+	      day: 'numeric' 
+	    }),
+	    meetingTime: `${meeting.startTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} - ${meeting.endTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`,
+	    topic: meeting.topic || 'Không có chủ đề cụ thể',
+	    ratingLink: `${process.env.FRONTEND_URL}/meetings/${meetingId}/rating`,
+	  }).catch(err => {
+	    console.error(`Failed to send rating request email to ${meeting.student.email}:`, err.message);
 	  });
 
 	  return updatedMeeting;
