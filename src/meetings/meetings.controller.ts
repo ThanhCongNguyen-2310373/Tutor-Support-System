@@ -5,6 +5,7 @@ import {
   Patch,
   Param,
   Body,
+  Query,
   UseGuards,
   Request,
   ParseIntPipe,
@@ -66,10 +67,18 @@ export class MeetingsController {
 //#############################################
   @Get('my-meetings')
   @Roles(Role.STUDENT, Role.TUTOR)
-  @ApiOperation({ summary: 'Xem danh sách meetings của mình' })
+  @ApiOperation({ 
+    summary: 'Xem danh sách meetings của mình',
+    description: 'Hỗ trợ filter: ?status=PENDING|CONFIRMED|COMPLETED|CANCELED&startDate=2024-01-01&endDate=2024-12-31'
+  })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
-  async getMyMeetings(@Request() req) {
-    return this.meetingsService.getMyMeetings(req.user.id, req.user.role);
+  async getMyMeetings(
+    @Request() req, 
+    @Query('status') status?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.meetingsService.getMyMeetings(req.user.id, req.user.role, { status, startDate, endDate });
   }
 
 

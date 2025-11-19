@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 import { EmailService } from '../email/email.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { MeetingStatus, Role } from '@prisma/client';
@@ -10,6 +11,7 @@ export class MeetingsService {
   constructor(
     private prisma: PrismaService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
   ) {}
 
 
@@ -112,6 +114,14 @@ export class MeetingsService {
       return newMeeting;
     });
 
+    // Send real-time notification
+    await this.notificationsService.notifyNewBookingRequest(tutor.userId, {
+      meetingId: meeting.id,
+      studentName: meeting.student.fullName,
+      scheduledTime: slot.startTime,
+      topic: dto.topic,
+    });
+
     return meeting;
   }
 
@@ -203,12 +213,32 @@ export class MeetingsService {
 //##############################################
 //## Get my meetings (Student or Tutor view) ###
 //##############################################
-  async getMyMeetings(userId: number, role: Role) {
-    const where = role === Role.STUDENT 
+  async getMyMeetings(
+    userId: number, 
+    role: Role, 
+    filters?: { status?: string; startDate?: string; endDate?: string }
+  ) {
+    const where: any = role === Role.STUDENT 
       ? { studentId: userId }
       : role === Role.TUTOR
       ? { tutor: { userId } }
       : {};
+
+    // Apply status filter
+    if (filters?.status) {
+      where.status = filters.status as MeetingStatus;
+    }
+
+    // Apply date range filters
+    if (filters?.startDate || filters?.endDate) {
+      where.startTime = {};
+      if (filters.startDate) {
+        where.startTime.gte = new Date(filters.startDate);
+      }
+      if (filters.endDate) {
+        where.startTime.lte = new Date(filters.endDate);
+      }
+    }
 
     const meetings = await this.prisma.meeting.findMany({
       where,
@@ -440,6 +470,13 @@ export class MeetingsService {
       console.error(`Failed to send confirmation email to ${meeting.student.email}:`, err.message);
     });
 
+    // Send real-time notification
+    await this.notificationsService.notifyBookingConfirmed(meeting.studentId, {
+      meetingId: meetingId,
+      tutorName: meeting.tutor.user.fullName,
+      scheduledTime: meeting.startTime,
+    });
+
     return updatedMeeting;
   }
 
@@ -501,6 +538,14 @@ export class MeetingsService {
       });
 
       return updated;
+    });
+
+    // Send real-time notification
+    await this.notificationsService.notifyBookingRejected(meeting.studentId, {
+      meetingId: meetingId,
+      tutorName: meeting.tutor.user.fullName,
+      scheduledTime: meeting.startTime,
+      reason: reason,
     });
 
     return updatedMeeting;
@@ -580,6 +625,13 @@ export class MeetingsService {
 	    ratingLink: `${process.env.FRONTEND_URL}/meetings/${meetingId}/rating`,
 	  }).catch(err => {
 	    console.error(`Failed to send rating request email to ${meeting.student.email}:`, err.message);
+	  });
+
+	  // Send real-time notification
+	  await this.notificationsService.notifyMeetingCompleted(meeting.studentId, {
+	    meetingId: meetingId,
+	    tutorName: meeting.tutor.user.fullName,
+	    completedTime: meeting.startTime,
 	  });
 
 	  return updatedMeeting;
