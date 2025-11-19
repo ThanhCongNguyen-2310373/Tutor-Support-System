@@ -99,27 +99,15 @@ npm run start:prod
 
 ### ✅ Kiểm tra cài đặt thành công
 
-Khi terminal hiển thị:
+Khi terminal hiển thị như sau, truy cập: **http://localhost:3000/api-docs** để test APIs (Swagger).
 ```
 ✅ 📚 Swagger API Documentation: http://localhost:3000/api-docs
 ```
-
-Truy cập: **http://localhost:3000/api-docs** để test APIs!
-
----
-
-## 📖 API Documentation (Swagger)
-
-Sau khi chạy ứng dụng, truy cập Swagger UI tại:
+Xem db: # Opens a browser at "http://localhost:5555/"
 
 ```
-http://localhost:3000/api-docs
+npx prisma studio
 ```
-
-Tại đây bạn có thể:
-- Xem tất cả endpoints
-- Test API trực tiếp
-- Xem schema của request/response
 
 ---
 

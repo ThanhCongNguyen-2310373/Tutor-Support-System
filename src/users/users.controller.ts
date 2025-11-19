@@ -24,6 +24,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '@prisma/client';
+import { ApplyTutorDto } from './dto/tutor-application.dto';
 
 @ApiTags('2. Users')
 @Controller('users')
@@ -100,5 +103,28 @@ export class UsersController {
     return {
       message: 'Avatar deleted successfully',
     };
+  }
+
+  @Get('me/progress')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.STUDENT) // Chỉ sinh viên mới được xem tiến độ của mình
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xem tiến độ học tập của bản thân (Dành cho Student)' })
+  @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
+  @ApiResponse({ status: 401, description: 'Chưa đăng nhập' })
+  @ApiResponse({ status: 403, description: 'Không phải là Student' })
+  async getMyProgress(@Request() req) {
+    return this.usersService.getMyProgress(req.user.id);
+  }
+
+  @Post('apply-tutor')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.STUDENT)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Nộp đơn đăng ký trở thành Tutor' })
+  @ApiResponse({ status: 201, description: 'Nộp đơn thành công' })
+  @ApiResponse({ status: 400, description: 'Bạn đã là Tutor hoặc đã có đơn đang chờ duyệt' })
+  async applyTutor(@Request() req, @Body() dto: ApplyTutorDto) {
+    return this.usersService.applyToBecomeTutor(req.user.id, dto);
   }
 }
