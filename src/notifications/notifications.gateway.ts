@@ -54,7 +54,8 @@ export interface NotificationPayload {
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // Frontend URLs
+    //origin: ['http://localhost:3000', 'http://localhost:5173'], // Frontend URLs
+    origin: true, // Allow all origins
     credentials: true,
   },
   namespace: '/notifications', // Socket namespace
