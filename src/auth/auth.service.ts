@@ -1,5 +1,5 @@
 // src/auth/auth.service.ts
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../core/prisma.service';
 import { HcmutSsoService } from '../external/hcmut-sso.service';
@@ -31,11 +31,11 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new Error('User already registered in the system');
+      throw new ConflictException('User already registered in the system');
     }
 
     // 2. "Fetch" User Info from External System (Simulation)
-    const mockProfile = this.datacoreService.getMockProfile(dto.email);
+    const mockProfile = await this.datacoreService.getMockProfile(dto.email);
 
     // 3. Hash Password
     const hashedPassword = await bcrypt.hash(dto.password, 10);

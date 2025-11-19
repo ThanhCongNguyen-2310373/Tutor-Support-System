@@ -67,24 +67,27 @@ export class HcmutDatacoreService {
   /**
    * Generate profile from "Existing External System"
    */
-  getMockProfile(email: string): SyncUserDto {
-    this.logger.log(`🎲 [HCMUT_DATACORE] Generating mock profile for: ${email}`);
+  async getMockProfile(email: string): Promise<SyncUserDto> {
+    this.logger.log(`🎲 [HCMUT_DATACORE] Generating unique mock profile for: ${email}`);
 
     const namePart = email.split('@')[0];
     const role = this.inferRoleFromEmail(email);
     
+    // Generate Unique IDs (Async check)
+    const userId = await this.generateUniqueMSSV(role);
+    const phoneNumber = await this.generateUniquePhone();
+
     return {
-      userId: this.generateMockMSSV(role),
+      userId: userId,
       email: email,
       fullName: this.generateMockName(namePart),
       role: role,
       department: this.getRandomDepartment(),
       status: 'Active',
-      phoneNumber: this.generateMockPhone(),
+      phoneNumber: phoneNumber,
       studentClass: role === Role.STUDENT ? this.generateMockClass() : null,
     };
   }
-
   // --- Helpers ---
 
   private async findUserByIdentifier(identifier: string) {
@@ -119,12 +122,46 @@ export class HcmutDatacoreService {
     return Role.STUDENT;
   }
 
-  private generateMockMSSV(role: Role): string {
-    const randomNum = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+  // --- Unique Generators ---
+
+  private async generateUniqueMSSV(role: Role): Promise<string> {
     const prefix = role === Role.STUDENT ? '21' : role === Role.TUTOR ? 'GV' : 'NV';
-    return `${prefix}${randomNum}`;
+    let isUnique = false;
+    let mssv = '';
+
+    // Retry loop until unique
+    while (!isUnique) {
+      const randomNum = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+      mssv = `${prefix}${randomNum}`;
+      
+      // Check DB
+      const existing = await this.prisma.user.findUnique({ where: { mssv } });
+      if (!existing) {
+        isUnique = true;
+      }
+    }
+    return mssv;
   }
 
+  private async generateUniquePhone(): Promise<string> {
+    const prefixes = ['090', '091', '098', '097', '089'];
+    let isUnique = false;
+    let phone = '';
+
+    while (!isUnique) {
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      const suffix = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
+      phone = `${prefix}${suffix}`;
+
+      // Check DB (Assuming phoneNumber is unique in schema, if not, this check is still safe)
+      const existing = await this.prisma.user.findFirst({ where: { phoneNumber: phone } });
+      if (!existing) {
+        isUnique = true;
+      }
+    }
+    return phone;
+  }
+ 
   private generateMockName(seed: string): string {
     const surnames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng'];
     const middles = ['Văn', 'Thị', 'Hữu', 'Minh', 'Gia', 'Thanh', 'Quốc', 'Duy'];
@@ -136,11 +173,6 @@ export class HcmutDatacoreService {
   private getRandomDepartment(): string {
     const depts = ['KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH', 'KHOA ĐIỆN - ĐIỆN TỬ', 'KHOA CƠ KHÍ', 'KHOA KỸ THUẬT HÓA HỌC'];
     return depts[Math.floor(Math.random() * depts.length)];
-  }
-
-  private generateMockPhone(): string {
-    const prefixes = ['090', '091', '098', '097', '089'];
-    return `${prefixes[Math.floor(Math.random() * prefixes.length)]}${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`;
   }
 
   private generateMockClass(): string {
