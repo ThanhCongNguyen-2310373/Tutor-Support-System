@@ -107,24 +107,6 @@ export class TutorsController {
     return this.tutorsService.getAvailability(req.user.id);
   }
 
-
-
-
-//#####################################
-//## Tutor Get booking requests api ###
-//#####################################
-  @Get('me/meet_list')
-  @Roles(Role.TUTOR)
-  @ApiOperation({ summary: 'Xem danh sách yêu cầu đặt lịch' })
-  @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
-  @ApiResponse({ status: 404, description: 'Tutor profile không tồn tại' })
-  async getBookingRequests(@Request() req) {
-    return this.meetingsService.getBookingRequests(req.user.id);
-  }
-
-
-
-
 //################################
 //## Tutor Confirm booking api ###
 //################################
@@ -138,30 +120,6 @@ export class TutorsController {
   async confirmBooking(@Request() req, @Param('id', ParseIntPipe) id: number) {
     return this.meetingsService.confirmBooking(req.user.id, id);
   }
-
-
-
-
-//###############################
-//## Tutor Reject booking api ###
-//###############################
-  @Patch('bookings/:id/reject')
-  @Roles(Role.TUTOR)
-  @ApiOperation({ summary: 'Tutor từ chối booking' })
-  @ApiResponse({ status: 200, description: 'Từ chối thành công' })
-  @ApiResponse({ status: 400, description: 'Chỉ có thể reject booking PENDING' })
-  @ApiResponse({ status: 403, description: 'Không có quyền reject booking này' })
-  @ApiResponse({ status: 404, description: 'Booking không tồn tại' })
-  async rejectBooking(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-    @Body('reason') reason?: string,
-  ) {
-    return this.meetingsService.rejectBooking(req.user.id, id, reason);
-  }
-
-
-
 
 //#######################################
 //## Tutor Create progress record api ###
@@ -207,8 +165,5 @@ export class TutorsController {
   async getMyStudents(@Request() req) {
     return this.tutorsService.getMyStudents(req.user.id);
   }
-
-
-
 
 }

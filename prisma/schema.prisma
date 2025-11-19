@@ -43,7 +43,7 @@ model User {
   // Quan hệ 1-N (Nghiệp vụ Admin/Coordinator)
   adminApplications   TutorApplication[] @relation("AdminApplications")
   coordinatorComplaints Complaint[]      @relation("CoordinatorComplaints")
-  tbmApplications     TutorApplication[] @relation("TBMApplications")
+  //tbmApplications     TutorApplication[] @relation("TBMApplications")
 
   // Quan hệ 1-N (Chung)
   notifications   Notification[]
@@ -200,13 +200,17 @@ model TutorApplication {
   status    TutorApplicationStatus  @default(PENDING) // PENDING, APPROVED, REJECTED
   createdAt DateTime @default(now())
 
+  // New fields for application details
+  bio       String
+  expertise String[]
+
   // Student được đề cử
   student   User @relation("StudentApplications", fields: [studentId], references: [id])
   studentId Int
 
   // TBM đề cử
-  tbm   User @relation("TBMApplications", fields: [tbmId], references: [id])
-  tbmId Int
+  //tbm   User @relation("TBMApplications", fields: [tbmId], references: [id])?
+  //tbmId Int?
 
   // Admin duyệt
   approvedBy User? @relation("AdminApplications", fields: [adminId], references: [id])

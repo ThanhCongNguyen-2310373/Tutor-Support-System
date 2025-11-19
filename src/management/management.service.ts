@@ -487,13 +487,6 @@ export class ManagementService {
             mssv: true,
           },
         },
-        tbm: {
-          select: {
-            id: true,
-            fullName: true,
-            email: true,
-          },
-        },
         approvedBy: {
           select: {
             id: true,
@@ -562,7 +555,8 @@ export class ManagementService {
       await prisma.tutorProfile.create({
         data: {
           userId: application.studentId,
-          expertise: [],
+          expertise: application.expertise,
+          bio: application.bio,
           available: true,
         },
       });
