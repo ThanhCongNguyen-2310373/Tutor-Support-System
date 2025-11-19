@@ -170,7 +170,7 @@ export class ManagementController {
 
 
 //#############################
-//## rest user password api ###
+//## reset user password api ###
 //#############################
   @Post('users/:id/reset-password')
   @Roles(Role.ADMIN)

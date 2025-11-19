@@ -26,6 +26,7 @@ import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '@prisma/client';
+import { ApplyTutorDto } from './dto/tutor-application.dto';
 
 @ApiTags('2. Users')
 @Controller('users')
@@ -114,5 +115,16 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Không phải là Student' })
   async getMyProgress(@Request() req) {
     return this.usersService.getMyProgress(req.user.id);
+  }
+
+  @Post('apply-tutor')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.STUDENT)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Nộp đơn đăng ký trở thành Tutor' })
+  @ApiResponse({ status: 201, description: 'Nộp đơn thành công' })
+  @ApiResponse({ status: 400, description: 'Bạn đã là Tutor hoặc đã có đơn đang chờ duyệt' })
+  async applyTutor(@Request() req, @Body() dto: ApplyTutorDto) {
+    return this.usersService.applyToBecomeTutor(req.user.id, dto);
   }
 }

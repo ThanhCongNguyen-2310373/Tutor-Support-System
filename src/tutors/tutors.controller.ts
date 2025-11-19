@@ -166,7 +166,4 @@ export class TutorsController {
     return this.tutorsService.getMyStudents(req.user.id);
   }
 
-
-
-
 }

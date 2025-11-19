@@ -1,8 +1,9 @@
 // src/users/users.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 import { UploadService } from '../upload/upload.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ApplyTutorDto } from './dto/tutor-application.dto';
 
 @Injectable()
 export class UsersService {
@@ -166,6 +167,43 @@ export class UsersService {
     });
 
     return progressRecords;
+  }
+
+  async applyToBecomeTutor(userId: number, dto: ApplyTutorDto) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (user.role === 'TUTOR') {
+      throw new BadRequestException('Bạn đã là Tutor rồi');
+    }
+
+    // Check for existing pending application
+    const existingApp = await this.prisma.tutorApplication.findFirst({
+      where: {
+        studentId: userId,
+        status: 'PENDING',
+      },
+    });
+
+    if (existingApp) {
+      throw new BadRequestException('Bạn đã có đơn đăng ký đang chờ duyệt');
+    }
+
+    // Create application
+    const application = await this.prisma.tutorApplication.create({
+      data: {
+        studentId: userId,
+        bio: dto.bio,
+        expertise: dto.expertise,
+        status: 'PENDING',
+        // tbmId is optional now, so we don't set it for self-applications
+      },
+    });
+
+    return {
+      message: 'Nộp đơn đăng ký thành công',
+      application,
+    };
   }
 
 }

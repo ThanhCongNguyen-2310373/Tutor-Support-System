@@ -213,17 +213,20 @@ async function main() {
   });
   console.log('✅ Created 1 sample complaint');
 
-  // 9. Create Sample Tutor Applications
+  // 9. Create Sample Tutor Applications (Self-applications)
   for (let i = 0; i < 3; i++) {
     await prisma.tutorApplication.create({
       data: {
         studentId: students[i].id,
-        tbmId: tbm.id, // Fix: Added tbmId which is required
+        // tbmId is now optional, so we omit it to simulate self-application
         status: TutorApplicationStatus.PENDING,
+        // Adding mock data for the application details
+        bio: `Tôi là ${students[i].fullName}, có niềm đam mê giảng dạy và thành tích tốt các môn đại cương.`,
+        expertise: ['Giải Tích', 'Vật Lý 1&2', 'Hóa Đại Cương'].slice(0, 2), // Mock expertise
       },
     });
   }
-  console.log('✅ Created 3 tutor applications');
+  console.log('✅ Created 3 tutor applications (Self-applied)');
 
   console.log('🎉 Seeding completed!');
 }
