@@ -329,6 +329,20 @@ export class TutorsService {
       throw new NotFoundException('Tutor profile không tồn tại');
     }
 
+    const hasRelation = await this.prisma.meeting.findFirst({
+    where: {
+      tutorId: tutor.id,
+      studentId: studentId,
+      // Quan trọng: Chấp nhận cả meeting đã hoàn thành hoặc đã xác nhận
+      status: { in: ['COMPLETED', 'CONFIRMED'] } 
+    }
+  });
+
+  if (!hasRelation) {
+    // Nếu chưa từng dạy sinh viên này -> Chặn quyền truy cập
+    throw new ForbiddenException('Bạn không có quyền xem tiến độ của sinh viên này (Chưa có lớp học chung)');
+  }
+
     // Get progress records
     const records = await this.prisma.progressRecord.findMany({
       where: {
