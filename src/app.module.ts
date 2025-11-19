@@ -13,6 +13,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { ExternalModule } from './external/external.module';
 import { UploadModule } from './upload/upload.module';
 import { EmailModule } from './email/email.module';
+import { AIModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -36,6 +37,9 @@ import { EmailModule } from './email/email.module';
     NotificationsModule,
     UploadModule,
     EmailModule,
+    
+    // AI Features (Matching, Chatbot, Content Gen)
+    AIModule,
   ],
 })
 export class AppModule {}

@@ -72,8 +72,8 @@ export class EmailService {
       });
       this.logger.log(`Welcome email sent to ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send welcome email to ${to}:`, error);
-      throw error;
+      this.logger.error(`Failed to send welcome email to ${to}:`, error.message);
+      // Don't throw - email is non-critical, don't block registration
     }
   }
 
@@ -93,8 +93,8 @@ export class EmailService {
       });
       this.logger.log(`Meeting confirmation sent to ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send meeting confirmation to ${to}:`, error);
-      throw error;
+      this.logger.error(`Failed to send meeting confirmation to ${to}:`, error.message);
+      // Don't throw - email is non-critical
     }
   }
 
@@ -114,8 +114,8 @@ export class EmailService {
       });
       this.logger.log(`Meeting reminder sent to ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send meeting reminder to ${to}:`, error);
-      throw error;
+      this.logger.error(`Failed to send meeting reminder to ${to}:`, error.message);
+      // Don't throw - email is non-critical
     }
   }
 
@@ -132,8 +132,8 @@ export class EmailService {
       });
       this.logger.log(`Rating request sent to ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send rating request to ${to}:`, error);
-      throw error;
+      this.logger.error(`Failed to send rating request to ${to}:`, error.message);
+      // Don't throw - email is non-critical
     }
   }
 
@@ -155,9 +155,9 @@ export class EmailService {
     } catch (error) {
       this.logger.error(
         `Failed to send complaint notification to ${to}:`,
-        error,
+        error.message,
       );
-      throw error;
+      // Don't throw - email is non-critical
     }
   }
 
