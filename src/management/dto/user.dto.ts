@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
+import { IsEmail, IsString, IsEnum, IsOptional, IsArray, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 
@@ -25,6 +25,14 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   mssv?: string;
+
+   @ApiProperty({
+    description: 'Khoa hoặc Phòng ban',
+    example: 'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH',
+  })
+  @IsString()
+  @IsNotEmpty()
+  department: string;
 
   @ApiProperty({
     description: 'Vai trò của người dùng',

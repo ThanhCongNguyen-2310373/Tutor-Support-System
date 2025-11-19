@@ -23,6 +23,9 @@ model User {
   password  String?
   avatarUrl String?  // URL ảnh đại diện (Cloudinary)
   createdAt DateTime @default(now())
+  department String
+  phoneNumber  String?
+  studentClass String?
 
   // Quan hệ 1-1: Nếu role là TUTOR, sẽ có profile ở đây
   tutorProfile TutorProfile?

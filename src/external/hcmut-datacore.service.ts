@@ -1,276 +1,150 @@
-// src/external/hcmut-datacore.service.ts
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../core/prisma.service';
 import { SyncUserDto } from './dto/sync-user.dto';
 import { Role } from '@prisma/client';
 
-/**
- * Service tích hợp với HCMUT_DATACORE để đồng bộ dữ liệu người dùng
- * 
- * HCMUT_DATACORE là hệ thống dữ liệu tập trung của trường
- * Chứa thông tin đầy đủ về:
- * - Sinh viên: MSSV, họ tên, khoa, ngành, lớp, trạng thái học tập
- * - Giảng viên: Mã CB, họ tên, khoa, bộ môn, chức danh
- * - Cán bộ: Mã CB, họ tên, phòng ban, chức vụ
- * 
- * Hiện tại: MOCK implementation để development
- * Production: Sẽ gọi API thật của HCMUT_DATACORE
- */
 @Injectable()
 export class HcmutDatacoreService {
   private readonly logger = new Logger(HcmutDatacoreService.name);
-  private readonly datacoreUrl: string;
-  private readonly datacoreApiKey: string;
 
-  constructor(private configService: ConfigService) {
-    this.datacoreUrl = this.configService.get<string>('HCMUT_DATACORE_URL') || 'https://datacore.hcmut.edu.vn/api';
-    this.datacoreApiKey = this.configService.get<string>('HCMUT_DATACORE_API_KEY') || 'mock_api_key';
-  }
+  constructor(private prisma: PrismaService) {}
+
+  // =================================================================
+  // 1. REAL DB OPERATIONS (Used for Login & Controller Sync)
+  // =================================================================
 
   /**
-   * Đồng bộ thông tin 1 user từ DATACORE
-   * 
-   * @param userId - MSSV hoặc Mã cán bộ
-   * @returns Thông tin user đầy đủ
+   * Fetch user details from Local DB
    */
-  async syncUserData(userId: string): Promise<SyncUserDto> {
-    this.logger.log(`🔄 [HCMUT_DATACORE] Syncing user data: ${userId}`);
+  async syncUserData(identifier: string): Promise<SyncUserDto> {
+    this.logger.log(`[HCMUT_DATACORE] Fetching profile for: ${identifier}`);
 
-    try {
-      // TODO: Production - Gọi API thật
-      // const response = await this.httpService.get(`${this.datacoreUrl}/users/${userId}`, {
-      //   headers: {
-      //     'X-API-Key': this.datacoreApiKey
-      //   }
-      // }).toPromise();
-      // return this.transformDatacoreResponse(response.data);
+    const user = await this.findUserByIdentifier(identifier);
 
-      // MOCK: Giả lập response từ DATACORE
-      return this.mockGetUserData(userId);
-    } catch (error) {
-      this.logger.error(`❌ [HCMUT_DATACORE] Sync failed for ${userId}:`, error.message);
-      throw error;
+    if (!user) {
+      throw new NotFoundException('User profile not found in system');
     }
+
+    return this.mapUserToDto(user);
   }
 
-  /**
-   * Đồng bộ hàng loạt users (dùng cho migration hoặc scheduled job)
-   * 
-   * @param userIds - Danh sách MSSV/Mã CB
-   * @returns Danh sách user data
-   */
   async bulkSyncUsers(userIds: string[]): Promise<SyncUserDto[]> {
-    this.logger.log(`🔄 [HCMUT_DATACORE] Bulk syncing ${userIds.length} users`);
-
-    try {
-      // TODO: Production - Gọi API bulk sync
-      // const response = await this.httpService.post(`${this.datacoreUrl}/users/bulk`, {
-      //   userIds,
-      //   apiKey: this.datacoreApiKey
-      // }).toPromise();
-      // return response.data.map(this.transformDatacoreResponse);
-
-      // MOCK: Sync từng user
-      const results = await Promise.all(
-        userIds.map(userId => this.mockGetUserData(userId))
-      );
-
-      this.logger.log(`✅ [HCMUT_DATACORE] Bulk sync completed: ${results.length} users`);
-      return results;
-    } catch (error) {
-      this.logger.error(`❌ [HCMUT_DATACORE] Bulk sync failed:`, error.message);
-      throw error;
-    }
+    const users = await this.prisma.user.findMany({
+      where: {
+        OR: [{ mssv: { in: userIds } }, { email: { in: userIds } }],
+      },
+    });
+    return users.map((user) => this.mapUserToDto(user));
   }
 
-  /**
-   * Lấy danh sách sinh viên theo khoa
-   * 
-   * @param department - Mã khoa (CSE, EE, ME, etc.)
-   * @returns Danh sách sinh viên
-   */
   async getStudentsByDepartment(department: string): Promise<SyncUserDto[]> {
-    this.logger.log(`📚 [HCMUT_DATACORE] Getting students from department: ${department}`);
-
-    try {
-      // TODO: Production - Gọi API thật
-      // const response = await this.httpService.get(`${this.datacoreUrl}/students`, {
-      //   params: { department },
-      //   headers: { 'X-API-Key': this.datacoreApiKey }
-      // }).toPromise();
-      // return response.data.map(this.transformDatacoreResponse);
-
-      // MOCK: Trả về danh sách mock
-      return this.mockGetStudentsByDepartment(department);
-    } catch (error) {
-      this.logger.error(`❌ [HCMUT_DATACORE] Failed to get students:`, error.message);
-      throw error;
-    }
+    const students = await this.prisma.user.findMany({
+      where: { role: Role.STUDENT, department: { contains: department, mode: 'insensitive' } },
+    });
+    return students.map((user) => this.mapUserToDto(user));
   }
 
-  /**
-   * Lấy danh sách giảng viên theo bộ môn
-   * 
-   * @param department - Mã bộ môn
-   * @returns Danh sách giảng viên
-   */
   async getTutorsByDepartment(department: string): Promise<SyncUserDto[]> {
-    this.logger.log(`👨‍🏫 [HCMUT_DATACORE] Getting tutors from department: ${department}`);
-
-    try {
-      // TODO: Production - Gọi API thật
-      // const response = await this.httpService.get(`${this.datacoreUrl}/tutors`, {
-      //   params: { department },
-      //   headers: { 'X-API-Key': this.datacoreApiKey }
-      // }).toPromise();
-      // return response.data.map(this.transformDatacoreResponse);
-
-      // MOCK: Trả về danh sách mock
-      return this.mockGetTutorsByDepartment(department);
-    } catch (error) {
-      this.logger.error(`❌ [HCMUT_DATACORE] Failed to get tutors:`, error.message);
-      throw error;
-    }
+    const tutors = await this.prisma.user.findMany({
+      where: { role: Role.TUTOR, department: { contains: department, mode: 'insensitive' } },
+    });
+    return tutors.map((user) => this.mapUserToDto(user));
   }
+
+  async checkUserStatus(userId: string): Promise<string> {
+    const user = await this.findUserByIdentifier(userId);
+    return user ? 'Active' : 'Unknown';
+  }
+
+  async healthCheck() {
+    return { status: 'healthy', mode: 'local-db-backed' };
+  }
+
+  // =================================================================
+  // 2. MOCK GENERATION (Used for Registration Simulation)
+  // =================================================================
 
   /**
-   * Kiểm tra trạng thái học tập/giảng dạy
-   * 
-   * @param userId - MSSV/Mã CB
-   * @returns Trạng thái (active, suspended, graduated, etc.)
+   * Generate profile from "Existing External System"
    */
-  async checkUserStatus(userId: string): Promise<string> {
-    this.logger.log(`🔍 [HCMUT_DATACORE] Checking status for: ${userId}`);
+  getMockProfile(email: string): SyncUserDto {
+    this.logger.log(`🎲 [HCMUT_DATACORE] Generating mock profile for: ${email}`);
 
-    try {
-      // TODO: Production - Gọi API thật
-      // const response = await this.httpService.get(`${this.datacoreUrl}/users/${userId}/status`, {
-      //   headers: { 'X-API-Key': this.datacoreApiKey }
-      // }).toPromise();
-      // return response.data.status;
-
-      // MOCK: Trả về status
-      return 'active';
-    } catch (error) {
-      this.logger.error(`❌ [HCMUT_DATACORE] Failed to check status:`, error.message);
-      throw error;
-    }
-  }
-
-  // ==================== MOCK METHODS (Development only) ====================
-
-  private mockGetUserData(userId: string): SyncUserDto {
-    // Determine role based on userId pattern
-    let role: Role = Role.STUDENT;
-    let department = 'Computer Science & Engineering';
-    let status = 'active';
-
-    if (userId.startsWith('GV') || (userId.startsWith('TUTOR'))) {
-      role = Role.TUTOR;
-      department = 'Software Engineering Department';
-      status = 'teaching';
-    } else if (userId.startsWith('ADMIN')) {
-      role = Role.ADMIN;
-      department = 'IT Administration';
-      status = 'working';
-    } else if (userId.startsWith('COORD')) {
-      role = Role.COORDINATOR;
-      department = 'Academic Affairs';
-      status = 'working';
-    }
-
-    const userData: SyncUserDto = {
-      userId,
-      email: `${userId.toLowerCase()}@hcmut.edu.vn`,
-      fullName: this.generateMockName(userId),
-      department,
-      role,
-      status,
+    const namePart = email.split('@')[0];
+    const role = this.inferRoleFromEmail(email);
+    
+    return {
+      userId: this.generateMockMSSV(role),
+      email: email,
+      fullName: this.generateMockName(namePart),
+      role: role,
+      department: this.getRandomDepartment(),
+      status: 'Active',
       phoneNumber: this.generateMockPhone(),
-      studentClass: role === Role.STUDENT ? 'CC01' : undefined,
+      studentClass: role === Role.STUDENT ? this.generateMockClass() : null,
     };
-
-    this.logger.log(`✅ [HCMUT_DATACORE MOCK] User data synced for ${userId}`);
-    return userData;
   }
 
-  private mockGetStudentsByDepartment(department: string): SyncUserDto[] {
-    // MOCK: Trả về 5 sinh viên mẫu
-    const students: SyncUserDto[] = [];
-    for (let i = 1; i <= 5; i++) {
-      const mssv = `2${i.toString().padStart(6, '0')}`;
-      students.push({
-        userId: mssv,
-        email: `${mssv}@hcmut.edu.vn`,
-        fullName: this.generateMockName(mssv),
-        department,
-        role: Role.STUDENT,
-        status: 'active',
-        studentClass: `CC0${i}`,
-      });
+  // --- Helpers ---
+
+  private async findUserByIdentifier(identifier: string) {
+    let user = await this.prisma.user.findFirst({
+      where: { OR: [{ mssv: identifier }, { email: identifier }] },
+    });
+    if (!user && !isNaN(Number(identifier))) {
+      user = await this.prisma.user.findUnique({ where: { id: Number(identifier) } });
     }
-
-    this.logger.log(`✅ [HCMUT_DATACORE MOCK] Found ${students.length} students in ${department}`);
-    return students;
+    return user;
   }
 
-  private mockGetTutorsByDepartment(department: string): SyncUserDto[] {
-    // MOCK: Trả về 3 giảng viên mẫu
-    const tutors: SyncUserDto[] = [];
-    for (let i = 1; i <= 3; i++) {
-      const maCB = `GV${i.toString().padStart(5, '0')}`;
-      tutors.push({
-        userId: maCB,
-        email: `${maCB.toLowerCase()}@hcmut.edu.vn`,
-        fullName: this.generateMockName(maCB),
-        department,
-        role: Role.TUTOR,
-        status: 'teaching',
-        phoneNumber: this.generateMockPhone(),
-      });
-    }
-
-    this.logger.log(`✅ [HCMUT_DATACORE MOCK] Found ${tutors.length} tutors in ${department}`);
-    return tutors;
+  private mapUserToDto(user: any): SyncUserDto {
+    return {
+      userId: user.mssv || user.id.toString(),
+      email: user.email,
+      fullName: user.fullName,
+      department: user.department || 'N/A',
+      role: user.role,
+      status: 'Active',
+      phoneNumber: user.phoneNumber || '',
+      studentClass: user.studentClass || '',
+    };
   }
 
-  private generateMockName(userId: string): string {
-    const surnames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Võ', 'Đặng', 'Bùi', 'Đỗ'];
-    const midNames = ['Văn', 'Thị', 'Hữu', 'Đức', 'Minh', 'Anh', 'Hoàng', 'Thanh', 'Thu'];
-    const names = ['An', 'Bình', 'Cường', 'Dũng', 'Hải', 'Khoa', 'Long', 'Nam', 'Phong', 'Quân', 'Trang', 'Linh'];
+  private inferRoleFromEmail(email: string): Role {
+    const prefix = email.split('@')[0].toLowerCase();
+    if (prefix.startsWith('gv') || prefix.includes('tutor')) return Role.TUTOR;
+    if (prefix.startsWith('admin')) return Role.ADMIN;
+    if (prefix.startsWith('coord')) return Role.COORDINATOR;
+    if (prefix.startsWith('tbm')) return Role.TBM;
+    return Role.STUDENT;
+  }
 
-    const seed = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const randomSurname = surnames[seed % surnames.length];
-    const randomMidName = midNames[(seed + 1) % midNames.length];
-    const randomName = names[(seed + 2) % names.length];
+  private generateMockMSSV(role: Role): string {
+    const randomNum = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    const prefix = role === Role.STUDENT ? '21' : role === Role.TUTOR ? 'GV' : 'NV';
+    return `${prefix}${randomNum}`;
+  }
 
-    return `${randomSurname} ${randomMidName} ${randomName}`;
+  private generateMockName(seed: string): string {
+    const surnames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng'];
+    const middles = ['Văn', 'Thị', 'Hữu', 'Minh', 'Gia', 'Thanh', 'Quốc', 'Duy'];
+    const names = ['An', 'Bình', 'Cường', 'Dũng', 'Giang', 'Hà', 'Khánh', 'Linh', 'Minh', 'Nam', 'Thảo'];
+    const r = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+    return `${r(surnames)} ${r(middles)} ${r(names)}`;
+  }
+
+  private getRandomDepartment(): string {
+    const depts = ['KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH', 'KHOA ĐIỆN - ĐIỆN TỬ', 'KHOA CƠ KHÍ', 'KHOA KỸ THUẬT HÓA HỌC'];
+    return depts[Math.floor(Math.random() * depts.length)];
   }
 
   private generateMockPhone(): string {
-    const prefix = ['090', '091', '093', '094', '096', '097', '098'];
-    const randomPrefix = prefix[Math.floor(Math.random() * prefix.length)];
-    const randomNumber = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
-    return `${randomPrefix}${randomNumber}`;
+    const prefixes = ['090', '091', '098', '097', '089'];
+    return `${prefixes[Math.floor(Math.random() * prefixes.length)]}${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`;
   }
 
-  /**
-   * Health check - Kiểm tra DATACORE service có hoạt động không
-   */
-  async healthCheck(): Promise<{ status: string; message: string }> {
-    try {
-      // TODO: Production - Ping DATACORE API
-      // await this.httpService.get(`${this.datacoreUrl}/health`).toPromise();
-
-      return {
-        status: 'healthy',
-        message: 'HCMUT_DATACORE service is available (MOCK)'
-      };
-    } catch (error) {
-      return {
-        status: 'unhealthy',
-        message: 'HCMUT_DATACORE service is unavailable'
-      };
-    }
+  private generateMockClass(): string {
+    const prefixes = ['CC', 'CK', 'DD', 'MT'];
+    return `${prefixes[Math.floor(Math.random() * prefixes.length)]}${20 + Math.floor(Math.random() * 4)}MB`;
   }
 }

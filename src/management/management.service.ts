@@ -345,6 +345,7 @@ export class ManagementService {
           email: dto.email,
           fullName: dto.fullName,
           mssv: dto.mssv,
+          department: dto.department,
           role: dto.role,
         },
       });
