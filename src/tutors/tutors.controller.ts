@@ -139,30 +139,6 @@ export class TutorsController {
     return this.meetingsService.confirmBooking(req.user.id, id);
   }
 
-
-
-
-//###############################
-//## Tutor Reject booking api ###
-//###############################
-  @Patch('bookings/:id/reject')
-  @Roles(Role.TUTOR)
-  @ApiOperation({ summary: 'Tutor từ chối booking' })
-  @ApiResponse({ status: 200, description: 'Từ chối thành công' })
-  @ApiResponse({ status: 400, description: 'Chỉ có thể reject booking PENDING' })
-  @ApiResponse({ status: 403, description: 'Không có quyền reject booking này' })
-  @ApiResponse({ status: 404, description: 'Booking không tồn tại' })
-  async rejectBooking(
-    @Request() req,
-    @Param('id', ParseIntPipe) id: number,
-    @Body('reason') reason?: string,
-  ) {
-    return this.meetingsService.rejectBooking(req.user.id, id, reason);
-  }
-
-
-
-
 //#######################################
 //## Tutor Create progress record api ###
 //#######################################
