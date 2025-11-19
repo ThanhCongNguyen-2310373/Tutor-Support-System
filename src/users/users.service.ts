@@ -136,4 +136,36 @@ export class UsersService {
       data: { avatarUrl: null },
     });
   }
+  
+  // Fetch student progress list
+  async getMyProgress(userId: number) {
+    // Kiểm tra user có tồn tại không (optional, vì qua Guard đã check token rồi)
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    const progressRecords = await this.prisma.progressRecord.findMany({
+      where: {
+        studentId: userId,
+      },
+      include: {
+        tutor: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return progressRecords;
+  }
+
 }
