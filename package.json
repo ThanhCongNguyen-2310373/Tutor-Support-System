@@ -30,7 +30,9 @@
     "@nestjs/jwt": "^10.1.0",
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.4.20",
+    "@nestjs/platform-socket.io": "^10.4.20",
     "@nestjs/swagger": "^7.1.0",
+    "@nestjs/websockets": "^10.4.20",
     "@prisma/client": "^5.5.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
@@ -43,6 +45,7 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1",
     "streamifier": "^0.1.1"
   },
   "devDependencies": {
