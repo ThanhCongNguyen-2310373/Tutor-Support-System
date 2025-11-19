@@ -3,6 +3,28 @@ import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+// Danh sách các khoa
+const faculties = [
+  'KHOA CƠ KHÍ',
+  'KHOA KỸ THUẬT ĐỊA CHẤT VÀ DẦU KHÍ',
+  'KHOA ĐIỆN - ĐIỆN TỬ',
+  'KHOA KỸ THUẬT GIAO THÔNG',
+  'KHOA KỸ THUẬT HÓA HỌC',
+  'KHOA MÔI TRƯỜNG VÀ TÀI NGUYÊN',
+  'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH',
+  'KHOA QUẢN LÝ CÔNG NGHIỆP',
+  'KHOA KHOA HỌC ỨNG DỤNG',
+  'KHOA CÔNG NGHỆ VẬT LIỆU',
+  'KHOA KỸ THUẬT XÂY DỰNG',
+];
+
+const adminDepartment = 'BAN QUẢN TRỊ';
+
+// Hàm lấy ngẫu nhiên 1 khoa
+function getRandomFaculty() {
+  return faculties[Math.floor(Math.random() * faculties.length)];
+}
+
 async function main() {
   console.log('🌱 Starting database seeding...');
 
@@ -16,6 +38,7 @@ async function main() {
       fullName: 'System Administrator',
       mssv: 'ADMIN001',
       role: Role.ADMIN,
+      department: adminDepartment, // ✅ Admin thuộc Ban Quản Trị
     },
   });
   console.log('✅ Created Admin:', admin.email);
@@ -30,20 +53,22 @@ async function main() {
       fullName: 'Đinh Văn Điều Phối',
       mssv: 'COORD001',
       role: Role.COORDINATOR,
+      department: adminDepartment, // ✅ Coordinator thuộc Ban Quản Trị
     },
   });
   console.log('✅ Created Coordinator:', coordinator.email);
 
-  // create TBM
+  // Create TBM (Trưởng Bộ Môn)
   const tbm = await prisma.user.upsert({
     where: { email: 'tbm@hcmut.edu.vn' },
     update: {},
     create: {
-      email: 'tbm1@hcmut.edu.vn',
+      email: 'tbm@hcmut.edu.vn',
       password: await bcrypt.hash('tbm123', 10),
       fullName: 'Quản Thành Thơ',
       mssv: 'TBM001',
       role: Role.TBM,
+      department: 'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH', // ✅ Ví dụ TBM thuộc khoa Máy Tính
     },
   });
   console.log('✅ Created TBM:', tbm.email);
@@ -60,6 +85,7 @@ async function main() {
         fullName: `Giảng viên ${i}`,
         mssv: `TUTOR00${i}`,
         role: Role.TUTOR,
+        department: getRandomFaculty(), // ✅ Tutor thuộc 1 khoa ngẫu nhiên
       },
     });
 
@@ -75,7 +101,7 @@ async function main() {
     });
 
     tutors.push({ user: tutor, profile: tutorProfile });
-    console.log(`✅ Created Tutor ${i}:`, tutor.email);
+    console.log(`✅ Created Tutor ${i}:`, tutor.email, `(${tutor.department})`);
   }
 
   // 4. Create 10 Students
@@ -90,10 +116,11 @@ async function main() {
         fullName: `Sinh viên ${i}`,
         mssv: `211234${i.toString().padStart(2, '0')}`,
         role: Role.STUDENT,
+        department: getRandomFaculty(), // ✅ Student thuộc 1 khoa ngẫu nhiên
       },
     });
     students.push(student);
-    console.log(`✅ Created Student ${i}:`, student.email);
+    console.log(`✅ Created Student ${i}:`, student.email, `(${student.department})`);
   }
 
   // 5. Create Availability Slots for Tutors (next 7 days)
@@ -191,7 +218,7 @@ async function main() {
     await prisma.tutorApplication.create({
       data: {
         studentId: students[i].id,
-        tbmId: tbm.id,
+        tbmId: tbm.id, // Fix: Added tbmId which is required
         status: TutorApplicationStatus.PENDING,
       },
     });
