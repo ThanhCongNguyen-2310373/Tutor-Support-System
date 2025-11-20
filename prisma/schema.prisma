@@ -26,6 +26,7 @@ model User {
   department String
   phoneNumber  String?
   studentClass String?
+  gpa          Float?
 
   // Quan hệ 1-1: Nếu role là TUTOR, sẽ có profile ở đây
   tutorProfile TutorProfile?
@@ -88,6 +89,8 @@ model AvailabilitySlot {
   startTime DateTime
   endTime   DateTime
   isBooked  Boolean  @default(false)
+  //NEW: Số lượng sinh viên tối đa (Hỗ trợ lớp nhóm)
+  maxStudents Int      @default(1)
 
   tutor   TutorProfile @relation(fields: [tutorId], references: [id])
   tutorId Int
@@ -104,9 +107,8 @@ model Meeting {
   status    MeetingStatus @default(PENDING)
   topic     String?       // Chủ đề buổi hẹn
 
-  // Quan hệ N-1 với Student
-  student   User   @relation("StudentMeetings", fields: [studentId], references: [id])
-  studentId Int
+  // UPDATED: Một buổi học có thể có nhiều sinh viên 
+  students  User[]        @relation("StudentMeetings")
 
   // Quan hệ N-1 với Tutor
   tutor     TutorProfile @relation("TutorMeetings", fields: [tutorId], references: [id])
@@ -116,8 +118,8 @@ model Meeting {
   slot      AvailabilitySlot @relation(fields: [slotId], references: [id])
   slotId    Int              @unique
 
-  // Quan hệ 1-1 với Đánh giá
-  rating     Rating?
+  // Quan hệ 1-N với Đánh giá
+  ratings Rating[]
   // Quan hệ 1-N với Khiếu nại
   complaints Complaint[]
 }
@@ -141,7 +143,10 @@ model Rating {
 
   // Quan hệ 1-1 ngược lại
   meeting   Meeting @relation(fields: [meetingId], references: [id])
-  meetingId Int     @unique
+  meetingId Int     
+
+  //THÊM: Ràng buộc mỗi sinh viên chỉ đánh giá 1 lần cho 1 meeting
+  @@unique([studentId, meetingId])
 }
 
 // (UC_TUT_03) Theo dõi tiến độ
@@ -203,6 +208,7 @@ model TutorApplication {
   // New fields for application details
   bio       String
   expertise String[]
+  gpa       Float
 
   // Student được đề cử
   student   User @relation("StudentApplications", fields: [studentId], references: [id])

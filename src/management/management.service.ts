@@ -67,7 +67,8 @@ export class ManagementService {
       // Create meeting with CONFIRMED status
       const newMeeting = await prisma.meeting.create({
         data: {
-          studentId: dto.studentId,
+          // FIX: Use 'students' connect instead of 'studentId'
+          students: { connect: { id: dto.studentId } },
           tutorId: dto.tutorId,
           slotId: dto.slotId,
           startTime: slot.startTime,
@@ -76,7 +77,8 @@ export class ManagementService {
           topic: 'Ghép cặp bởi Coordinator',
         },
         include: {
-          student: true,
+          // FIX: 'student' -> 'students'
+          students: true,
           tutor: { include: { user: true } },
         },
       });
@@ -110,18 +112,23 @@ export class ManagementService {
 //## UC_COO_02: Student create complaint ###
 //##########################################
   async createComplaint(userId: number, role: Role, dto: CreateComplaintDto) {
-	if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền complaint meeting này'); }
+    if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền complaint meeting này'); }
+    
     // Check meeting if provided
     if (dto.meetingId) {
       const meeting = await this.prisma.meeting.findUnique({
         where: { id: dto.meetingId },
+        // FIX: Include students to verify participation
+        include: { students: true }
       });
 
       if (!meeting) {
         throw new NotFoundException('Meeting không tồn tại');
       }
 
-      if (meeting.studentId !== userId) {
+      // FIX: Check if user is in the students list
+      const isParticipant = meeting.students.some(s => s.id === userId);
+      if (!isParticipant) {
         throw new ForbiddenException('Không có quyền khiếu nại meeting này');
       }
     }
