@@ -26,16 +26,6 @@ import { EmailController } from './email.controller';
         defaults: {
           from: configService.get<string>('EMAIL_FROM'),
         },
-        template: {
-          dir: join(__dirname, '..', '..', 'templates', 'emails'),
-          adapter: new HandlebarsAdapter({
-            // Register custom helpers
-            eq: (a: any, b: any) => a === b,
-          }),
-          options: {
-            strict: true,
-          },
-        },
       }),
     }),
   ],
