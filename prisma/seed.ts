@@ -65,6 +65,7 @@ async function main() {
       role: Role.ADMIN,
       department: ADMIN_DEPT,
       phoneNumber: generatePhone(),
+
     },
   });
 
@@ -89,6 +90,7 @@ async function main() {
       role: Role.TBM,
       department: 'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH',
       phoneNumber: generatePhone(),
+
     },
   });
 
@@ -103,8 +105,11 @@ async function main() {
     // MSSV số: 21xxxxx
     const mssv = `21${Math.floor(10000 + Math.random() * 90000)}`; 
     
-    const s = await prisma.user.create({
-      data: {
+    // Dùng upsert để không lỗi nếu chạy lại
+    const s = await prisma.user.upsert({
+      where: { email: `student${i}@hcmut.edu.vn` },
+      update: {},
+      create: {
         email: `student${i}@hcmut.edu.vn`,
         password: hashedPassword,
         fullName: `Sinh viên ${i}`,
@@ -112,7 +117,7 @@ async function main() {
         role: Role.STUDENT,
         department: dept,
         phoneNumber: generatePhone(),
-        studentClass: 'CC21MB',
+        studentClass: `CC${20 + Math.floor(i / 10)}MB`,
         gpa: generateGPA(),
       },
     });
@@ -125,60 +130,51 @@ async function main() {
   console.log('Creating Tutors...');
   const tutors = [];
 
-  // A. Student Tutors (Sinh viên giỏi làm Tutor) - 10 người
-  // MSSV là số
-  for (let i = 1; i <= 10; i++) {
-    const mssv = `19${Math.floor(10000 + Math.random() * 90000)}`;
+  // --- PHẦN A: 5 Tutor Cụ Thể (Từ main - Để test AI) ---
+  const tutorData = [
+    { email: 'tutor1@hcmut.edu.vn', name: 'TS. Nguyễn Văn A', mssv: 'TUTOR001', phone: '0904567890', dept: 'KHOA KHOA HỌC ỨNG DỤNG', expertise: ['Giải Tích 1', 'Giải Tích 2', 'Toán Cao Cấp A1', 'Giải Tích Hàm'], bio: 'Giảng viên khoa Toán - Tin, chuyên Giải Tích.', rating: 4.8 },
+    { email: 'tutor2@hcmut.edu.vn', name: 'ThS. Trần Thị B', mssv: 'TUTOR002', phone: '0905678901', dept: 'KHOA KHOA HỌC ỨNG DỤNG', expertise: ['Đại Số Tuyến Tính', 'Đại Số Đại Cương', 'Toán Rời Rạc'], bio: 'Chuyên gia Đại Số Tuyến Tính.', rating: 4.5 },
+    { email: 'tutor3@hcmut.edu.vn', name: 'ThS. Lê Văn C', mssv: 'TUTOR003', phone: '0906789012', dept: 'KHOA KHOA HỌC ỨNG DỤNG', expertise: ['Giải Tích 1', 'Đại Số Tuyến Tính', 'Vật Lý Đại Cương 1', 'Xác Suất Thống Kê'], bio: 'Tutor đa năng, kinh nghiệm 5 năm.', rating: 4.9 },
+    { email: 'tutor4@hcmut.edu.vn', name: 'Phạm Thị D', mssv: 'TUTOR004', phone: '0907890123', dept: 'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH', expertise: ['Giải Tích 1', 'Toán Cao Cấp A1'], bio: 'Sinh viên năm 4, nhiệt tình.', rating: 3.2 },
+    { email: 'tutor5@hcmut.edu.vn', name: 'PGS. Hoàng Văn E', mssv: 'TUTOR005', phone: '0908901234', dept: 'KHOA KHOA HỌC ỨNG DỤNG', expertise: ['Vật Lý Đại Cương 1', 'Vật Lý Đại Cương 2', 'Cơ Học Lượng Tử'], bio: 'Phó Giáo sư khoa Vật Lý Kỹ Thuật.', rating: 4.7 }
+  ];
+
+  for (const t of tutorData) {
+    const user = await prisma.user.upsert({
+      where: { email: t.email },
+      update: {},
+      create: {
+        email: t.email, password: hashedPassword, fullName: t.name, mssv: t.mssv, role: Role.TUTOR, department: t.dept, phoneNumber: t.phone
+      }
+    });
+    const profile = await prisma.tutorProfile.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: { userId: user.id, bio: t.bio, expertise: t.expertise, averageRating: t.rating, available: true }
+    });
+    tutors.push({ user, profile });
+  }
+
+  // --- PHẦN B: Random Tutors (Từ group-meeting-logic - Để tăng số lượng) ---
+  for (let i = 1; i <= 5; i++) {
     const user = await prisma.user.create({
       data: {
         email: `sv.tutor${i}@hcmut.edu.vn`,
         password: hashedPassword,
         fullName: `Nguyễn Văn Tutor SV ${i}`,
-        mssv: mssv,
+        mssv: `19${Math.floor(10000 + Math.random() * 90000)}`,
         role: Role.TUTOR,
         department: getRandomItem(FACULTIES),
         phoneNumber: generatePhone(),
-        studentClass: 'CK19KSTN',
-        gpa: 3.6 + Math.random() * 0.4, // GPA cao
       },
     });
-
     const profile = await prisma.tutorProfile.create({
       data: {
         userId: user.id,
-        bio: 'Sinh viên năm cuối, GPA xuất sắc, nhiệt tình hỗ trợ.',
+        bio: 'Sinh viên giỏi, hỗ trợ nhiệt tình.',
         expertise: getRandomItems([...SUBJECTS.GEN, ...SUBJECTS.IT], 3),
         available: true,
-        averageRating: 4.5,
-      }
-    });
-    tutors.push({ user, profile });
-  }
-
-  // B. Lecturer Tutors (Giảng viên) - 5 người
-  // MSSV bắt đầu bằng 'GV'
-  for (let i = 1; i <= 5; i++) {
-    const mssv = `GV${Math.floor(1000 + Math.random() * 9000)}`;
-    const user = await prisma.user.create({
-      data: {
-        email: `gv.tutor${i}@hcmut.edu.vn`,
-        password: hashedPassword,
-        fullName: `TS. Trần Giảng Viên ${i}`,
-        mssv: mssv,
-        role: Role.TUTOR,
-        department: 'KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH',
-        phoneNumber: generatePhone(),
-        // Không có gpa, studentClass
-      },
-    });
-
-    const profile = await prisma.tutorProfile.create({
-      data: {
-        userId: user.id,
-        bio: 'Tiến sĩ, 15 năm kinh nghiệm giảng dạy và nghiên cứu.',
-        expertise: getRandomItems(SUBJECTS.IT, 4),
-        available: true,
-        averageRating: 5.0,
+        averageRating: 4.0 + Math.random(),
       }
     });
     tutors.push({ user, profile });
@@ -197,6 +193,7 @@ async function main() {
         role: Role.TUTOR,
         department: 'KHOA ĐIỆN - ĐIỆN TỬ',
         phoneNumber: generatePhone(),
+
       },
     });
 
