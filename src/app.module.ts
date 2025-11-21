@@ -14,6 +14,7 @@ import { ExternalModule } from './external/external.module';
 import { UploadModule } from './upload/upload.module';
 import { EmailModule } from './email/email.module';
 import { AIModule } from './ai/ai.module';
+import { ReportingModule } from './reporting/report.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AIModule } from './ai/ai.module';
     NotificationsModule,
     UploadModule,
     EmailModule,
+    ReportingModule,
     
     // AI Features (Matching, Chatbot, Content Gen)
     AIModule,
