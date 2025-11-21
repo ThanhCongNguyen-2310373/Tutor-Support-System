@@ -59,27 +59,41 @@ export class EmailService {
     private readonly configService: ConfigService,
   ) {}
 
-  /**
-   * 1. Welcome Email - Gửi khi user đăng ký hoặc được tạo
-   */
-  async sendWelcomeEmail(to: string, data: WelcomeEmailData): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to,
-        subject: '🎓 Chào mừng đến với HCMUT Tutor Support System',
-        template: 'welcome',
-        context: data,
-      });
-      this.logger.log(`Welcome email sent to ${to}`);
-    } catch (error) {
-      this.logger.error(`Failed to send welcome email to ${to}:`, error.message);
-      // Don't throw - email is non-critical, don't block registration
-    }
-  }
 
-  /**
-   * 2. Meeting Confirmation - Gửi khi Tutor confirm booking
-   */
+
+
+//############################################################
+//## 1. Welcome Email - Gửi khi user đăng ký hoặc được tạo ###
+//############################################################
+	async sendWelcomeEmail(to: string, data: WelcomeEmailData): Promise<void> {
+	  try {
+		await this.mailerService.sendMail({
+		  to,
+		  subject: '🎓 Chào mừng đến với HCMUT Tutor Support System',
+		  html: `
+		    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+		      <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px;">
+		        <h1 style="color: #667eea;">Chào mừng ${data.fullName}!</h1>
+		        <p>Email: <strong>${data.email}</strong></p>
+		        <p>Vai trò: <strong>${data.role}</strong></p>
+		        <p>MSSV: <strong>${data.mssv}</strong></p>
+		        <p style="margin-top: 20px; color: #666;">Cảm ơn bạn đã tham gia hệ thống!</p>
+		      </div>
+		    </div>
+		  `,
+		});
+		this.logger.log(`Welcome email sent to ${to}`);
+	  } catch (error) {
+		this.logger.error(`Failed to send welcome email to ${to}:`, error.message);
+	  }
+	}
+
+
+
+  
+//##############################################################
+//## 2. Meeting Confirmation - Gửi khi Tutor confirm booking ###
+//##############################################################
   async sendMeetingConfirmation(
     to: string,
     data: MeetingConfirmationData,
@@ -98,9 +112,12 @@ export class EmailService {
     }
   }
 
-  /**
-   * 3. Meeting Reminder - Gửi 24h trước buổi hẹn
-   */
+
+  
+
+//####################################################
+//##  3. Meeting Reminder - Gửi 24h trước buổi hẹn ###
+//####################################################
   async sendMeetingReminder(
     to: string,
     data: MeetingReminderData,
@@ -119,9 +136,12 @@ export class EmailService {
     }
   }
 
-  /**
-   * 4. Rating Request - Gửi sau khi meeting completed
-   */
+
+
+
+//########################################################
+//## 4. Rating Request - Gửi sau khi meeting completed ###
+//########################################################
   async sendRatingRequest(to: string, data: RatingRequestData): Promise<void> {
     try {
       await this.mailerService.sendMail({
@@ -137,9 +157,12 @@ export class EmailService {
     }
   }
 
-  /**
-   * 5. Complaint Notification - Gửi cho Coordinator khi có khiếu nại mới
-   */
+
+
+
+//###########################################################################
+//## 5. Complaint Notification - Gửi cho Coordinator khi có khiếu nại mới ###
+//###########################################################################
   async sendComplaintNotification(
     to: string,
     data: ComplaintNotificationData,
@@ -161,9 +184,12 @@ export class EmailService {
     }
   }
 
-  /**
-   * Test email connection
-   */
+
+
+
+//#############################
+//## Test email connection ###
+//#############################
   async testConnection(): Promise<boolean> {
     try {
       const testEmail = this.configService.get<string>('SMTP_USER');
