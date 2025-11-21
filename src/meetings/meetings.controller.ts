@@ -3,6 +3,7 @@ import {
   Post,
   Get,
   Patch,
+  Put,
   Param,
   Body,
   Query,
@@ -14,6 +15,7 @@ import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@ne
 import { MeetingsService } from './meetings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { CreateRatingDto } from './dto/create-rating.dto';
+import { RescheduleMeetingDto } from './dto/reschedule-meeting.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -132,6 +134,27 @@ export class MeetingsController {
   @ApiResponse({ status: 404, description: 'Meeting không tồn tại' })
   async completeMeeting(@Request() req, @Param('id', ParseIntPipe) id: number){
     return this.meetingsService.completeMeeting(req.user.id, req.user.role, id);
+  }
+
+  // ========================================================
+  // Student đổi lịch học
+  // ========================================================
+  @Put(':id/reschedule')
+  @Roles(Role.STUDENT) // Chỉ sinh viên mới được tự đổi lịch của mình
+  @ApiOperation({ 
+    summary: 'Đổi lịch học (Reschedule)', 
+    description: 'Chuyển sinh viên từ meeting hiện tại sang một slot mới. Yêu cầu slot mới phải cùng Tutor và chưa đầy.' 
+  })
+  @ApiResponse({ status: 200, description: 'Đổi lịch thành công' })
+  @ApiResponse({ status: 400, description: 'Slot mới đã đầy hoặc không hợp lệ' })
+  @ApiResponse({ status: 403, description: 'Không có quyền đổi lịch meeting này' })
+  @ApiResponse({ status: 404, description: 'Meeting hoặc Slot mới không tồn tại' })
+  async rescheduleMeeting(
+    @Request() req,
+    @Param('id', ParseIntPipe) meetingId: number,
+    @Body() dto: RescheduleMeetingDto,
+  ) {
+    return this.meetingsService.rescheduleMeeting(req.user.id, meetingId, dto);
   }
 
 }

@@ -114,90 +114,88 @@ export class MeetingsService {
     // 1. Lấy Meeting cũ và Slot cũ
     const meeting = await this.prisma.meeting.findUnique({
       where: { id: meetingId },
-      include: { 
-        slot: true, 
-        students: true,
-        tutor: { include: { user: true } }
-      }
+      include: { slot: true, students: true, tutor: { include: { user: true } } }
     });
 
     if (!meeting) throw new NotFoundException('Meeting không tồn tại');
 
-    // Check: User có phải là 1 trong các sinh viên của meeting này không?
+    // Check quyền
     const isParticipant = meeting.students.some(s => s.id === userId);
     if (!isParticipant) throw new ForbiddenException('Bạn không tham gia meeting này');
 
-    // 2. Kiểm tra Slot mới
+    // 2. Lấy Slot mới
     const newSlot = await this.prisma.availabilitySlot.findUnique({
       where: { id: dto.newSlotId },
       include: { meeting: { include: { students: true } } }
     });
 
     if (!newSlot) throw new NotFoundException('Slot mới không tồn tại');
-    if (newSlot.tutorId !== meeting.tutorId) throw new BadRequestException('Slot mới phải cùng Tutor');
     
-    // Check Slot mới có còn chỗ không
+    // Validate cơ bản
+    if (newSlot.tutorId !== meeting.tutorId) throw new BadRequestException('Chỉ được đổi sang slot của cùng một Tutor');
     const newSlotCount = newSlot.meeting?.students.length || 0;
     if (newSlot.isBooked || newSlotCount >= newSlot.maxStudents) {
-      throw new BadRequestException('Slot mới đã đầy (Full)');
+      throw new BadRequestException('Slot mới đã đầy');
     }
 
-    // 3. Thực hiện chuyển đổi (Transaction)
-    await this.prisma.$transaction(async (prisma) => {
-      // A. Rời khỏi Meeting cũ
-      await prisma.meeting.update({
-        where: { id: meetingId },
-        data: {
-          students: { disconnect: { id: userId } } // Xóa SV khỏi danh sách
-        }
-      });
-
-      // Update Slot cũ: Vì có 1 người rời đi -> Slot chắc chắn không còn Full -> Mở lại
-      await prisma.availabilitySlot.update({
-        where: { id: meeting.slotId },
-        data: { isBooked: false }
-      });
-      
-      // (Optional) Nếu Meeting cũ không còn ai -> Có thể xóa Meeting hoặc để đó tùy logic
-      // if (meeting.students.length === 1) { await prisma.meeting.delete(...) }
-
-      // B. Tham gia vào Slot mới
-      if (newSlot.meeting) {
-        // Join meeting đã có ở slot mới
-        await prisma.meeting.update({
-          where: { id: newSlot.meeting.id },
-          data: { students: { connect: { id: userId } } }
-        });
-      } else {
-        // Tạo meeting mới ở slot mới
-        await prisma.meeting.create({
-          data: {
-            tutorId: meeting.tutorId,
-            slotId: newSlot.id,
-            startTime: newSlot.startTime,
-            endTime: newSlot.endTime,
-            status: MeetingStatus.PENDING, // Reset status để duyệt lại
-            students: { connect: { id: userId } }
-          }
-        });
-      }
-
-      // Update Slot mới: Nếu đầy -> Đóng slot
-      if (newSlotCount + 1 >= newSlot.maxStudents) {
-        await prisma.availabilitySlot.update({
-          where: { id: newSlot.id },
-          data: { isBooked: true }
-        });
+    // Kiểm tra xem Student có đang bận ở giờ của Slot mới không?
+    const timeConflict = await this.prisma.meeting.findFirst({
+      where: {
+        students: { some: { id: userId } }, // Tìm các meeting CỦA SINH VIÊN NÀY
+        startTime: newSlot.startTime,       // Trùng giờ bắt đầu
+        // (Hoặc logic phức tạp hơn: start < newEnd && end > newStart nếu thời lượng khác nhau)
+        status: { in: ['PENDING', 'CONFIRMED'] }, // Chỉ tính các lớp đang hoạt động
+        id: { not: meetingId }              // Trừ chính cái meeting đang đi đổi
       }
     });
 
-    // Notification
-    await this.notificationsService.createNotification(
-      meeting.tutor.userId,
-      'Thay đổi lịch học',
-      `Một sinh viên đã chuyển lịch sang ${newSlot.startTime.toLocaleString('vi-VN')}`,
-      'low' as any // Fix type casting if needed
-    );
+    if (timeConflict) {
+      throw new BadRequestException(`Bạn đã có lịch học khác vào lúc ${newSlot.startTime.toLocaleString('vi-VN')}`);
+    }
+
+    // 3. Thực hiện chuyển đổi (Transaction giữ nguyên như cũ)
+    await this.prisma.$transaction(async (prisma) => {
+       // ... (Logic remove student cũ, add student mới giữ nguyên) ...
+       
+       // A. Rời meeting cũ
+       await prisma.meeting.update({
+        where: { id: meetingId },
+        data: { students: { disconnect: { id: userId } } }
+       });
+       
+       // Mở lại slot cũ
+       await prisma.availabilitySlot.update({
+        where: { id: meeting.slotId },
+        data: { isBooked: false }
+       });
+
+       // B. Vào meeting mới
+       if (newSlot.meeting) {
+         await prisma.meeting.update({
+           where: { id: newSlot.meeting.id },
+           data: { students: { connect: { id: userId } } }
+         });
+       } else {
+         await prisma.meeting.create({
+           data: {
+             tutorId: meeting.tutorId,
+             slotId: newSlot.id,
+             startTime: newSlot.startTime,
+             endTime: newSlot.endTime,
+             status: MeetingStatus.PENDING,
+             students: { connect: { id: userId } }
+           }
+         });
+       }
+       
+       // Đóng slot mới nếu full
+       if (newSlotCount + 1 >= newSlot.maxStudents) {
+         await prisma.availabilitySlot.update({
+           where: { id: newSlot.id },
+           data: { isBooked: true }
+         });
+       }
+    });
 
     return { message: 'Đổi lịch thành công' };
   }
