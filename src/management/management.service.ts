@@ -13,17 +13,19 @@ export class ManagementService {
     private emailService: EmailService,
   ) {}
 
-
-
+  // src/management/management.service.ts
 
 //###############################################
 //##  UC_COO_01: Coordinator - Manual Pairing ###
 //###############################################
   async manualPair(dto: ManualPairDto) {
-    // Check slot availability
+    // 1. Check slot availability AND fetch existing meeting
     const slot = await this.prisma.availabilitySlot.findUnique({
       where: { id: dto.slotId },
-      include: { tutor: true },
+      include: { 
+        tutor: true,
+        meeting: { include: { students: true } } // Check if meeting exists
+      },
     });
 
     if (!slot) {
@@ -34,11 +36,23 @@ export class ManagementService {
       throw new BadRequestException('Slot không thuộc tutor này');
     }
 
+    // Check if slot is FULL (isBooked = true)
     if (slot.isBooked) {
-      throw new BadRequestException('Slot đã được đặt');
+      throw new BadRequestException('Slot đã được đặt (Full)');
     }
 
-    // Check student and tutor exist
+    // Check capacity manually just in case
+    const currentStudents = slot.meeting?.students || [];
+    if (currentStudents.length >= slot.maxStudents) {
+      throw new BadRequestException('Slot đã đủ số lượng sinh viên tối đa');
+    }
+
+    // Check if student is already in this slot
+    if (currentStudents.some(s => s.id === dto.studentId)) {
+      throw new BadRequestException('Sinh viên đã có trong lớp này rồi');
+    }
+
+    // 2. Check student exist
     const student = await this.prisma.user.findUnique({
       where: { id: dto.studentId },
     });
@@ -56,32 +70,53 @@ export class ManagementService {
       throw new NotFoundException('Tutor không tồn tại');
     }
 
-    // Create meeting (manual override - auto CONFIRMED)
+    // 3. Execute Logic (Create or Update)
     const meeting = await this.prisma.$transaction(async (prisma) => {
-      // Update slot
-      await prisma.availabilitySlot.update({
-        where: { id: dto.slotId },
-        data: { isBooked: true },
-      });
+      let resultMeeting;
 
-      // Create meeting with CONFIRMED status
-      const newMeeting = await prisma.meeting.create({
-        data: {
-          studentId: dto.studentId,
-          tutorId: dto.tutorId,
-          slotId: dto.slotId,
-          startTime: slot.startTime,
-          endTime: slot.endTime,
-          status: 'CONFIRMED', // Manual pair => auto confirmed
-          topic: 'Ghép cặp bởi Coordinator',
-        },
-        include: {
-          student: true,
-          tutor: { include: { user: true } },
-        },
-      });
+      if (slot.meeting) {
+        // CASE A: Meeting exists -> Add student to it
+        resultMeeting = await prisma.meeting.update({
+          where: { id: slot.meeting.id },
+          data: {
+            students: { connect: { id: dto.studentId } },
+            // Ensure status is confirmed if it wasn't
+            status: 'CONFIRMED', 
+          },
+          include: {
+            students: true,
+            tutor: { include: { user: true } },
+          },
+        });
+      } else {
+        // CASE B: No meeting -> Create new one
+        resultMeeting = await prisma.meeting.create({
+          data: {
+            students: { connect: { id: dto.studentId } },
+            tutorId: dto.tutorId,
+            slotId: dto.slotId,
+            startTime: slot.startTime,
+            endTime: slot.endTime,
+            status: 'CONFIRMED', // Manual pair => auto confirmed
+            topic: 'Ghép cặp bởi Coordinator',
+          },
+          include: {
+            students: true,
+            tutor: { include: { user: true } },
+          },
+        });
+      }
 
-      // Notify both student and tutor
+      // 4. Update Slot isBooked if we reached max capacity
+      // (current + 1 because we just added one)
+      if (currentStudents.length + 1 >= slot.maxStudents) {
+        await prisma.availabilitySlot.update({
+          where: { id: dto.slotId },
+          data: { isBooked: true },
+        });
+      }
+
+      // 5. Notify (Only notify the NEW student and the Tutor)
       await prisma.notification.createMany({
         data: [
           {
@@ -91,37 +126,40 @@ export class ManagementService {
           },
           {
             recipientId: tutor.userId,
-            title: 'Đã được ghép cặp với student',
-            message: `Coordinator đã ghép bạn với student ${student.fullName} vào ${slot.startTime.toLocaleString('vi-VN')}`,
+            title: 'Lớp học có thành viên mới',
+            message: `Coordinator đã thêm student ${student.fullName} vào lớp lúc ${slot.startTime.toLocaleString('vi-VN')}`,
           },
         ],
       });
 
-      return newMeeting;
+      return resultMeeting;
     });
 
     return meeting;
   }
 
 
-
-
 //##########################################
 //## UC_COO_02: Student create complaint ###
 //##########################################
   async createComplaint(userId: number, role: Role, dto: CreateComplaintDto) {
-	if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền complaint meeting này'); }
+    if (role !== Role.STUDENT){ throw new ForbiddenException('Bạn không có quyền complaint meeting này'); }
+    
     // Check meeting if provided
     if (dto.meetingId) {
       const meeting = await this.prisma.meeting.findUnique({
         where: { id: dto.meetingId },
+        // FIX: Include students to verify participation
+        include: { students: true }
       });
 
       if (!meeting) {
         throw new NotFoundException('Meeting không tồn tại');
       }
 
-      if (meeting.studentId !== userId) {
+      // FIX: Check if user is in the students list
+      const isParticipant = meeting.students.some(s => s.id === userId);
+      if (!isParticipant) {
         throw new ForbiddenException('Không có quyền khiếu nại meeting này');
       }
     }

@@ -10,7 +10,7 @@ import {
   Request,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { MeetingsService } from './meetings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { CreateRatingDto } from './dto/create-rating.dto';
@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '@prisma/client';
+import { MeetingStatus } from '@prisma/client';
 
 @ApiTags('meetings')
 @ApiBearerAuth()
@@ -71,6 +72,9 @@ export class MeetingsController {
     summary: 'Xem danh sách meetings của mình',
     description: 'Hỗ trợ filter: ?status=PENDING|CONFIRMED|COMPLETED|CANCELED&startDate=2024-01-01&endDate=2024-12-31'
   })
+  @ApiQuery({ name: 'status', required: false, enum: MeetingStatus })
+  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2024-01-01' })
+  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2024-12-31' })
   @ApiResponse({ status: 200, description: 'Lấy danh sách thành công' })
   async getMyMeetings(
     @Request() req, 
@@ -129,8 +133,5 @@ export class MeetingsController {
   async completeMeeting(@Request() req, @Param('id', ParseIntPipe) id: number){
     return this.meetingsService.completeMeeting(req.user.id, req.user.role, id);
   }
-
-
-
 
 }

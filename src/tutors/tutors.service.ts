@@ -102,6 +102,7 @@ export class TutorsService {
         startTime,
         endTime,
         isBooked: false,
+        maxStudents: dto.maxStudents || 1, // 🟢 Lưu số lượng tối đa
       },
     });
 
@@ -314,13 +315,10 @@ export class TutorsService {
   }
 
 
-
-
-//##############################################
+ //##############################################
 //## UC_TUT_03: Get student progress records ###
 //##############################################
   async getStudentProgress(tutorUserId: number, studentId: number) {
-    // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
       where: { userId: tutorUserId },
     });
@@ -329,21 +327,21 @@ export class TutorsService {
       throw new NotFoundException('Tutor profile không tồn tại');
     }
 
+    // FIX: Updated for Many-to-Many (Meeting has 'students', not 'studentId')
     const hasRelation = await this.prisma.meeting.findFirst({
-    where: {
-      tutorId: tutor.id,
-      studentId: studentId,
-      // Quan trọng: Chấp nhận cả meeting đã hoàn thành hoặc đã xác nhận
-      status: { in: ['COMPLETED', 'CONFIRMED'] } 
+      where: {
+        tutorId: tutor.id,
+        students: {
+          some: { id: studentId } // Check if 'students' list contains this ID
+        },
+        status: { in: ['COMPLETED', 'CONFIRMED'] } 
+      }
+    });
+
+    if (!hasRelation) {
+      throw new ForbiddenException('Bạn không có quyền xem tiến độ của sinh viên này (Chưa có lớp học chung)');
     }
-  });
 
-  if (!hasRelation) {
-    // Nếu chưa từng dạy sinh viên này -> Chặn quyền truy cập
-    throw new ForbiddenException('Bạn không có quyền xem tiến độ của sinh viên này (Chưa có lớp học chung)');
-  }
-
-    // Get progress records
     const records = await this.prisma.progressRecord.findMany({
       where: {
         tutorId: tutor.id,
@@ -367,14 +365,10 @@ export class TutorsService {
     return records;
   }
 
-
-
-
 //#############################################
 //## Get all students tutored by this tutor ###
 //#############################################
   async getMyStudents(tutorUserId: number) {
-    // Find tutor profile
     const tutor = await this.prisma.tutorProfile.findUnique({
       where: { userId: tutorUserId },
     });
@@ -383,25 +377,27 @@ export class TutorsService {
       throw new NotFoundException('Tutor profile không tồn tại');
     }
 
-    // Get unique students from completed meetings
-    const meetings = await this.prisma.meeting.findMany({
+    // FIX: Query Users directly based on relationship
+    // Instead of getting meetings and mapping (which is hard with M-N distinct),
+    // we find Users who have at least one COMPLETED meeting with this tutor.
+    const students = await this.prisma.user.findMany({
       where: {
-        tutorId: tutor.id,
-        status: 'COMPLETED',
+        studentMeetings: {
+          some: {
+            tutorId: tutor.id,
+            status: 'COMPLETED'
+          }
+        }
       },
-      include: {
-        student: {
-          select: {
-            id: true,
-            fullName: true,
-            email: true,
-            mssv: true,
-          },
-        },
-      },
-      distinct: ['studentId'],
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        mssv: true,
+        avatarUrl: true,
+      }
     });
 
-    return meetings.map((m) => m.student);
+    return students;
   }
 }

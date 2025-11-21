@@ -1,5 +1,6 @@
 import { IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional,IsNumber,Min } from 'class-validator';
 
 export class CreateAvailabilityDto {
   @ApiProperty({
@@ -15,4 +16,11 @@ export class CreateAvailabilityDto {
   })
   @IsDateString()
   endTime: string;
+
+  // NEW: Số lượng sinh viên tối đa (Mặc định 1 nếu không gửi)
+  @ApiProperty({ description: 'Số lượng sinh viên tối đa', example: 5, required: false })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  maxStudents?: number;
 }

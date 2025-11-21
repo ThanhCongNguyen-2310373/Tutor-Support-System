@@ -195,6 +195,7 @@ export class UsersService {
         studentId: userId,
         bio: dto.bio,
         expertise: dto.expertise,
+        gpa: dto.gpa,
         status: 'PENDING',
         // tbmId is optional now, so we don't set it for self-applications
       },
