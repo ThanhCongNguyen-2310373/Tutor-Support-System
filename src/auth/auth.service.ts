@@ -99,6 +99,7 @@ export class AuthService {
       role: user.role,
     };
     return {
+	  code: 200,
       message: 'Login successful',
       access_token: this.jwtService.sign(payload),
       user: {
