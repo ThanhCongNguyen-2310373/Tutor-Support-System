@@ -25,7 +25,7 @@ export const tutorsService = {
   // Get tutor availability
   getAvailability: async (tutorId) => {
     try {
-      const response = await apiClient.get(`/tutors/${tutorId}/availability`);
+      const response = await apiClient.get(`/tutors/me/availability`);
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch availability' };

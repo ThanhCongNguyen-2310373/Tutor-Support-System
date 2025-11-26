@@ -23,6 +23,7 @@ export default function CourseDetail() {
         
         // FIX: Extract the array from the response object
         // If availabilitySlots is undefined, default to empty array []
+        console.log(data.availabilitySlots);
         setSlots(data.availabilitySlots || []); 
         
       } catch (error) {

@@ -45,7 +45,7 @@ export default function Login() {
       else if (role === 'ADMIN') navigate("/dashboard/admin");
       else if (role === 'OAA') navigate("/dashboard/oaa");
       else if (role === 'OSA') navigate("/dashboard/osa");
-      else if (role === 'TRUONGKHOA') navigate("/dashboard/truongkhoa");
+      else if (role === 'TBM') navigate("/dashboard/truongkhoa");
       else navigate("/dashboard/student");
       
     } catch (err) {

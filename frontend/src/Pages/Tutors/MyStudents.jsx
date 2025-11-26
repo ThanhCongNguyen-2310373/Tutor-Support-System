@@ -23,7 +23,7 @@ export default function MyStudents() {
     try {
       setLoading(true);
       const response = await tutorsService.getMyStudents();
-      setStudents(response.data || []);
+      setStudents(response || []);
     } catch (error) {
       showError("Không thể tải danh sách học sinh");
       console.error(error);
@@ -53,11 +53,27 @@ export default function MyStudents() {
       return;
     }
 
+    // --- FIX STARTS HERE ---
+    
+    // 1. Combine the 3 separate fields into one formatted "note" string
+    const combinedNote = `
+      Thành tích: ${progressData.achievements}
+      Khó khăn: ${progressData.difficulties || "Không có"}
+      Đề xuất: ${progressData.suggestions || "Không có"}
+    `.trim();
+
+    // 2. Prepare payload matching EXACTLY what the backend wants
+    const payload = {
+      studentId: Number(selectedStudent.id), // Ensure it is a Number
+      note: combinedNote
+    };
+
+    // -----------------------
+
     try {
-      await tutorsService.postProgress({
-        studentId: selectedStudent.id,
-        ...progressData,
-      });
+      console.log("Sending Payload:", payload); // Debugging
+      await tutorsService.postProgress(payload);
+      
       showSuccess("Đã ghi nhận tiến độ học tập!");
       setShowModal(false);
       setSelectedStudent(null);

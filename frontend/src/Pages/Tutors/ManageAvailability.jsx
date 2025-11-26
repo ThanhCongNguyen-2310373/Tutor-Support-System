@@ -1,6 +1,6 @@
 // src/Pages/Tutors/ManageAvailability.jsx
 import React, { useState, useEffect } from "react";
-import { tutorsService } from "../../api";
+import { tutorsService, tutorsAPI } from "../../api";
 import { showSuccess, showError } from "../../utils/errorHandler";
 import "./ManageAvailability.css";
 
@@ -18,10 +18,12 @@ export default function ManageAvailability() {
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  // Updated state to include maxStudents
   const [formData, setFormData] = useState({
     dayOfWeek: 1,
     startTime: "08:00",
     endTime: "10:00",
+    maxStudents: 1, 
   });
 
   useEffect(() => {
@@ -31,14 +33,40 @@ export default function ManageAvailability() {
   const fetchAvailability = async () => {
     try {
       setLoading(true);
-      const response = await tutorsService.getMyAvailability();
-      setSlots(response.data || []);
+      const response = await tutorsService.getAvailability();
+      console.log("DEBUG RAW RESPONSE:", response); // Look at this log!
+      setSlots(response || []);
+      console.log("Processed Slots:", response);
     } catch (error) {
       showError("Không thể tải lịch trống");
       console.error(error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper to calculate the next occurrence of a specific day of the week
+  // This converts generic days (Monday) to specific dates (2025-11-XX) for the backend
+  const getNextDateForDay = (dayIndex, timeString) => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    const currentDay = date.getDay(); 
+    
+    // Calculate days until target day
+    let daysUntilTarget = (dayIndex - currentDay + 7) % 7;
+    
+    // If it's today but time has passed, move to next week
+    if (daysUntilTarget === 0) {
+      const now = new Date();
+      if (now.getHours() > hours || (now.getHours() === hours && now.getMinutes() >= minutes)) {
+        daysUntilTarget = 7;
+      }
+    }
+
+    date.setDate(date.getDate() + daysUntilTarget);
+    date.setHours(hours, minutes, 0, 0);
+    
+    return date.toISOString();
   };
 
   const handleAddSlot = async (e) => {
@@ -50,14 +78,38 @@ export default function ManageAvailability() {
       return;
     }
 
+    if (formData.maxStudents < 1) {
+      showError("Số lượng học viên phải ít nhất là 1");
+      return;
+    }
+
+    // Convert inputs to format backend expects
+    const startTimeISO = getNextDateForDay(formData.dayOfWeek, formData.startTime);
+    const endTimeISO = getNextDateForDay(formData.dayOfWeek, formData.endTime);
+
+    const payload = {
+      startTime: startTimeISO,
+      endTime: endTimeISO,
+      maxStudents: parseInt(formData.maxStudents), // Ensure it's a number
+    };
+
     try {
-      await tutorsService.postAvailability(formData);
+      await tutorsService.postAvailability(payload);
       showSuccess("Đã thêm lịch trống thành công!");
       setShowModal(false);
-      setFormData({ dayOfWeek: 1, startTime: "08:00", endTime: "10:00" });
+      // Reset form
+      setFormData({ 
+        dayOfWeek: 1, 
+        startTime: "08:00", 
+        endTime: "10:00", 
+        maxStudents: 1 
+      });
       fetchAvailability();
     } catch (error) {
-      showError(error.message || "Không thể thêm lịch trống");
+      const msg = Array.isArray(error.message) 
+        ? error.message.join(', ') 
+        : (error.message || "Không thể thêm lịch trống");
+      showError(msg);
       console.error(error);
     }
   };
@@ -82,20 +134,22 @@ export default function ManageAvailability() {
     });
 
     slots.forEach((slot) => {
-      if (grouped[slot.dayOfWeek] !== undefined) {
-        grouped[slot.dayOfWeek].push(slot);
+      // Backend returns specific dates, we need to convert back to day of week index (0-6)
+      const date = new Date(slot.startTime);
+      const dayIndex = date.getDay();
+      
+      if (grouped[dayIndex] !== undefined) {
+        grouped[dayIndex].push(slot);
       }
     });
 
     return grouped;
   };
 
-  const formatTime = (time) => {
-    // If time is in HH:mm:ss format, extract HH:mm
-    if (time && time.length >= 5) {
-      return time.substring(0, 5);
-    }
-    return time;
+  const formatTime = (isoString) => {
+    if (!isoString) return "";
+    const date = new Date(isoString);
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
   };
 
   if (loading) {
@@ -127,8 +181,14 @@ export default function ManageAvailability() {
               ) : (
                 groupedSlots[day.value].map((slot) => (
                   <div key={slot.id} className="ma-slot-card">
-                    <div className="ma-slot-time">
-                      {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                    <div>
+                      <div className="ma-slot-time">
+                        {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                      </div>
+                      {/* Optional: Show max students on the card */}
+                      <div style={{fontSize: '0.8rem', color: '#718096'}}>
+                        Tối đa: {slot.maxStudents} HV
+                      </div>
                     </div>
                     <button
                       className="ma-btn-delete"
@@ -197,6 +257,22 @@ export default function ManageAvailability() {
                     setFormData({ ...formData, endTime: e.target.value })
                   }
                   required
+                />
+              </div>
+
+              {/* NEW INPUT FOR MAX STUDENTS */}
+              <div className="ma-form-group">
+                <label>Số lượng học viên tối đa</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  value={formData.maxStudents}
+                  onChange={(e) =>
+                    setFormData({ ...formData, maxStudents: parseInt(e.target.value) })
+                  }
+                  required
+                  placeholder="Ví dụ: 1"
                 />
               </div>
 
