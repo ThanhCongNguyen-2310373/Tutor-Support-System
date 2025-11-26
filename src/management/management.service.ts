@@ -523,6 +523,8 @@ export class ManagementService {
             fullName: true,
             email: true,
             mssv: true,
+            department: true,
+            studentClass: true,
           },
         },
         approvedBy: {
