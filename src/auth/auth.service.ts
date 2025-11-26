@@ -82,12 +82,12 @@ export class AuthService {
     // This will throw UnauthorizedException if password doesn't match
     const ssoResult = await this.ssoService.authenticateUser(dto.email, dto.password);
 
-    // 2. Fetch Data (Delegate to Datacore Service)
-    // Use the ID returned from SSO to get full profile
-    const userProfile = await this.datacoreService.syncUserData(ssoResult.userId || dto.email);
+    // 2. Get DB Object for Token (Already validated by SSO)
+    const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
 
-    // 3. Get DB Object for Token
-    const user = await this.prisma.user.findUnique({ where: { email: userProfile.email } });
+    if (!user) {
+      throw new BadRequestException('User not found in database');
+    }
 
     return this.generateToken(user);
   }

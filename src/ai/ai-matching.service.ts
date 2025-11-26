@@ -129,7 +129,7 @@ export class AIMatchingService {
       );
 
         matches.push({
-        tutorId: tutor.id,
+        tutorId: tutor.user.id, // Use user.id instead of tutor.id
         tutorName: tutor.user.fullName,
         tutorEmail: tutor.user.email,
         score: finalScore,
@@ -312,18 +312,19 @@ export class AIMatchingService {
       reasons.push(`⚠️ Chưa có slot trống`);
     }
 
-    // 5. Hourly Rate
-    if (preferences.maxHourlyRate) {
-      if (tutor.hourlyRate <= preferences.maxHourlyRate) {
-        reasons.push(
-          `💰 Học phí: ${tutor.hourlyRate.toLocaleString('vi-VN')} VND/h (phù hợp)`,
-        );
-      } else {
-        reasons.push(
-          `⚠️ Học phí: ${tutor.hourlyRate.toLocaleString('vi-VN')} VND/h (cao hơn mong muốn)`,
-        );
-      }
-    }
+    // 5. Hourly Rate (not in schema, skip for now)
+    // if (preferences.maxHourlyRate) {
+    //   const defaultRate = 50000;
+    //   if (defaultRate <= preferences.maxHourlyRate) {
+    //     reasons.push(
+    //       `💰 Học phí: ${defaultRate.toLocaleString('vi-VN')} VND/h (phù hợp)`,
+    //     );
+    //   } else {
+    //     reasons.push(
+    //       `⚠️ Học phí: ${defaultRate.toLocaleString('vi-VN')} VND/h (cao hơn mong muốn)`,
+    //     );
+    //   }
+    // }
 
     return {
       subjectMatch,
@@ -403,7 +404,7 @@ export class AIMatchingService {
       );
 
       matches.push({
-        tutorId: tutor.id,
+        tutorId: tutor.user.id, // Use user.id instead of tutor.id
         tutorName: tutor.user.fullName,
         tutorEmail: tutor.user.email,
         score: finalScore,
