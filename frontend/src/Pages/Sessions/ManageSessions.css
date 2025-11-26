@@ -1,0 +1,171 @@
+/* ===== Layout tổng ===== */
+.sess {
+  padding: 16px 12px 28px;
+  background: #fff;
+  color: #0f172a;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Header 2 bên: Yêu cầu đang chờ xử lý | Buổi học đã xác nhận */
+.sess-topnote {
+  display: flex;
+  margin-bottom: 10px;
+  color: #1e2a39;
+}
+
+.sess-topnote > span {
+  flex: 1;
+  text-align: center;
+}
+
+.sess-linklike,
+.sess-right-title {
+  color: #2563eb;
+  text-decoration: none;
+  cursor: default;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+/* ===== Hai cột ===== */
+.sess-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .sess-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Tiêu đề cột ===== */
+.sess-col-title {
+  margin: 8px 0 12px;
+  color: #123a8c;
+  font-weight: 800;
+}
+
+/* ===== Card ===== */
+.sess-card {
+  border: 3px solid #0a66d1;
+  border-radius: 8px;
+  background: #fff;
+  padding: 14px 12px 14px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+}
+
+.sess-card--confirmed {
+  border-color: #20a653;
+}
+
+/* Phần Link bọc nội dung card (để click sang SessionDetail) */
+.sess-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Header tên SV */
+.sess-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.sess-name {
+  font-size: 16px;
+}
+
+.sess-id {
+  color: #334155;
+  font-weight: 700;
+}
+
+/* ===== Danh sách thông tin trong card ===== */
+.sess-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.sess-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 6px 0;
+  color: #0b1e36;
+}
+
+/* "Yêu cầu:", "Ghi chú:" không bị tách dòng */
+.sess-list strong {
+  white-space: nowrap;
+}
+
+/* Icon */
+.i {
+  width: 22px;
+  display: inline-flex;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.i-person {
+  font-size: 18px;
+}
+
+/* ===== Nút hành động ===== */
+.sess-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;      
+  transition: transform .02s ease, filter .15s ease;
+}
+
+.btn:hover {
+  filter: brightness(.98);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn_reject {
+  background: #F24822;
+  color: #fff;
+}
+
+.btn_accept {
+  background: #39b05c;
+  color: #fff;
+}
+
+/* Trạng thái rỗng */
+.sess-empty {
+  padding: 16px;
+  border: 2px dashed #c6d5f3;
+  border-radius: 8px;
+  color: #4b5563;
+  background: #f8fbff;
+}

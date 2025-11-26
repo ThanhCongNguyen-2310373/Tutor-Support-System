@@ -1,0 +1,94 @@
+/* Reset nhỏ cho button-card */
+.card{
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Kích thước và nền giống ảnh mẫu */
+.card-inner{
+  width: 320px;                 /* bạn có thể chỉnh 338px nếu muốn khớp tuyệt đối */
+  height: 260px;
+  background: #54E0D2;          /* xanh ngọc */
+  border: 4px solid #5FA9FF;    /* viền xanh dương */
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px;
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.4) inset; /* viền sáng nhẹ phía trong như ảnh */
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+/* Hover nhẹ để có cảm giác nhấn */
+.card:hover .card-inner{
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.15),
+    0 0 0 3px rgba(255,255,255,.5) inset;
+}
+
+
+.card-icon{
+  display: block;
+  object-fit: contain;
+}
+
+/* Khi dùng mask để tô màu icon ảnh (.svg/.png) */
+.card-icon--mask{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+/* Tiêu đề */
+.card-title{
+  font-size: 32px;              /* giống ảnh */
+  line-height: 1.2;
+  color: #111;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+
+
+.card-actions{
+  display: flex;
+  gap: 40px;
+  margin-top: 6px;
+}
+
+.card-mini-btn{
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 2px solid #5FA9FF;
+  background: #2f8bff;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  
+  
+}
+.card-mini-btn:hover{ filter: brightness(0.97); }
+
+/* Responsive giữ như cũ, tuỳ bạn tinh chỉnh thêm */
+
+
+/* Responsive nhẹ */
+@media (max-width: 480px){
+  .card-inner{ width: 280px; height: 230px; }
+  .card-icon{ width: 84px; height: 84px; }
+  .card-title{ font-size: 20px; }
+}

@@ -1,0 +1,853 @@
+/* src/Pages/NotificationSystem/NotificationSystem.css */
+
+.notification-system-container {
+  /* Thay đổi từ auto thành 100vh để bao phủ toàn bộ chiều cao màn hình */
+  min-height: 100vh; 
+  /* Đổi màu xám (#f5f7fa) thành màu trắng (#ffffff) theo ý bạn */
+  background-color: #ffffff; 
+}
+
+.notification-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Breadcrumb */
+.breadcrumb-card {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-active {
+  color: #007AD2;
+  font-weight: 500;
+}
+
+/* Tabs */
+.tabs-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab {
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #007AD2;
+  background: #f9fafb;
+}
+
+.tab-active {
+  color: #007AD2;
+  border-bottom-color: #007AD2;
+}
+
+.tab .icon {
+  font-size: 18px;
+}
+
+/* Common Headers */
+.dashboard-header,
+.create-header,
+.log-header,
+.scheduled-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.dashboard-header h2,
+.create-header h2,
+.log-header h2,
+.scheduled-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #007AD2;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0066b3;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn-outline {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+}
+
+.btn-link {
+  background: transparent;
+  color: #007AD2;
+  padding: 4px 8px;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.btn-link.btn-danger {
+  color: #dc2626;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.btn-large {
+  padding: 12px 24px;
+  font-size: 15px;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stat-primary .stat-icon {
+  background: #dbeafe;
+  color: #007AD2;
+}
+
+.stat-success .stat-icon {
+  background: #d1fae5;
+  color: #10b981;
+}
+.stat-card.stat-danger {
+  background-color: #f7c7c7; /* Màu đỏ rất nhạt (chuẩn style hiện đại) */
+}
+.stat-warning .stat-icon {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.stat-danger .stat-icon {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 4px 0;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* Notification List */
+.notification-list-card,
+.log-table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.notification-table,
+.log-table {
+  width: 100%;
+  border-collapse: separate; /* Để bo góc header được */
+  border-spacing: 0;
+}
+.notification-table thead,
+.log-table thead {
+  background: #eff6ff; /* Xanh rất nhạt thay vì màu xám */
+}
+
+.notification-table th,
+.log-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700; /* Đậm hơn chút */
+  color: #1e40af; /* Chữ màu xanh đậm */
+  text-transform: uppercase; /* Chữ in hoa tiêu đề */
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #dbeafe; /* Viền dưới xanh nhạt */
+}
+
+.notification-table tbody tr,
+.log-table tbody tr {
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-table td,
+.log-table td {
+  padding: 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  color: #4b5563;
+}
+.notification-table tbody tr:hover,
+.log-table tbody tr:hover {
+  background-color: #f0f9ff; /* Màu xanh da trời rất nhạt khi di chuột */
+}
+
+
+.notification-table td {
+  padding: 12px 16px;
+}
+
+.notification-title {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.recipient-info,
+.time-info {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-sent {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Form Styles */
+.form-container {
+  background: white;
+  border-radius: 12px; /* Bo góc mềm mại hơn */
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 24px;
+  display: block;
+}
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0; /* Viền xám nhạt tinh tế */
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background-color: #f8fafc; /* Màu nền xanh xám rất nhạt */
+  transition: all 0.2s ease-in-out; /* Hiệu ứng mượt mà */
+}
+
+/* Hiệu ứng khi di chuột vào */
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+  background-color: #fff;
+  border-color: #94a3b8;
+}
+
+/* Hiệu ứng khi đang nhập liệu (Focus) - Quan trọng */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: #007AD2; /* Màu xanh chủ đạo */
+  box-shadow: 0 0 0 4px rgba(0, 122, 210, 0.15); /* Hiệu ứng hào quang xanh */
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+  min-height: 120px;
+}
+
+/* Radio Group */
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+  cursor: pointer;
+}
+
+/* Checkbox Label */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+/* Checkbox trong bảng */
+input[type="checkbox"] {
+  accent-color: #007AD2; /* Màu xanh cho checkbox */
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Recipient Selector */
+.recipient-selector {
+  /* Giữ các thuộc tính trang trí cũ */
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  
+  /* Đảm bảo căn lề khớp với input thường */
+  margin: 0; 
+}
+
+.recipient-search {
+  margin-bottom: 16px;
+}
+
+.recipient-groups {
+  margin-bottom: 16px;
+}
+
+.group-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+}
+
+.group-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selected-recipients {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.selected-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+}
+
+.recipient-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recipient-tag {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: #1e40af;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.remove-tag:hover {
+  color: #1e3a8a;
+}
+
+/* Preview */
+.notification-preview {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  background: #f9fafb;
+  margin-bottom: 20px;
+}
+
+.preview-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 0 12px 0;
+}
+
+.preview-box {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.preview-notification {
+  display: flex;
+  gap: 12px;
+}
+
+.preview-icon {
+  width: 40px;
+  height: 40px;
+  background: #dbeafe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.preview-content {
+  flex: 1;
+}
+
+.preview-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.preview-content p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.preview-time {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+/* Log Screen */
+.log-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.log-table-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.log-table thead {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.log-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.log-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.log-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.log-table td {
+  padding: 12px 16px;
+}
+
+.message-id {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.recipient-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recipient-name {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.recipient-id {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.channel-info,
+.timestamp {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Scheduled Notifications */
+.scheduled-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.schedule-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.schedule-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-info {
+  flex: 1;
+}
+
+.schedule-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.schedule-header-row h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.schedule-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.schedule-details p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.next-run {
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.schedule-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-header,
+  .create-header,
+  .log-header,
+  .scheduled-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .tab {
+    white-space: nowrap;
+  }
+
+  .radio-group {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .log-filters {
+    flex-direction: column;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .schedule-card {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .schedule-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+/* Căn chỉnh Icon trong nút bấm và Tab */
+.icon {
+  font-size: 18px; /* Điều chỉnh kích thước icon */
+  display: inline-flex; /* Giúp icon căn giữa theo chiều dọc */
+  vertical-align: middle;
+  margin-bottom: 2px; /* Tinh chỉnh nhỏ để thẳng hàng với chữ */
+}
+
+/* Căn chỉnh Icon to trong các thẻ Stat (Thống kê) */
+.stat-icon {
+  /* Giữ nguyên các thuộc tính cũ như width, height, background... */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Class mới cho SVG bên trong stat-card để nó to rõ ràng */
+.stat-icon-svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2px; /* Độ dày nét vẽ */
+}
+
+/* Cập nhật màu sắc cho Icon trong Stat Card */
+.stat-primary .stat-icon-svg { color: #007AD2; }
+.stat-success .stat-icon-svg { color: #10b981; }
+.stat-warning .stat-icon-svg { color: #f59e0b; }
+.stat-danger .stat-icon-svg  { color: #ef4444; }
+
+/* Icon xóa tag (dấu X) */
+.remove-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-input,
+.form-select,
+.form-textarea,
+.recipient-selector {
+  width: 100%;             /* Bắt buộc chiếm 100% chiều ngang của cha */
+  box-sizing: border-box;  /* QUAN TRỌNG: Tính cả viền và padding vào chiều rộng */
+  max-width: 100%;         /* Ngăn không cho tràn ra ngoài khung */
+  display: block;          /* Đảm bảo nằm trên một dòng riêng biệt */
+}
+
+/* Ghi đè lại thuộc tính cũ để xếp dọc */
+.create-header {
+  display: flex;
+  flex-direction: column; /* Xếp theo chiều dọc (trên xuống dưới) */
+  justify-content: flex-start; /* Căn mọi thứ về phía đầu */
+  gap: 4px; /* Khoảng cách nhỏ giữa tiêu đề to và dòng chữ nhỏ */
+  align-items: flex-start; /* Căn lề trái */
+}
+
+/* Đảm bảo dòng chữ nhỏ không bị margin thừa */
+.create-header .subtitle {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #6b7280; /* Màu xám nhạt cho dịu mắt */
+  font-weight: normal;
+}
+
+/* Chỉnh lại tiêu đề to một chút nếu cần */
+.create-header h2 {
+  margin-bottom: 4px; /* Giảm khoảng cách dưới của chữ to */
+}

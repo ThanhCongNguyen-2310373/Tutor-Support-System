@@ -1,0 +1,111 @@
+/* Giữ nguyên kích thước/tham số gốc */
+.navbar{
+  width: 100%;
+  background-color: #D8EBF8;
+}
+.nav-inner{
+  height: 72px;                 /* giữ nguyên 72px */
+  display: flex;
+  align-items: center;
+  padding: 0 12px;              /* thêm padding nhẹ cho thoáng */
+}
+.bk-mini{
+  height: 72px;                 /* giữ nguyên */
+  width: auto;
+  display: block;
+}
+
+/* ====== Menu giữa (chỉ hiện trong dashboard) ====== */
+.nav-menu{
+  display: flex;
+  align-items: center;
+  
+  list-style: none;
+  margin: 0 0 0 12px;           /* cách logo một chút */
+  padding: 0;
+}
+.nav-link{
+  display: inline-flex;
+  align-items: center;
+  height: 72px;                 /* nằm gọn trong thanh 72px */
+  padding: 0 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #0b1e36;
+  font-weight: 400;
+  font-size: 40px;
+  margin-left: 72px;
+  
+  
+}
+.nav-link.is-active{
+  background: #007AD2;          /* tab đang chọn */
+  color: #fff;
+}
+
+/* ====== Nhóm phải: Đăng xuất + Avatar ====== */
+.nav-actions{
+  margin-left: auto;            /* đẩy sang phải */
+  display: flex;
+  align-items: center;
+ 
+}
+
+/* Nút Đăng xuất nhỏ giống ảnh */
+.btn-logout{
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #7f8c8d;
+  border-radius: 8px;
+  background: #f3f3f3;
+  color: #0b1e36;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: inset 0 1px #fff, 0 1px 0 rgba(0,0,0,.18);
+  margin-right: 32px;
+  font-size: 24px;
+}
+.btn-logout:hover{ filter: brightness(0.98); }
+
+/* Ảnh avatar tròn */
+.avatar-img{
+  width: 40px;
+  height: 40px;
+  display: block;
+  cursor: pointer;   
+}
+
+/* Notification Badge */
+.nav-link-notification {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 18px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}

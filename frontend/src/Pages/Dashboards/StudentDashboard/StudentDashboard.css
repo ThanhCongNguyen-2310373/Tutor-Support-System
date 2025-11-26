@@ -1,0 +1,197 @@
+.sd{
+  padding: 16px 0 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;           /* căn giữa toàn bộ */
+}
+
+/* Tiêu đề */
+.sd-title-wrap{
+  width: min(820px, 92vw);
+  background: #fff;
+  margin-bottom: 8px;
+}
+.sd-title{
+  margin: 8px 0;
+  text-align: center;
+  color: #1c3e9c;
+  font-weight: 800;
+  font-size: clamp(22px, 3vw, 36px);
+  letter-spacing: 1px;
+}
+
+/* Panel */
+.sd-panel{
+  width: min(820px, 92vw);
+  border: 6px solid #0a66d1;
+  border-radius: 4px;
+  background: #fff;
+  padding: 18px 12px 24px;
+}
+
+/* KHỐI THẺ – CHỈ DÙNG FLEX */
+.sd-grid{
+  display: flex;                 /* chỉ flex */
+  flex-wrap: wrap;               /* xuống dòng khi thiếu chỗ */
+  justify-content: center;       /* căn giữa theo hàng */
+  column-gap: 40px;              /* khoảng cách giữa cột */
+  row-gap: 28px;                 /* khoảng cách giữa hàng */
+}
+
+/* Mỗi thẻ (Link bao Card) */
+.sd-card-link{
+  text-decoration: none;
+  display: block;
+  flex: 0 1 320px;               /* rộng ~320px, đủ 2 thẻ/hàng trong 820px */
+}
+
+/* Thẻ thứ 3 ở hàng dưới: khối chiếm full hàng, căn giữa con bên trong */
+.sd-card-center{
+  flex-basis: 100%;              /* chiếm cả hàng để xuống dòng */
+  display: flex;
+  justify-content: center;       /* căn giữa Card bên trong */
+}
+
+/* Stats Cards */
+.sd-stats {
+  width: min(820px, 92vw);
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 150px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Section */
+.sd-section {
+  width: min(820px, 92vw);
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sd-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1c3e9c;
+  margin-bottom: 16px;
+}
+
+.sd-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 32px;
+}
+
+/* Meetings List */
+.sd-meetings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sd-meeting-card {
+  display: block;
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.sd-meeting-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.sd-meeting-time {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.sd-meeting-topic {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.sd-meeting-tutor {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.sd-meeting-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-confirmed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-canceled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Responsive: 1 thẻ mỗi hàng khi màn nhỏ */
+@media (max-width: 760px){
+  .sd-grid{
+    column-gap: 20px;
+    row-gap: 20px;
+  }
+  .sd-card-link{
+    flex: 1 1 280px;
+  }
+  .sd-card-center{
+    flex-basis: 100%;
+  }
+  .sd-stats {
+    flex-direction: column;
+  }
+  .stat-card {
+    min-width: 100%;
+  }
+}

@@ -1,0 +1,417 @@
+/* src/Pages/TutorCandidateApproval/TutorCandidateApproval.css */
+
+.tutor-approval-container {
+  padding: 24px;
+  background: #f9fafb;
+  min-height: 100vh;
+}
+
+.tutor-approval-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.tutor-approval-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* Thanh filter + search */
+.tutor-approval-toolbar {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-group,
+.search-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Ô filter giống mockup */
+.filter-box {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 140px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.filter-box:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.filter-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 4px;
+}
+
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #1f2937;
+  width: 100%;
+  cursor: pointer;
+  padding-right: 24px;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Search box */
+.search-box {
+  position: relative;
+  width: 280px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.btn-refresh {
+  background: #1e40af;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.btn-refresh:hover {
+  background: #1d4ed8;
+}
+
+.btn-refresh::before {
+  content: "Refresh";
+  font-size: 18px;
+}
+
+/* Bảng */
+.tutor-approval-table-container {
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.tutor-approval-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tutor-approval-table th {
+  background: #1e40af;
+  color: white;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tutor-approval-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.tutor-approval-table tr.selected {
+  background: #dbeafe;
+}
+
+.name-cell {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gpa-low {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.action-view {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Nút hành động */
+.tutor-approval-actions {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-reject,
+.btn-approve {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reject {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.btn-reject:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.btn-approve {
+  background: #1e40af;
+  color: white;
+  border: none;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.btn-reject:disabled,
+.btn-approve:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 420px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.confirm-modal h3 {
+  margin: 0 0 16px;
+  color: #1e40af;
+  font-size: 20px;
+}
+
+.confirm-modal p {
+  margin-bottom: 24px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-cancel,
+.btn-confirm {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  min-width: 90px;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-confirm {
+  background: #1e40af;
+  color: white;
+  border: none;
+}
+
+/* Toast */
+.notification-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 340px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  overflow: hidden;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-header {
+  background: #1e40af;
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.toast-body {
+  padding: 16px;
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.notification-toast.error .toast-header { background: #dc2626; }
+.notification-toast.success .toast-header { background: #16a34a; }
+.notification-toast.warning .toast-header { background: #d97706; }
+
+/* Căn chỉnh toolbar giống mẫu */
+.tutor-approval-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e6f0ff;
+  padding: 8px 12px;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+}
+
+/* Filter box */
+.filter-box {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #1e3a8a;
+  border-radius: 4px;
+  padding: 4px 8px;
+  min-width: 110px;
+}
+
+.filter-label {
+  color: #1e3a8a;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.filter-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+/* Search box */
+.search-box {
+  display: flex;
+  flex: 1;
+  max-width: 500px;
+  align-items: center;
+  border: 1px solid #1e3a8a;
+  border-radius: 4px;
+  background: white;
+  padding: 4px 8px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 180px;
+}
+
+/* Nút refresh tròn giống hình */
+.btn-refresh {
+  background: #c7d2fe;
+  border: 1px solid #1e3a8a;
+  color: #1e3a8a;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-refresh:hover {
+  background: #a5b4fc;
+}

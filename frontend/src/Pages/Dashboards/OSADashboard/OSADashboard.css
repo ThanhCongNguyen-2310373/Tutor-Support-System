@@ -1,0 +1,138 @@
+/* Bố cục giống StudentDashboard nhưng dùng prefix td- */
+
+.td{
+  padding: 16px 0 109px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tiêu đề */
+.td-title-wrap{
+  width: min(700px, 92vw);       /* gọn hơn một chút; muốn to hơn đổi 700→820 */
+  background: #fff;
+  margin-bottom: 8px;
+}
+.td-title{
+  margin: 8px 0;
+  text-align: center;
+  color: #1c3e9c;
+  font-weight: 800;
+  font-size: clamp(22px, 3vw, 36px);
+  letter-spacing: 1px;
+}
+
+/* Panel */
+.td-panel{
+  width: min(600px, 92vw);
+  border: 6px solid #0a66d1;
+  border-radius: 4px;
+  background: #fff;
+  padding: 18px 12px 24px;
+}
+
+/* Khối thẻ chỉ dùng flex */
+.td-grid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 28px;
+  row-gap: 20px;
+}
+
+/* Link bao card (nếu sau này thêm nhiều thẻ) */
+.td-card-link{
+  text-decoration: none;
+  display: block;
+  flex: 0 1 260px;               /* khớp kích thước Card hiện tại */
+}
+
+/* Card giữa panel */
+.td-card-center{
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* OSA Scholarship Reports Styles */
+.osa-scholarship-section {
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.osa-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+}
+
+.osa-report-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.osa-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.osa-card-subtitle {
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 1rem;
+}
+
+.osa-table-container {
+  overflow-x: auto;
+}
+
+.osa-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.osa-table thead {
+  background: #f7fafc;
+}
+
+.osa-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.osa-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+.osa-table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.osa-empty-message {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 760px){
+  .td-grid{
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+  .td-card-link{
+    flex: 1 1 240px;
+  }
+}

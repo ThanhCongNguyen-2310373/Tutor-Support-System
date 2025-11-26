@@ -1,0 +1,561 @@
+/* OAAReport.css - Giao diện sáng màu, hiện đại, đồng bộ với NotificationSystem */
+
+.oaa-report-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.oaa-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ========== Breadcrumb ========== */
+.oaa-breadcrumb {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.breadcrumb-active {
+  color: #007AD2;
+  font-weight: 500;
+}
+
+/* ========== Header ========== */
+.oaa-header {
+  background: white;
+  padding: 20px;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.oaa-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.oaa-title {
+  flex: 1;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 16px;
+  letter-spacing: 0.5px;
+}
+
+.oaa-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.oaa-header-meta {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.oaa-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ========== Tabs ========== */
+.oaa-tabs {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.oaa-tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.oaa-tab-button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 14px;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.oaa-tab-button.active {
+  color: #007AD2;
+  font-weight: 600;
+  border-bottom: 3px solid #007AD2;
+  background: #f9fafb;
+}
+
+.oaa-tab-button:hover {
+  background: #f3f4f6;
+}
+
+/* ========== Form Sections ========== */
+.oaa-form-section {
+  margin-bottom: 24px;
+}
+
+.oaa-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.oaa-form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.oaa-form-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.oaa-form-label {
+  font-size: 13px;
+  color: #374151;
+}
+
+.oaa-input,
+.oaa-select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.oaa-input:focus,
+.oaa-select:focus {
+  outline: none;
+  border-color: #007AD2;
+}
+
+.oaa-two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ========== Checkbox Group ========== */
+.oaa-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.oaa-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  transition: all 0.2s;
+}
+
+.oaa-checkbox-label:hover {
+  background: #f9fafb;
+  border-color: #007AD2;
+}
+
+.oaa-checkbox {
+  accent-color: #007AD2;
+}
+
+/* ========== Selected Tags ========== */
+.oaa-selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.oaa-tag {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oaa-tag-close {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ========== Stats Grid ========== */
+.oaa-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.oaa-stat-card {
+  padding: 16px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+
+.oaa-stat-card.cyan {
+  background: #22d3ee;
+}
+
+.oaa-stat-card.indigo {
+  background: #6366f1;
+}
+
+.oaa-stat-card.black {
+  background: #1f2937;
+}
+
+.oaa-stat-card.red {
+  background: #bb080b;
+}
+
+/* ========== Status Message ========== */
+.oaa-status-message {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.oaa-status-message.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.oaa-status-message.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* ========== Buttons ========== */
+.oaa-btn-primary,
+.oaa-btn-secondary,
+.oaa-btn-outline,
+.oaa-btn-danger {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oaa-btn-primary {
+  background: #007AD2;
+  color: white;
+}
+
+.oaa-btn-primary:hover {
+  background: #0062a8;
+}
+
+.oaa-btn-secondary {
+  background: #6b7280;
+  color: white;
+}
+
+.oaa-btn-secondary:hover {
+  background: #4b5563;
+}
+
+.oaa-btn-outline {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.oaa-btn-outline:hover {
+  background: #f9fafb;
+  border-color: #007AD2;
+  color: #007AD2;
+}
+
+.oaa-btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.oaa-btn-danger:hover {
+  background: #dc2626;
+}
+
+/* ========== Loading Spinner ========== */
+.oaa-loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.oaa-spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #007AD2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== Modal (Notification) ========== */
+.oaa-modal-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.oaa-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.oaa-modal-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.oaa-modal-icon.error {
+  color: #dc2626;
+}
+
+.oaa-modal-icon.success {
+  color: #16a34a;
+}
+
+.oaa-modal-title {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.oaa-modal-message {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.oaa-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.oaa-modal-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.oaa-modal-btn.close {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.oaa-modal-btn.retry {
+  background: #007AD2;
+  color: white;
+}
+
+/* ========== Report Preview ========== */
+.oaa-report {
+  background: white;
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.oaa-report-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.oaa-report-meta {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.oaa-report-meta-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Progress bars */
+.oaa-progress-item {
+  margin-bottom: 12px;
+}
+
+.oaa-progress-bar {
+  background: #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 18px;
+  position: relative;
+}
+
+.oaa-progress-fill {
+  background: #007AD2;
+  height: 100%;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 6px;
+}
+
+/* Chart */
+.oaa-chart-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 200px;
+  margin: 16px 0;
+}
+
+.oaa-chart-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.oaa-chart-bar-fill {
+  width: 24px;
+  background: #007AD2;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s;
+}
+
+.oaa-chart-label {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Table */
+.oaa-table-container {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.oaa-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.oaa-table th,
+.oaa-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.oaa-table th {
+  background: #f9fafb;
+  font-size: 13px;
+  color: #374151;
+  text-align: left;
+}
+
+.oaa-table td.center {
+  text-align: center;
+}
+
+.oaa-table-progress-bar {
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 10px;
+  width: 100px;
+  margin-right: 6px;
+}
+
+.oaa-table-progress-fill {
+  background: #007AD2;
+  height: 100%;
+}
+
+.oaa-table-progress-text {
+  font-size: 12px;
+  color: #374151;
+}
+
+/* Recommendations */
+.oaa-recommendations p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Report Actions */
+.oaa-report-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}

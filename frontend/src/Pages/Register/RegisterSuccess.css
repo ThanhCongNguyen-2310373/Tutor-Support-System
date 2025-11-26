@@ -1,0 +1,97 @@
+/* ===== Khung trang ===== */
+.cs{
+  padding: 16px 0 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #0b1e36;
+}
+
+/* Tiêu đề đậm, căn giữa */
+.cs-title{
+  margin: 8px 0 12px;
+  text-align: center;
+  color: #1b1f3b;
+  font-weight: 900;
+  font-size: clamp(22px, 2.6vw, 34px);
+  letter-spacing: .3px;
+}
+
+/* Panel viền xanh dày giống mẫu */
+.cs-panel{
+  width: min(820px, 92vw);
+  border: 6px solid #0a66d1;     /* viền xanh dày */
+  border-radius: 4px;
+  background: #fff;
+  padding: 18px 16px 20px;
+}
+
+/* Danh sách dòng thông tin */
+.cs-list{
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0 6px;
+  
+}
+.cs-list li{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.6;
+  margin: 6px 0;
+  color: #0b1e36;
+  font-size: 24px;
+}
+
+/* Tăng size emoji/biểu tượng cho giống mẫu */
+.cs-list li::first-letter{
+  font-size: 1.15em;
+}
+
+/* Nhóm nút bên dưới, căn giữa */
+.cs-actions{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Nút chính: xanh nhạt, viền xanh như ảnh */
+.cs-primary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: min(320px, 80%);
+  height: 38px;
+  background: #d9ecff;
+  color: #0b1e36;
+  border: 3px solid #5FA9FF;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+}
+.cs-primary:hover{ filter: brightness(0.98); }
+
+/* Nút phụ: nền xám nhạt, viền xám */
+.cs-secondary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: min(320px, 80%);
+  height: 34px;
+  background: white;
+  color: #1b2634;
+  border: 3px solid #bfc6cc;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+}
+.cs-secondary:hover{ background: #e9eef2; }
+
+/* Responsive nhẹ */
+@media (max-width: 520px){
+  .cs-panel{ padding: 16px 12px; }
+  .cs-actions a{ width: 100%; }
+}
