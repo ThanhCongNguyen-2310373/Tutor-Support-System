@@ -1,16 +1,536 @@
-// This file is kept for backward compatibility
-// All imports are redirected to the new api/ folder structure
+import axios from 'axios';
 
-// Re-export everything from api/index.js
-export {
-  apiClient,
-  authService,
-  tutorsService,
-  meetingsService,
-  aiService,
-  notificationsService,
-  authAPI,
-  tutorsAPI,
-  meetingsAPI,
-  AI_API
-} from './api/index';
+// ============================================================================
+// API CLIENT
+// ============================================================================
+
+const apiClient = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000',
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor - Add token to headers
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - Handle errors globally
+apiClient.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    // Handle 401 Unauthorized
+    if (error.response?.status === 401) {
+      const currentPath = window.location.pathname;
+      
+      // Only redirect to login if not already on login page
+      if (currentPath !== '/' && currentPath !== '/login' && currentPath !== '/register-account') {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('dashRole');
+        
+        // Redirect to login
+        window.location.href = '/';
+      }
+    }
+
+    // Handle 403 Forbidden
+    if (error.response?.status === 403) {
+      console.error('Permission denied');
+    }
+
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error - API server is down');
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// ============================================================================
+// AUTH SERVICE
+// ============================================================================
+
+export const authService = {
+  register: async (userData) => {
+    try {
+      const response = await apiClient.post('/auth/register', userData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Registration failed' };
+    }
+  },
+
+  login: async (credentials) => {
+    try {
+      const response = await apiClient.post('/auth/login', credentials);
+      
+      if (response.access_token) {
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+      }
+      
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Login failed' };
+    }
+  },
+
+  changePassword: async (passwordData) => {
+    try {
+      const response = await apiClient.post('/auth/change-password', passwordData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Change password failed' };
+    }
+  },
+
+  logout: () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  },
+
+  getCurrentUser: () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem('access_token');
+  },
+};
+
+// ============================================================================
+// TUTORS SERVICE
+// ============================================================================
+
+export const tutorsService = {
+  getAll: async (filters = {}) => {
+    try {
+      const query = new URLSearchParams(filters).toString();
+      const response = await apiClient.get(`/tutors${query ? `?${query}` : ''}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch tutors' };
+    }
+  },
+
+  getTutorById: async (id) => {
+    try {
+      const response = await apiClient.get(`/tutors/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch tutor details' };
+    }
+  },
+
+  getAvailability: async (tutorId) => {
+    try {
+      const response = await apiClient.get(`/tutors/me/availability`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch availability' };
+    }
+  },
+
+  postAvailability: async (availabilityData) => {
+    try {
+      const response = await apiClient.post('/tutors/availability', availabilityData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to create availability' };
+    }
+  },
+
+  deleteAvailability: async (availabilityId) => {
+    try {
+      const response = await apiClient.delete(`/tutors/availability/${availabilityId}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete availability' };
+    }
+  },
+
+  getMyAvailability: async () => {
+    try {
+      const response = await apiClient.get('/tutors/me/availability');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch my availability' };
+    }
+  },
+
+  getMyStudents: async () => {
+    try {
+      const response = await apiClient.get('/tutors/me/students');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch my students' };
+    }
+  },
+
+  postProgress: async (progressData) => {
+    try {
+      const response = await apiClient.post('/tutors/progress', progressData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to record progress' };
+    }
+  },
+};
+
+// ============================================================================
+// MEETINGS SERVICE
+// ============================================================================
+
+export const meetingsService = {
+  book: async (bookingData) => {
+    try {
+      const response = await apiClient.post('/meetings/book', bookingData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to book meeting' };
+    }
+  },
+
+  getMyMeetings: async (status = null) => {
+    try {
+      const url = status ? `/meetings/my-meetings?status=${status}` : '/meetings/my-meetings';
+      const response = await apiClient.get(url);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch meetings' };
+    }
+  },
+
+  getMeetingById: async (id) => {
+    try {
+      const response = await apiClient.get(`/meetings/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch meeting details' };
+    }
+  },
+
+  getUpcoming: async () => {
+    try {
+      const response = await apiClient.get('/meetings/my-meetings?status=CONFIRMED');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch upcoming meetings' };
+    }
+  },
+
+  getHistory: async () => {
+    try {
+      const response = await apiClient.get('/meetings/my-meetings?status=COMPLETED');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch meeting history' };
+    }
+  },
+
+  confirm: async (meetingId) => {
+    try {
+      const response = await apiClient.patch(`/tutors/bookings/${meetingId}/confirm`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to confirm meeting' };
+    }
+  },
+
+  cancel: async (meetingId) => {
+    try {
+      const response = await apiClient.patch(`/meetings/${meetingId}/cancel`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to cancel meeting' };
+    }
+  },
+
+  complete: async (meetingId) => {
+    try {
+      const response = await apiClient.patch(`/meetings/${meetingId}/complete`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to complete meeting' };
+    }
+  },
+
+  reschedule: async (meetingId, newScheduleData) => {
+    try {
+      const response = await apiClient.put(`/meetings/${meetingId}/reschedule`, newScheduleData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to reschedule meeting' };
+    }
+  },
+
+  rate: async (meetingId, ratingData) => {
+    try {
+      const response = await apiClient.post(`/meetings/${meetingId}/rate`, ratingData);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to rate meeting' };
+    }
+  },
+};
+
+// ============================================================================
+// AI SERVICE
+// ============================================================================
+
+export const aiService = {
+  matchTutors: async (criteria) => {
+    try {
+      const response = await apiClient.post('/ai/match-tutors', criteria);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to match tutors' };
+    }
+  },
+
+  getSimilarTutors: async (tutorId) => {
+    try {
+      const response = await apiClient.get(`/ai/similar-tutors/${tutorId}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to get similar tutors' };
+    }
+  },
+
+  chat: async (message) => {
+    try {
+      const response = await apiClient.post('/ai/chat', { message });
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to chat with AI' };
+    }
+  },
+
+  getChatHistory: async () => {
+    try {
+      const response = await apiClient.get('/ai/chatbot/history');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to get chat history' };
+    }
+  },
+
+  clearChatHistory: async () => {
+    try {
+      const response = await apiClient.delete('/ai/chatbot/history');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to clear chat history' };
+    }
+  },
+
+  faqSearch: async (query) => {
+    try {
+      const response = await apiClient.post('/ai/faq-search', { query });
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to search FAQ' };
+    }
+  },
+
+  checkHealth: async () => {
+    try {
+      const response = await apiClient.get('/ai/chatbot/health');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to check chatbot health' };
+    }
+  },
+};
+
+// ============================================================================
+// NOTIFICATIONS SERVICE
+// ============================================================================
+
+export const notificationsService = {
+  getAll: async (page = 1, limit = 20) => {
+    try {
+      const response = await apiClient.get(`/notifications?page=${page}&limit=${limit}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch notifications' };
+    }
+  },
+
+  getUnreadCount: async () => {
+    try {
+      const response = await apiClient.get('/notifications/unread-count');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch unread count' };
+    }
+  },
+
+  markAsRead: async (notificationId) => {
+    try {
+      const response = await apiClient.patch(`/notifications/${notificationId}/read`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark notification as read' };
+    }
+  },
+
+  markAllAsRead: async () => {
+    try {
+      const response = await apiClient.patch('/notifications/read-all');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark all as read' };
+    }
+  },
+};
+
+// ============================================================================
+// EXTERNAL SERVICE
+// ============================================================================
+
+export const externalService = {
+  searchLibrary: async (query, page = 1, limit = 20) => {
+    try {
+      const params = new URLSearchParams({
+        query,
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      const response = await apiClient.get(`/external/library/search?${params}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to search library' };
+    }
+  },
+
+  getDocumentUrl: async (id) => {
+    try {
+      const response = await apiClient.get(`/external/library/document-url/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to get document URL' };
+    }
+  },
+
+  getRecommendations: async () => {
+    try {
+      const response = await apiClient.get('/external/library/recommendations');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch recommendations' };
+    }
+  },
+
+  getPopularDocuments: async (limit = 10) => {
+    try {
+      const params = new URLSearchParams({
+        limit: limit.toString(),
+      });
+      const response = await apiClient.get(`/external/library/popular?${params}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch popular documents' };
+    }
+  },
+};
+
+// ============================================================================
+// MANAGEMENT SERVICE
+// ============================================================================
+
+export const managementService = {
+  getApplications: async (filters = {}) => {
+    try {
+      const response = await apiClient.get('/management/tutor-applications');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch applications' };
+    }
+  },
+  
+  approveApplication: async (id) => {
+    try {
+      const response = await apiClient.patch(`/management/tutor-applications/${id}/approve`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to approve application' };
+    }
+  },
+  
+  rejectApplication: async (id, reason = '') => {
+    try {
+      const response = await apiClient.patch(`/management/tutor-applications/${id}/reject`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to reject application' };
+    }
+  },
+};
+
+// ============================================================================
+// REPORTS SERVICE
+// ============================================================================
+
+export const reportsService = {
+  getScholarshipTutors: async (filters = {}) => {
+    try {
+      const query = new URLSearchParams(filters).toString();
+      const response = await apiClient.get(`/reports/osa/scholarship/tutors${query ? `?${query}` : ''}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch scholarship tutors' };
+    }
+  },
+
+  getScholarshipLearners: async (filters = {}) => {
+    try {
+      const query = new URLSearchParams(filters).toString();
+      const response = await apiClient.get(`/reports/osa/scholarship/learners${query ? `?${query}` : ''}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch scholarship learners' };
+    }
+  },
+
+  getDepartmentMetrics: async () => {
+    try {
+      const response = await apiClient.get('/reports/oaa/department-metrics');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch department metrics' };
+    }
+  },
+};
+
+// ============================================================================
+// BACKWARD COMPATIBILITY EXPORTS
+// ============================================================================
+
+export const authAPI = authService;
+export const tutorsAPI = tutorsService;
+export const meetingsAPI = meetingsService;
+export const AI_API = aiService;
+
+export default apiClient;

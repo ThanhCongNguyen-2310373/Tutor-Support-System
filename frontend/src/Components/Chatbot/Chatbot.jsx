@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Trash2, Loader } from "lucide-react";
-import aiService from "../../api/ai.service";
+import aiService from "../../api.js";
 import { showError } from "../../utils/errorHandler";
 import "./Chatbot.css";
 

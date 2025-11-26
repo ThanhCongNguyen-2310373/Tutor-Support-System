@@ -3,7 +3,7 @@ import "./OSADashboard.css";
 import Card from "../../../Components/Card/Card";
 import pencilIcon from "../../../Components/Assets/pen-to-square-solid-full.svg";
 import { Link } from "react-router-dom";
-import reportsService from "../../../api/reports.service";
+import reportsService from "../../../api.js";
 import { showError } from "../../../utils/errorHandler";
 
 export default function OSADashboard() {
