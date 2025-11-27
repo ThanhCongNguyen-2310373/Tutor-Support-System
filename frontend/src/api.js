@@ -5,7 +5,7 @@ import axios from 'axios';
 // ============================================================================
 
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -287,7 +287,7 @@ export const meetingsService = {
 
   rate: async (meetingId, ratingData) => {
     try {
-      const response = await apiClient.post(`/meetings/${meetingId}/rate`, ratingData);
+      const response = await apiClient.post(`/meetings/${meetingId}/rating`, ratingData);
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to rate meeting' };
@@ -532,5 +532,6 @@ export const authAPI = authService;
 export const tutorsAPI = tutorsService;
 export const meetingsAPI = meetingsService;
 export const AI_API = aiService;
+export const managementAPI = managementService
 
 export default apiClient;

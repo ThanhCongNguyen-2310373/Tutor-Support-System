@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import managementService from "../../api.js";
+import { managementAPI } from "../../api";
 import { showSuccess, showError } from "../../utils/errorHandler";
 import "./TutorCandidateApproval.css";
 
@@ -33,7 +33,7 @@ export default function TutorCandidateApproval() {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await managementService.getApplications();
+      const response = await managementAPI.getApplications();
       setCandidates(response || []);
     } catch (error) {
       showError("Không thể tải danh sách ứng viên");
@@ -68,20 +68,12 @@ export default function TutorCandidateApproval() {
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
-
-  // Helper to get Admin ID
-  const getAdminId = () => {
-    try {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      return user.id || user.userId;
-    } catch { return null; }
-  };
-
+  
   // Single Approve (Used in Detail Modal)
   const handleSingleApprove = async (id) => {
     if (!window.confirm("Bạn có chắc muốn duyệt ứng viên này?")) return;
     try {
-      await managementService.approveApplication(id);
+      await managementAPI.approveApplication(id);
       showSuccess("Đã duyệt ứng viên!");
       setViewCandidate(null); // Close modal
       fetchApplications();
@@ -94,7 +86,7 @@ export default function TutorCandidateApproval() {
   const handleSingleReject = async (id) => {
     if (!window.confirm("Bạn có chắc muốn từ chối ứng viên này?")) return;
     try {
-      await managementService.rejectApplication(id);
+      await managementAPI.rejectApplication(id);
       showSuccess("Đã từ chối ứng viên!");
       setViewCandidate(null); // Close modal
       fetchApplications();
@@ -124,7 +116,7 @@ export default function TutorCandidateApproval() {
     setShowConfirmModal(false);
     try {
       await Promise.all(
-        selectedCandidates.map(id => managementService.approveApplication(id))
+        selectedCandidates.map(id => managementAPI.approveApplication(id))
       );
       showSuccess(`Đã duyệt ${selectedCandidates.length} ứng viên!`);
       setSelectedCandidates([]);
@@ -139,7 +131,7 @@ export default function TutorCandidateApproval() {
     if (!window.confirm(`Bạn có chắc muốn từ chối ${selectedCandidates.length} ứng viên?`)) return;
     try {
       await Promise.all(
-        selectedCandidates.map(id => managementService.rejectApplication(id))
+        selectedCandidates.map(id => managementAPI.rejectApplication(id))
       );
       showSuccess(`Đã từ chối ${selectedCandidates.length} ứng viên!`);
       setSelectedCandidates([]);
