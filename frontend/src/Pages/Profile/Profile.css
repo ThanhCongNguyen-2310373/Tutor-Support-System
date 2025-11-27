@@ -6,7 +6,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .pf-title {
@@ -24,10 +25,10 @@
   border-radius: 12px;
   background: #fff;
   padding: 24px;
-  
+
   /* Grid Layout: Left (Avatar) - Right (Info) */
   display: grid;
-  grid-template-columns: 320px 1fr; 
+  grid-template-columns: 320px 1fr;
   gap: 32px;
   align-items: start;
 }
@@ -60,6 +61,49 @@
   object-fit: cover; /* Ensures photo fills box nicely */
 }
 
+/* ====== PLACEHOLDER AVATAR (PERSON ICON XANH NHẠT) ====== */
+
+.pf-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dbeafe; /* xanh nhạt */
+}
+
+.pf-avatar-circle {
+  width: 60%;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: #bfdbfe;
+  position: relative;
+}
+
+/* Đầu */
+.pf-avatar-head {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: #eff6ff;
+}
+
+/* Thân */
+.pf-avatar-body {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 40%;
+  border-radius: 999px 999px 40% 40%;
+  background: #eff6ff;
+}
+
 /* Role Badge (TUTOR / STUDENT) */
 .status-badge {
   padding: 8px 24px;
@@ -69,16 +113,18 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.status-approved { /* Tutor Style */
+.status-approved {
+  /* Tutor Style */
   background-color: #dbeafe; /* Light Blue */
-  color: #1e40af;            /* Dark Blue Text */
+  color: #1e40af; /* Dark Blue Text */
   border: 1px solid #bfdbfe;
 }
 
-.status-pending { /* Student Style */
+.status-pending {
+  /* Student Style */
   background-color: #f3f4f6;
   color: #374151;
   border: 1px solid #e5e7eb;
@@ -130,7 +176,7 @@
   font-weight: 600;
   color: #1f2937;
   font-size: 1rem;
-  
+
   /* Handle long text */
   white-space: nowrap;
   overflow: hidden;
@@ -144,12 +190,11 @@
 
 .pf-input.is-readonly {
   background-color: #ffffff; /* Keep white for cleanliness */
-  pointer-events: none;      /* Prevent clicking */
-  color: #111827;            /* Dark text for readability */
+  pointer-events: none; /* Prevent clicking */
+  color: #111827; /* Dark text for readability */
 }
 
 /* --- Split Row (Khoa & Lớp) --- */
-/* This aligns the two fields side-by-side */
 .pf-row-split {
   display: grid;
   grid-template-columns: 1.5fr 1fr; /* Department gets more space than Class */
@@ -157,7 +202,6 @@
   margin-bottom: 16px;
 }
 
-/* Inside the split row, let labels shrink to fit content */
 .pf-row-split .pf-field {
   grid-template-columns: auto 1fr; /* Label takes only needed width */
   margin-bottom: 0;
@@ -189,11 +233,11 @@
 .pf-tag {
   display: inline-block;
   background-color: #e0f2fe; /* Light Cyan/Blue */
-  color: #0284c7;            /* Deep Cyan Text */
+  color: #0284c7; /* Deep Cyan Text */
   font-weight: 600;
   font-size: 0.9rem;
   padding: 6px 14px;
-  border-radius: 20px;       /* Pill Shape */
+  border-radius: 20px; /* Pill Shape */
   border: 1px solid #bae6fd;
   white-space: nowrap;
 }
@@ -211,7 +255,7 @@
     justify-content: center;
     gap: 20px;
   }
-  
+
   .pf-avatar {
     width: 180px;
     margin: 0;
@@ -236,7 +280,7 @@
     grid-template-columns: 1fr; /* Stack Khoa and Lop vertically */
     gap: 16px;
   }
-  
+
   .pf-row-split .pf-field {
     grid-template-columns: 1fr;
   }

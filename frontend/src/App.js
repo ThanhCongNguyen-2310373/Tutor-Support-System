@@ -86,7 +86,7 @@ function AppContent() {
             <Route path="/dashboard/osa" element={<OSADashboard />} />
 
             {/* Library */}
-            <Route path="/library" element={<Library />} />
+            <Route path="/dashboard/student/library" element={<Library />} />
 
             {/* Register */}
             <Route path="/register" element={<Register />} />

@@ -184,7 +184,7 @@ export default function StudentDashboard() {
         <h2 className="sd-section-title">Hành động nhanh</h2>
         <div className="sd-grid">
           {[
-            { to: "/library", icon: "📚", title: "Thư viện HCMUT", color: "#FF7051" },
+            { to: "/dashboard/student/library", icon: "📚", title: "Thư viện HCMUT", color: "#FF7051" },
             { to: "/register", icon: "👨‍🎓", title: "Tìm giảng viên", color: "#2F8E70" }
           ].map((card, i) => (
             <Link key={i} to={card.to} className="sd-card-link">
