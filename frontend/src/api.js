@@ -81,7 +81,8 @@ export const authService = {
       
       if (response.access_token) {
         localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        const getUser = await apiClient.get('/users/me')
+        localStorage.setItem('user', JSON.stringify(getUser));
       }
       
       return response;
@@ -114,6 +115,7 @@ export const authService = {
     }
   },
 
+
   isAuthenticated: () => {
     return !!localStorage.getItem('access_token');
   },
@@ -126,8 +128,7 @@ export const authService = {
 export const tutorsService = {
   getAll: async (filters = {}) => {
     try {
-      const query = new URLSearchParams(filters).toString();
-      const response = await apiClient.get(`/tutors${query ? `?${query}` : ''}`);
+      const response = await apiClient.get('/tutors');
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch tutors' };
@@ -287,7 +288,7 @@ export const meetingsService = {
 
   rate: async (meetingId, ratingData) => {
     try {
-      const response = await apiClient.post(`/meetings/${meetingId}/rate`, ratingData);
+      const response = await apiClient.post(`/meetings/${meetingId}/rating`, ratingData);
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to rate meeting' };
@@ -545,6 +546,7 @@ export const reportsService = {
   },
 };
 
+
 // ============================================================================
 // ACADEMIC SERVICE - LỘ TRÌNH MÔN HỌC (TBM)
 // ============================================================================
@@ -600,7 +602,7 @@ export const authAPI = authService;
 export const tutorsAPI = tutorsService;
 export const meetingsAPI = meetingsService;
 export const AI_API = aiService;
-
 export const managementAPI = managementService
+
 export const academicAPI = academicService;
 export default apiClient;
