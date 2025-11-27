@@ -55,6 +55,8 @@ import TutorRequestPage from "./Pages/TBM_TutorRequestPage/TutorRequestPage";
 import PairingApproval from "./Pages/PairingApproval/PairingApproval";
 //DRLAssesment
 import DRLAssessment from "./Pages/DRLAssessment/DRLAssessment";
+// Roadmap
+import RoadmapManage from "./Pages/RoadmapManage/RoadmapManage"
 
 // Component to initialize WebSocket
 function AppContent() {
@@ -124,7 +126,7 @@ function AppContent() {
             <Route path="/dashboard/admin/tutor-approval" element={<TutorCandidateApproval />} />
             {/* TBM Tutor Request */}
             <Route path="/dashboard/truongkhoa/tutor-requests" element={<TutorRequestPage />} />
-
+            <Route path="/dashboard/truongkhoa/roadmap-manage" element={<RoadmapManage />} />
 
 
             {/* Bắt mọi route lạ */}

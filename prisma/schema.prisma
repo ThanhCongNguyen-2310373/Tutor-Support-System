@@ -38,9 +38,6 @@ model User {
   studentApplications TutorApplication[] @relation("StudentApplications")
   progressRecords     ProgressRecord[]   @relation("StudentProgress")
 
-  // Quan hệ 1-N (Nghiệp vụ TBM)
-  roadmaps        LearningRoadmap[]
-
   // Quan hệ 1-N (Nghiệp vụ Admin/Coordinator)
   adminApplications   TutorApplication[] @relation("AdminApplications")
   coordinatorComplaints Complaint[]      @relation("CoordinatorComplaints")
@@ -193,10 +190,6 @@ model LearningRoadmap {
   title       String
   description String?
   documentUrl String? // Mô phỏng HCMUT_LIBRARY (UC_GENERAL_03)
-
-  // TBM tạo
-  author   User @relation(fields: [authorId], references: [id])
-  authorId Int
 }
 
 // (UC_TBM_02 & UC_ADMIN_02) Yêu cầu duyệt Tutor

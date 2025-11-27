@@ -42,6 +42,7 @@ export default function Navbar() {
   const isTruongKhoaTutorReq   = pathname === "/dashboard/truongkhoa/tutor-requests";
   const isOaaReport            = pathname === "/dashboard/oaa/report";
   const isDRL                  = pathname === "/drl";
+  const isRoadmapManage = pathname === "/dashboard/truongkhoa/roadmap-manage";
 
   // Lấy role ưu tiên theo URL (nếu đang ở /dashboard)
   let urlRole = "";
@@ -91,6 +92,8 @@ export default function Navbar() {
     active = "features";
   } else if (isNotification) {
     active = "announcements";
+  } else if (isRoadmapManage) {
+    active = "roadmap-manage";
   }
 
   // Tab giữa: đổi nhãn/đích theo trang hiện tại
@@ -134,6 +137,10 @@ export default function Navbar() {
     middleLabel = "Xét điểm rèn luyện";
     middleTo    = "/drl";
     middleKey   = "drl";
+  } else if (isRoadmapManage) {
+    middleLabel = "Lộ trình môn học";
+    middleTo    = "/dashboard/truongkhoa/roadmap-manage";
+    middleKey   = "roadmap-manage";
   }
 
   // Logout: xóa dashRole và về trang login
