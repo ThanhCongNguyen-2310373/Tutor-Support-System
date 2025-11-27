@@ -228,6 +228,32 @@ export class ManagementController {
   }
 
 
+  @Get('potential-tutors')
+  @Roles(Role.COORDINATOR, Role.TBM, Role.ADMIN) // chỉ TBM/Coord mới được xem
+  async getPotentialTutors(
+    @Query('gpaMin') gpaMin = 3.0,
+    @Query('department') department?: string,
+  ) {
+    return this.managementService.getPotentialTutors({ gpaMin: +gpaMin, department });
+  }
 
-
+  @Post('tutor-applications/propose')
+  @Roles(Role.TBM, Role.COORDINATOR)
+  @ApiOperation({ summary: 'Đề xuất sinh viên làm tutor (bởi TBM/Coordinator)' })
+  @ApiResponse({ status: 201, description: 'Đề xuất đã được tạo' })
+  @ApiResponse({ status: 400, description: 'Sinh viên không hợp lệ hoặc đã là tutor' })
+  async proposeTutorApplication(
+    @GetUser('userId') proposedById: number,
+    @Body() body: {
+      studentId: number;
+      expertise: string[];
+      bio: string;
+      gpa: number;
+    }
+  ) {
+    return this.managementService.proposeTutorApplication({
+      ...body,
+      proposedById, 
+    });
+  }
 }
