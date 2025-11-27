@@ -488,6 +488,27 @@ export const managementService = {
       throw error.response?.data || { message: 'Failed to reject application' };
     }
   },
+
+  // Thêm vào managementService
+  getPotentialTutors: async (filters = {}) => {
+    try {
+      const query = new URLSearchParams(filters).toString();
+      const response = await apiClient.get(`/management/potential-tutors${query ? `?${query}` : ''}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Không thể tải danh sách ứng viên tiềm năng' };
+    }
+  },
+
+  // THÊM VÀO managementService
+  proposeTutorApplication: async (data) => {
+    try {
+      const response = await apiClient.post('/management/tutor-applications/propose', data);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Gửi đề xuất thất bại' };
+    }
+  },
 };
 
 // ============================================================================

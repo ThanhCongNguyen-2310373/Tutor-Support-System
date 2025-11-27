@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 import { EmailService } from '../email/email.service';
 import { ManualPairDto } from './dto/manual-pair.dto';
@@ -704,4 +704,75 @@ export class ManagementService {
 
     return updated;
   }
+  
+//####################################################
+//## UC_TBM_02: TBM - get potential tutor          ###
+//####################################################
+  async getPotentialTutors(filters: { gpaMin?: number; department?: string }) {
+    const { gpaMin = 3.0, department } = filters;
+
+    return this.prisma.user.findMany({
+      where: {
+        role: Role.STUDENT,
+        gpa: { gte: gpaMin },
+        department: department ? { contains: department, mode: 'insensitive' } : undefined,
+        // Loại bỏ những người đã là tutor
+        tutorProfile: null,
+      },
+      select: {
+        id: true,
+        fullName: true,
+        mssv: true,
+        department: true,
+        studentClass: true,
+        gpa: true,
+      },
+      orderBy: { gpa: 'desc' },
+    });
+  }
+
+//####################################################
+//## UC_TBM_02: TBM - send to admin to aproval     ###
+//####################################################
+  async proposeTutorApplication(data: {
+    studentId: number;
+    expertise: string[];
+    bio: string;
+    gpa: number;
+    proposedById: number;
+  }) {
+    const existing = await this.prisma.tutorApplication.findFirst({
+    where: {
+      studentId: data.studentId,
+      status: 'PENDING', // chỉ check đơn đang chờ duyệt
+    },
+    });
+
+    if (existing) {
+      throw new ConflictException(
+        'Sinh viên này đã có đơn xin làm Tutor đang chờ duyệt! Không thể đề xuất thêm.'
+      );
+    }
+    return this.prisma.tutorApplication.create({
+      data: {
+        studentId: data.studentId,
+        expertise: data.expertise,
+        bio: data.bio,
+        gpa: data.gpa,
+        status: "PENDING",
+      },
+      include: {
+        student: {
+          select: { 
+            fullName: true,
+            mssv: true,
+            studentClass: true,
+            department: true,
+            email: true,
+          }
+        }
+      }
+    });
+  }
+
 }
