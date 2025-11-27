@@ -126,7 +126,7 @@ export const authService = {
 // ============================================================================
 
 export const tutorsService = {
-  getAll: async (filters = {}) => {
+  getAll: async () => {
     try {
       const response = await apiClient.get('/tutors');
       return response;
@@ -366,7 +366,7 @@ export const aiService = {
 };
 
 // ============================================================================
-// NOTIFICATIONS SERVICE
+// NOTIFICATIONS SERVICE (Old - deprecated, use notiService instead)
 // ============================================================================
 
 export const notificationsService = {
@@ -405,6 +405,72 @@ export const notificationsService = {
       throw error.response?.data || { message: 'Failed to mark all as read' };
     }
   },
+};
+
+// ============================================================================
+// NOTIFICATION SERVICE (New - improved version)
+// ============================================================================
+
+export const notiService = {
+  // GET /notifications?limit=50
+  getAll: async (limit = 50) => {
+    try {
+      const response = await apiClient.get(`/notifications?limit=${limit}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch notifications' };
+    }
+  },
+
+  // GET /notifications/unread-count
+  getUnreadCount: async () => {
+    try {
+      const response = await apiClient.get('/notifications/unread-count');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch unread count' };
+    }
+  },
+
+  // POST /notifications/:id/read
+  markAsRead: async (id) => {
+    try {
+      const response = await apiClient.post(`/notifications/${id}/read`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark notification as read' };
+    }
+  },
+
+  // POST /notifications/read-all
+  markAllAsRead: async () => {
+    try {
+      const response = await apiClient.post('/notifications/read-all');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark all as read' };
+    }
+  },
+
+  // DELETE /notifications/:id
+  delete: async (id) => {
+    try {
+      const response = await apiClient.delete(`/notifications/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete notification' };
+    }
+  },
+
+  // DELETE /notifications/read/all
+  deleteAllRead: async () => {
+    try {
+      const response = await apiClient.delete('/notifications/read/all');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete read notifications' };
+    }
+  }
 };
 
 // ============================================================================
@@ -482,14 +548,14 @@ export const managementService = {
   
   rejectApplication: async (id, reason = '') => {
     try {
-      const response = await apiClient.patch(`/management/tutor-applications/${id}/reject`);
+      const response = await apiClient.patch(`/management/tutor-applications/${id}/reject`, { reason });
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to reject application' };
     }
   },
 
-  // Thêm vào managementService
+  // Get potential tutors
   getPotentialTutors: async (filters = {}) => {
     try {
       const query = new URLSearchParams(filters).toString();
@@ -500,7 +566,7 @@ export const managementService = {
     }
   },
 
-  // THÊM VÀO managementService
+  // Propose tutor application
   proposeTutorApplication: async (data) => {
     try {
       const response = await apiClient.post('/management/tutor-applications/propose', data);
@@ -545,7 +611,6 @@ export const reportsService = {
     }
   },
 };
-
 
 // ============================================================================
 // ACADEMIC SERVICE - LỘ TRÌNH MÔN HỌC (TBM)
@@ -593,7 +658,6 @@ export const academicService = {
   },
 };
 
-
 // ============================================================================
 // BACKWARD COMPATIBILITY EXPORTS
 // ============================================================================
@@ -602,7 +666,8 @@ export const authAPI = authService;
 export const tutorsAPI = tutorsService;
 export const meetingsAPI = meetingsService;
 export const AI_API = aiService;
-export const managementAPI = managementService
-
+export const managementAPI = managementService;
+export const notiAPI = notiService;
 export const academicAPI = academicService;
+
 export default apiClient;
