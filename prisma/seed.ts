@@ -55,7 +55,19 @@ async function main() {
   // 1. SEED SYSTEM ADMINS & STAFF
   // ==========================================
   console.log('Creating Admin & Staff...');
-  
+
+  await prisma.user.create({
+    data: {
+      email: 'osa@hcmut.edu.vn',
+      password: hashedPassword,
+      fullName: 'Super Admin',
+      mssv: 'ADMIN000',
+      role: Role.OSA,
+      department: ADMIN_DEPT,
+      phoneNumber: generatePhone(),
+
+    },
+  });
   await prisma.user.create({
     data: {
       email: 'admin@hcmut.edu.vn',
