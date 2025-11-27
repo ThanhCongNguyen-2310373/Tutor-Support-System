@@ -81,7 +81,8 @@ export const authService = {
       
       if (response.access_token) {
         localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        const getUser = await apiClient.get('/users/me')
+        localStorage.setItem('user', JSON.stringify(getUser));
       }
       
       return response;
@@ -113,6 +114,7 @@ export const authService = {
       return null;
     }
   },
+
 
   isAuthenticated: () => {
     return !!localStorage.getItem('access_token');
@@ -523,6 +525,7 @@ export const reportsService = {
     }
   },
 };
+
 
 // ============================================================================
 // BACKWARD COMPATIBILITY EXPORTS
