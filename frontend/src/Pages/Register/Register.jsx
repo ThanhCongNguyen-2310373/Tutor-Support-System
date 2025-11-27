@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
-import { tutorsService, aiService } from "../../api";
+// Assuming tutorsService calls the getAll function you described
+import { tutorsService, aiService } from "../../api"; 
 import { showError, showSuccess } from "../../utils/errorHandler"; 
 
 export default function Register() {
-  const [tutors, setTutors] = useState([]);
+  // 'allTutors' stores the full list from DB (source of truth)
+  const [allTutors, setAllTutors] = useState([]);
+  // 'displayedTutors' is what is currently shown on screen (after filter)
+  const [displayedTutors, setDisplayedTutors] = useState([]);
+  
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [availableSubjects, setAvailableSubjects] = useState([]);
   
   // AI Search State
   const [showAiModal, setShowAiModal] = useState(false);
@@ -15,23 +21,35 @@ export default function Register() {
   const [aiCriteria, setAiCriteria] = useState({
     subjects: "",
     minRating: 4,
-    preferredExperience: 0 // Default based on your data
+    preferredExperience: 0
   });
 
   useEffect(() => {
     loadTutors();
   }, []);
 
-  const loadTutors = async (filters = {}) => {
+  const loadTutors = async () => {
     setLoading(true);
     try {
-      const data = await tutorsService.getAll(filters);
-      // Standard API returns array directly
-      setTutors(Array.isArray(data) ? data : []); 
+      // 1. Fetch ALL tutors
+      const data = await tutorsService.getAll();
+      const tutorList = Array.isArray(data) ? data : [];
+
+      setAllTutors(tutorList);
+      setDisplayedTutors(tutorList); // Initially show all
+
+      // 2. Extract unique subjects from expertise
+      const allExpertise = tutorList.flatMap(t => t.expertise || []);
+      const uniqueSubjects = [...new Set(allExpertise)]; // Remove duplicates
+      
+      // 3. Save to Local Storage & State
+      localStorage.setItem('availableSubjects', JSON.stringify(uniqueSubjects));
+      setAvailableSubjects(uniqueSubjects);
+
     } catch (error) {
       console.error("Failed to load tutors", error);
       showError(error);
-      setTutors([]);
+      setAllTutors([]);
     } finally {
       setLoading(false);
     }
@@ -39,10 +57,32 @@ export default function Register() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    loadTutors({ name: searchTerm });
+    
+    const term = searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      // If empty, show all
+      setDisplayedTutors(allTutors);
+      return;
+    }
+
+    // 4. Client-side Filtering Logic
+    const filtered = allTutors.filter(tutor => {
+      // Check Name
+      const nameMatch = tutor.user?.fullName?.toLowerCase().includes(term);
+      
+      // Check Expertise (Subject)
+      // Returns true if ANY of the expertise strings include the search term
+      const subjectMatch = tutor.expertise?.some(subject => 
+        subject.toLowerCase().includes(term)
+      );
+
+      return nameMatch || subjectMatch;
+    });
+
+    setDisplayedTutors(filtered);
   };
 
-  // --- FIXED AI MATCH FUNCTION ---
   const handleAiMatch = async () => {
     if (!aiCriteria.subjects.trim()) {
       showError("Vui lòng nhập môn học");
@@ -61,28 +101,22 @@ export default function Register() {
 
       const res = await aiService.matchTutors(payload);
       
-      // 1. Check if 'res.data' exists (based on your JSON structure)
       if (res.data && Array.isArray(res.data)) {
-        
-        // 2. Transform AI Data -> Standard Tutor Data for UI
         const formattedTutors = res.data.map(item => ({
-          id: item.tutorId, // Map tutorId -> id
+          id: item.tutorId,
           user: { 
-            fullName: item.tutorName, // Map tutorName -> user.fullName
+            fullName: item.tutorName, 
             email: item.tutorEmail 
           },
-          // Map AI "reasons" to "bio" so user sees why they matched
           bio: item.explanation.reasons ? item.explanation.reasons.join(". ") : "AI Gợi ý",
-          
-          // Map "specialization" string ("Toán, Lý") -> Array ["Toán", "Lý"]
           expertise: item.profile.specialization 
             ? item.profile.specialization.split(',').map(s => s.trim()) 
             : [],
-            
           rating: item.profile.rating
         }));
 
-        setTutors(formattedTutors);
+        // For AI match, we override the display list directly
+        setDisplayedTutors(formattedTutors);
         setShowAiModal(false);
         showSuccess(`Tìm thấy ${formattedTutors.length} tutor phù hợp!`);
       } else {
@@ -107,11 +141,19 @@ export default function Register() {
         <form onSubmit={handleSearch} className="reg-search-form">
           <input
             type="text"
-            placeholder="Tìm theo tên..."
+            list="subject-suggestions" // Connect to datalist
+            placeholder="Tìm theo tên hoặc môn học (VD: Đại số)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="reg-search-input"
           />
+          {/* 5. Suggestions Dropdown from Local Data */}
+          <datalist id="subject-suggestions">
+            {availableSubjects.map((sub, index) => (
+              <option key={index} value={sub} />
+            ))}
+          </datalist>
+
           <button type="submit" className="btn-search">Tìm kiếm</button>
         </form>
         
@@ -124,9 +166,8 @@ export default function Register() {
         <div className="loading">Đang tải danh sách...</div>
       ) : (
         <div className="reg-grid">
-          {/* Safety check before mapping */}
-          {Array.isArray(tutors) && tutors.length > 0 ? (
-            tutors.map((tutor) => (
+          {Array.isArray(displayedTutors) && displayedTutors.length > 0 ? (
+            displayedTutors.map((tutor) => (
               <TutorCard key={tutor.id} tutor={tutor} />
             ))
           ) : (
@@ -135,7 +176,7 @@ export default function Register() {
         </div>
       )}
 
-      {/* AI Modal */}
+      {/* AI Modal (Unchanged) */}
       {showAiModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -153,7 +194,7 @@ export default function Register() {
 
             <div className="modal-row">
               <div>
-                <label>Đánh giá (Sao):</label>
+                <label>Đánh giá tối thiểu (Sao):</label>
                 <input 
                   type="number"
                   className="modal-input"
@@ -181,13 +222,11 @@ export default function Register() {
   );
 }
 
-// Sub-component remains standard, as we transformed the data to fit it
 function TutorCard({ tutor }) {
   return (
     <div className="course-card">
       <div className="course-card-body">
         <h3 className="course-card-title">{tutor.user?.fullName}</h3>
-        {/* If it's an AI match, the 'bio' will contain the AI reasons */}
         <p className="tutor-bio">{tutor.bio || "Chưa có mô tả"}</p>
         <div className="tutor-tags">
           {tutor.expertise?.slice(0, 3).map((tag, idx) => (

@@ -126,7 +126,7 @@ export const authService = {
 // ============================================================================
 
 export const tutorsService = {
-  getAll: async (filters = {}) => {
+  getAll: async () => {
     try {
       const response = await apiClient.get('/tutors');
       return response;
