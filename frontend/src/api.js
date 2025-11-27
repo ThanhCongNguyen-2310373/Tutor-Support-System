@@ -128,8 +128,7 @@ export const authService = {
 export const tutorsService = {
   getAll: async (filters = {}) => {
     try {
-      const query = new URLSearchParams(filters).toString();
-      const response = await apiClient.get(`/tutors${query ? `?${query}` : ''}`);
+      const response = await apiClient.get('/tutors');
       return response;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to fetch tutors' };
