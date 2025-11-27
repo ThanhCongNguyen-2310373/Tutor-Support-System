@@ -10,7 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
-  
+
   const [step, setStep] = useState("intro");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,8 +23,9 @@ export default function Login() {
 
   const doLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError("Vui lòng nhập đầy đủ thông tin");
-      showError("Vui lòng nhập đầy đủ thông tin");
+      const msg = "Vui lòng nhập đầy đủ thông tin";
+      setError(msg);
+      showError(msg);
       return;
     }
 
@@ -32,22 +33,18 @@ export default function Login() {
 
     try {
       const response = await dispatch(loginUser({ email, password })).unwrap();
-      console.log("Login Response:", response);
 
-      // Show success message
       showSuccess("Đăng nhập thành công!");
 
-      // Navigate based on Role
       const role = response.user.role;
       localStorage.setItem("dashRole", role);
-      
-      if (role === 'TUTOR') navigate("/dashboard/tutor");
-      else if (role === 'ADMIN') navigate("/dashboard/admin");
-      else if (role === 'OAA') navigate("/dashboard/oaa");
-      else if (role === 'OSA') navigate("/dashboard/osa");
-      else if (role === 'TBM') navigate("/dashboard/truongkhoa");
+
+      if (role === "TUTOR") navigate("/dashboard/tutor");
+      else if (role === "ADMIN") navigate("/dashboard/admin");
+      else if (role === "OAA") navigate("/dashboard/oaa");
+      else if (role === "OSA") navigate("/dashboard/osa");
+      else if (role === "TBM") navigate("/dashboard/truongkhoa");
       else navigate("/dashboard/student");
-      
     } catch (err) {
       console.error("Login error:", err);
       const errorMessage = err.message || "Đăng nhập thất bại";
@@ -74,11 +71,13 @@ export default function Login() {
 
         {step === "intro" ? (
           <button
+            type="button"
             className="login-primary-btn"
             onClick={(e) => {
               e.stopPropagation();
               setStep("form");
             }}
+            disabled={loading}
           >
             ĐĂNG NHẬP
           </button>
@@ -86,7 +85,6 @@ export default function Login() {
           <form
             className="login-form"
             onSubmit={(e) => e.preventDefault()}
-            onClick={(e) => e.stopPropagation()}
             onKeyDown={handleFormKeyDown}
             noValidate
           >
@@ -120,27 +118,20 @@ export default function Login() {
             >
               {loading ? "ĐANG XỬ LÝ..." : "ĐĂNG NHẬP"}
             </button>
-
-            <div style={{ textAlign: 'center', marginTop: '15px' }}>
-              <span style={{ color: '#666', fontSize: '14px' }}>Chưa có tài khoản? </span>
-              <button
-                type="button"
-                onClick={() => navigate("/register-account")}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#667eea',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
-                Đăng ký ngay
-              </button>
-            </div>
           </form>
         )}
+      </div>
+
+      {/* Dòng đăng ký – nằm ngoài khung xám */}
+      <div className="login-register-hint">
+        <span>Chưa có tài khoản?</span>
+        <button
+          type="button"
+          className="login-register-link"
+          onClick={() => navigate("/register-account")}
+        >
+          Đăng ký ngay
+        </button>
       </div>
 
       {error && (

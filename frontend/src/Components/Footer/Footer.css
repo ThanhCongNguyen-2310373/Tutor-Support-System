@@ -1,72 +1,75 @@
-:root{
-  --primary:#007AD2;
+:root {
+  --primary: #007ad2;
   --footer-h: 72px;           /* chiều cao footer */
 }
 
 /* FOOTER */
-.footer{
+.footer {
   background: var(--primary);
-  color:#fff;
-  margin-top:auto;
+  color: #fff;
+  margin-top: auto;
 }
-.footer-row{
+
+.footer-row {
   min-height: var(--footer-h);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* LEFT */
-.footer-left{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Logo: cao bằng footer, bỏ nền mờ để không “lòe” */
-.bk-badge{
+.bk-badge {
   height: var(--footer-h);
-  display:flex;
-  align-items:center;
-  background: transparent;     
-  border-radius: 0;
-  padding: 0 4px;             
-  overflow: visible; 
-          
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
 }
 
-/* Logo fill toàn chiều cao footer (trừ viền đệm nhỏ), giữ tỉ lệ */
-.bk-badge img{
+.bk-badge img {
   height: calc(var(--footer-h) - 12px);
   width: auto;
-  display:block;
+  display: block;
   object-fit: contain;
-  z-index: 50;
-  
 }
 
-/* Nếu muốn logo đơn sắc trắng cho đồng bộ brand:
-   BẬT dòng dưới (bỏ comment). Nếu muốn giữ màu gốc thì để comment. */
-/* .bk-badge img{ filter: brightness(0) invert(1); } */
+/* Nếu muốn logo đơn sắc trắng thì bỏ comment dòng dưới */
+/* .bk-badge img { filter: brightness(0) invert(1); } */
 
-.footer-left-text{ line-height:1.1; }
+.footer-left-text {
+  line-height: 1.1;
+}
 
 /* RIGHT */
-.footer-right{ text-align:right; margin-right: 10px; }
-
-.footer-title{
-  font-weight:700;
-  font-size:20px;
-  line-height:1;
+.footer-right {
+  text-align: right;
+  margin-right: 10px;
 }
-.footer-sub{
-  margin-top:2px;
-  font-size:12px;
-  line-height:1.25;
+
+.footer-title {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.footer-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.25;
 }
 
 /* Responsive: giảm footer ở màn nhỏ để không chiếm chỗ */
-@media (max-width: 480px){
-  :root{ --footer-h: 60px; }
-  .footer-title{ font-size:18px; }
+@media (max-width: 480px) {
+  :root {
+    --footer-h: 60px;
+  }
+
+  .footer-title {
+    font-size: 18px;
+  }
 }

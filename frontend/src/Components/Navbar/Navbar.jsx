@@ -27,7 +27,7 @@ export default function Navbar() {
 
   // Ngữ cảnh trang hiện tại
   const isDashboardRoot = pathname.startsWith("/dashboard");
-  const isLibrary        = pathname === "/library";
+  
   const isRegisterList   = pathname === "/register";
   const isRegisterDetail = pathname.startsWith("/register/");
   const isRegister       = isRegisterList || isRegisterDetail || pathname === "/register/success";
@@ -55,6 +55,8 @@ export default function Navbar() {
     (typeof window !== "undefined" && localStorage.getItem("dashRole")) || "";
   const role = urlRole || storedRole || "student";
   const base = `/dashboard/${role}`;
+
+  const isLibrary = pathname === `${base}/library`;
 
   // Nhận diện trang SESSIONS (hỗ trợ cả /sessions và /dashboard/:role/sessions)
   const isSessionsStandalone = pathname === "/sessions" || pathname.startsWith("/sessions/");
@@ -100,7 +102,7 @@ export default function Navbar() {
 
   if (isLibrary) {
     middleLabel = "Thư viện tài nguyên";
-    middleTo    = "/library";
+    middleTo    = `${base}/library`;  // => /dashboard/student/library
     middleKey   = "library";
   } else if (isRegister) {
     middleLabel = "Đăng ký khóa học";
@@ -147,6 +149,15 @@ export default function Navbar() {
     navigate("/", { replace: true });
   };
 
+  const ROLE_LABEL = {
+  student: "Student",
+  tutor: "Tutor",
+  admin: "Admin",
+  truongkhoa: "Trưởng khoa",
+  oaa: "OAA",
+};
+const roleLabel = ROLE_LABEL[role] || role;
+
   return (
     <nav className="navbar">
       <div className="nav-inner">
@@ -191,10 +202,12 @@ export default function Navbar() {
                 Đăng xuất
               </a>
 
-              {/* Avatar → /dashboard/:role/profile */}
-              <Link to={`${base}/profile`} aria-label="Trang cá nhân">
-                <img src={avatar} alt="Tài khoản" className="avatar-img" />
-              </Link>
+              <div className="nav-avatar">
+                <Link to={`${base}/profile`} aria-label="Trang cá nhân">
+                  <img src={avatar} alt="Tài khoản" className="avatar-img" />
+                </Link>
+<div className="avatar-role">{roleLabel}</div>
+              </div>
             </div>
           </>
         )}

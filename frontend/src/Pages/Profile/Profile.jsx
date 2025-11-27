@@ -1,17 +1,13 @@
 // src/Pages/Profile/Profile.jsx
-import  { useEffect, useState } from "react";
-import avatar from "../../Components/Assets/avatar_profile.jpg";
+import { useEffect, useState } from "react";
 import "./Profile.css";
-
-// Default avatar if avatarUrl is null
-const DEFAULT_AVATAR = avatar;
 
 export default function Profile() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     try {
-      const userStr = localStorage.getItem('user');
+      const userStr = localStorage.getItem("user");
       const currentUser = userStr ? JSON.parse(userStr) : null;
       setUser(currentUser);
     } catch (error) {
@@ -22,19 +18,23 @@ export default function Profile() {
   if (!user) {
     return (
       <div className="pf">
-        <div className="pf-panel" style={{ textAlign: "center", padding: "2rem" }}>
+        <div
+          className="pf-panel"
+          style={{ textAlign: "center", padding: "2rem" }}
+        >
           Đang tải thông tin...
         </div>
       </div>
     );
   }
 
-  // LOGIC: Check if ID is a number. 
-  // If it contains letters (e.g. "ADMIN001"), it returns false.
+  // Sinh viên: mssv là toàn số
   const isStudent = user.mssv && /^\d+$/.test(user.mssv);
-  
-  // Check if user is a Tutor (keep existing logic)
+
+  // Tutor
   const isTutor = user.role === "TUTOR" && user.tutorProfile;
+
+  const hasAvatar = !!user.avatarUrl;
 
   return (
     <div className="pf">
@@ -44,16 +44,34 @@ export default function Profile() {
         {/* LEFT COLUMN */}
         <div className="pf-left">
           <div className="pf-avatar">
-            <img
-              src={user.avatarUrl || DEFAULT_AVATAR}
-              alt={`Avatar - ${user.fullName}`}
-              className="pf-avatar-img"
-              onError={(e) => (e.target.src = DEFAULT_AVATAR)}
-            />
+            {hasAvatar ? (
+              <img
+                src={user.avatarUrl}
+                alt={`Avatar - ${user.fullName}`}
+                className="pf-avatar-img"
+              />
+            ) : (
+              <div className="pf-avatar-placeholder">
+                <div className="pf-avatar-circle">
+                  <div className="pf-avatar-head" />
+                  <div className="pf-avatar-body" />
+                </div>
+              </div>
+            )}
           </div>
-          <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-            <span className={`status-badge ${user.role === 'TUTOR' || user.role === 'ADMIN' ? 'status-approved' : 'status-pending'}`} 
-                  style={{ padding: '0.5rem 1rem', borderRadius: '20px', fontWeight: 'bold' }}>
+          <div style={{ marginTop: "1rem", textAlign: "center" }}>
+            <span
+              className={`status-badge ${
+                user.role === "TUTOR" || user.role === "ADMIN"
+                  ? "status-approved"
+                  : "status-pending"
+              }`}
+              style={{
+                padding: "0.5rem 1rem",
+                borderRadius: "20px",
+                fontWeight: "bold",
+              }}
+            >
               {user.role}
             </span>
           </div>
@@ -63,13 +81,16 @@ export default function Profile() {
         <div className="pf-right">
           <div className="pf-form">
             <Field label="Họ và tên" value={user.fullName} />
-            
+
             {/* Dynamic Label: MSSV vs MSCB */}
             <Field label={isStudent ? "MSSV" : "MSCB"} value={user.mssv} />
-            
+
             <Field label="Email" value={user.email} />
-            <Field label="Số điện thoại" value={user.phoneNumber || "Chưa cập nhật"} />
-            
+            <Field
+              label="Số điện thoại"
+              value={user.phoneNumber || "Chưa cập nhật"}
+            />
+
             {/* Conditional Display: Class is hidden if not a student */}
             {isStudent ? (
               <div className="pf-row-split">
@@ -77,15 +98,14 @@ export default function Profile() {
                 <Field label="Lớp" value={user.studentClass} />
               </div>
             ) : (
-              // Staff/Admin view: Department takes full width, Class hidden
               <Field label="Khoa/Phòng ban" value={user.department} />
             )}
 
             {/* GPA: Only show if student */}
             {isStudent && (
-              <Field 
-                label="GPA" 
-                value={user.gpa ? parseFloat(user.gpa).toFixed(2) : "N/A"} 
+              <Field
+                label="GPA"
+                value={user.gpa ? parseFloat(user.gpa).toFixed(2) : "N/A"}
               />
             )}
 
@@ -94,9 +114,12 @@ export default function Profile() {
               <>
                 <div className="pf-section-divider"></div>
                 <h3 className="pf-section-header">Thông tin Gia sư</h3>
-                
-                <Field label="Giới thiệu (Bio)" value={user.tutorProfile.bio} />
-                
+
+                <Field
+                  label="Giới thiệu (Bio)"
+                  value={user.tutorProfile.bio}
+                />
+
                 <div className="pf-field">
                   <div className="pf-label">Chuyên môn:</div>
                   <div className="pf-tags-wrapper">
@@ -108,7 +131,12 @@ export default function Profile() {
                   </div>
                 </div>
 
-                <Field label="Đánh giá trung bình" value={`${parseFloat(user.tutorProfile.averageRating).toFixed(2)} / 5.0`} />
+                <Field
+                  label="Đánh giá trung bình"
+                  value={`${parseFloat(
+                    user.tutorProfile.averageRating
+                  ).toFixed(2)} / 5.0`}
+                />
               </>
             )}
           </div>
