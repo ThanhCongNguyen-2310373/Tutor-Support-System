@@ -28,7 +28,7 @@ export class NotificationsController {
   })
   @ApiResponse({ status: 200, description: 'Notifications retrieved successfully' })
   async getNotifications(
-    @GetUser('sub') userId: number,
+    @GetUser('userId') userId: number,
     @Query('limit', ParseIntPipe) limit: number = 20,
   ) {
     return this.notificationsService.getNotifications(userId, limit);
@@ -40,7 +40,7 @@ export class NotificationsController {
     description: 'Get the number of unread notifications for current user',
   })
   @ApiResponse({ status: 200, description: 'Unread count retrieved' })
-  async getUnreadCount(@GetUser('sub') userId: number) {
+  async getUnreadCount(@GetUser('userId') userId: number) {
     return this.notificationsService.getUnreadCount(userId);
   }
 
@@ -51,7 +51,7 @@ export class NotificationsController {
   })
   @ApiResponse({ status: 200, description: 'Notification marked as read' })
   async markAsRead(
-    @GetUser('sub') userId: number,
+    @GetUser('userId') userId: number,
     @Param('id', ParseIntPipe) notificationId: number,
   ) {
     return this.notificationsService.markAsRead(userId, notificationId);
@@ -63,7 +63,7 @@ export class NotificationsController {
     description: 'Mark all unread notifications as read for current user',
   })
   @ApiResponse({ status: 200, description: 'All notifications marked as read' })
-  async markAllAsRead(@GetUser('sub') userId: number) {
+  async markAllAsRead(@GetUser('userId') userId: number) {
     return this.notificationsService.markAllAsRead(userId);
   }
 
@@ -74,7 +74,7 @@ export class NotificationsController {
   })
   @ApiResponse({ status: 200, description: 'Notification deleted' })
   async deleteNotification(
-    @GetUser('sub') userId: number,
+    @GetUser('userId') userId: number,
     @Param('id', ParseIntPipe) notificationId: number,
   ) {
     return this.notificationsService.deleteNotification(userId, notificationId);
@@ -86,7 +86,7 @@ export class NotificationsController {
     description: 'Delete all read notifications for current user',
   })
   @ApiResponse({ status: 200, description: 'Read notifications deleted' })
-  async deleteAllRead(@GetUser('sub') userId: number) {
+  async deleteAllRead(@GetUser('userId') userId: number) {
     return this.notificationsService.deleteAllRead(userId);
   }
 }

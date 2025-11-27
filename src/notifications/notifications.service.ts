@@ -1,5 +1,5 @@
 // src/notifications/notifications.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 import { NotificationsGateway, NotificationEvent, NotificationPayload } from './notifications.gateway';
 
@@ -91,7 +91,7 @@ export class NotificationsService {
     });
 
     if (!notification) {
-      throw new Error('Notification not found or access denied');
+      throw new BadRequestException('Không có quyền xem thông báo này hoặc không tìm thấy thông báo');
     }
 
     const updated = await this.prisma.notification.update({

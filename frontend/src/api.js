@@ -548,6 +548,72 @@ export const reportsService = {
 
 
 // ============================================================================
+// NOTIFICATION SERVICE
+// ============================================================================
+export const notiService = {
+  // GET /notifications?limit=50
+  getAll: async (limit = 50) => {
+    try {
+      const response = await apiClient.get(`/notifications?limit=${limit}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch notifications' };
+    }
+  },
+
+  // GET /notifications/unread-count
+  getUnreadCount: async () => {
+    try {
+      const response = await apiClient.get('/notifications/unread-count');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch unread count' };
+    }
+  },
+
+  // POST /notifications/:id/read
+  markAsRead: async (id) => {
+    try {
+      const response = await apiClient.post(`/notifications/${id}/read`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark notification as read' };
+    }
+  },
+
+  // POST /notifications/read-all
+  markAllAsRead: async () => {
+    try {
+      const response = await apiClient.post('/notifications/read-all');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to mark all as read' };
+    }
+  },
+
+  // DELETE /notifications/:id
+  delete: async (id) => {
+    try {
+      const response = await apiClient.delete(`/notifications/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete notification' };
+    }
+  },
+
+  // DELETE /notifications/read/all
+  deleteAllRead: async () => {
+    try {
+      const response = await apiClient.delete('/notifications/read/all');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete read notifications' };
+    }
+  }
+};
+
+
+// ============================================================================
 // BACKWARD COMPATIBILITY EXPORTS
 // ============================================================================
 
@@ -556,5 +622,6 @@ export const tutorsAPI = tutorsService;
 export const meetingsAPI = meetingsService;
 export const AI_API = aiService;
 export const managementAPI = managementService
+export const notiAPI = notiService
 
 export default apiClient;
