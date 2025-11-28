@@ -522,7 +522,7 @@ export const reportsService = {
       const response = await apiClient.get(`/reports/osa/scholarship/tutors${query ? `?${query}` : ''}`);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch scholarship tutors' };
+      throw error.response || { message: 'Failed to fetch scholarship tutors' };
     }
   },
 
@@ -532,7 +532,7 @@ export const reportsService = {
       const response = await apiClient.get(`/reports/osa/scholarship/learners${query ? `?${query}` : ''}`);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch scholarship learners' };
+      throw error.response || { message: 'Failed to fetch scholarship learners' };
     }
   },
 
@@ -541,7 +541,7 @@ export const reportsService = {
       const response = await apiClient.get('/reports/oaa/department-metrics');
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch department metrics' };
+      throw error.response || { message: 'Failed to fetch department metrics' };
     }
   },
 };

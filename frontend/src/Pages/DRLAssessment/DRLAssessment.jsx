@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./DRLAssessment.css";
-import reportsAPI from "../../api"
+import { reportsAPI } from "../../api"
 import { showError, showSuccess } from "../../utils/errorHandler";
 
 // Icons từ react-icons/fi
@@ -12,14 +12,12 @@ import {
   FiFilter,
   FiRefreshCw,
   FiTrendingUp,
-  FiCheckCircle, 
-  FiStar
+  FiCheckCircle
 } from "react-icons/fi";
 
 // Charts từ recharts
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 
 export default function DRLAssessment() {
@@ -36,6 +34,7 @@ export default function DRLAssessment() {
     learnerMinGpa: 3.5,
     learnerMinHours: 0 
   });
+ // eslint-disable-next-line
 const getAbbreviation = (name) => {
   if (!name) return "";
   return name
@@ -45,9 +44,7 @@ const getAbbreviation = (name) => {
     .join("")                 // Ghép lại
     .toUpperCase();           // Viết hoa toàn bộ
 };
-  // Màu sắc cho biểu đồ
-  const COLORS = ["#2563eb", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
-
+  
   // Auto load data on mount
   useEffect(() => {
     fetchScholarshipData();
@@ -123,7 +120,7 @@ const getAbbreviation = (name) => {
     const avgLearnerGPA = eligibleLearners.length > 0
       ? (eligibleLearners.reduce((acc, curr) => acc + (curr.gpa || 0), 0) / eligibleLearners.length).toFixed(2)
       : 0;
-    const totalLearnerHours = eligibleLearners.reduce((acc, curr) => acc + (curr.hours || 0), 0);
+    // const totalLearnerHours = eligibleLearners.reduce((acc, curr) => acc + (curr.hours || 0), 0);
 
     return [
       { 
