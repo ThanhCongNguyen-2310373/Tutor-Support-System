@@ -197,6 +197,15 @@ export const tutorsService = {
       throw error.response?.data || { message: 'Failed to record progress' };
     }
   },
+
+  getStudentProgress: async (studentId) => {
+    try {
+      const response = await apiClient.get(`/tutors/students/${studentId}/progress`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to fetch student progress' };
+    }
+  },
 };
 
 // ============================================================================
