@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ReportingService } from './reporting.service';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from '@prisma/client';
@@ -12,6 +12,45 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @ApiBearerAuth()
 export class ReportingController {
   constructor(private reportingService: ReportingService) {}
+
+  // ==========================================
+  // OAA: Dashboard Report (Enhanced for Frontend)
+  // ==========================================
+  @Get('oaa/dashboard')
+  @Roles(Role.OAA, Role.ADMIN)
+  @ApiOperation({ 
+    summary: 'Báo cáo tổng quan OAA Dashboard',
+    description: 'Bao gồm: Thống kê tổng quan, phân bổ theo khoa, phân tích chuyên môn, đề xuất'
+  })
+  @ApiQuery({ name: 'semester', required: false, example: '2025-1' })
+  @ApiQuery({ name: 'departments', required: false, example: 'Khoa CNTT,Khoa Cơ Khí' })
+  @ApiQuery({ name: 'tutorStatus', required: false, enum: ['available', 'unavailable', 'all'] })
+  async getOAADashboard(
+    @Query('semester') semester?: string,
+    @Query('departments') departments?: string,
+    @Query('tutorStatus') tutorStatus?: 'available' | 'unavailable' | 'all',
+  ) {
+    const deptArray = departments ? departments.split(',').map(d => d.trim()) : undefined;
+    
+    return this.reportingService.getOAADashboardReport({
+      semester,
+      departments: deptArray,
+      tutorStatus,
+    });
+  }
+
+  // ==========================================
+  // OAA: Department Metrics (Legacy - Keep for compatibility)
+  // ==========================================
+  @Get('oaa/department-metrics')
+  @Roles(Role.OAA, Role.ADMIN)
+  @ApiOperation({ 
+    summary: 'Thống kê tổng quan theo Khoa',
+    description: 'Bao gồm: Số lượng Tutor/Student, Tỷ lệ đáp ứng, Tổng số buổi đã dạy.'
+  })
+  async getDepartmentMetrics() {
+    return this.reportingService.getDepartmentOverviewReport();
+  }
 
   // ==========================================
   // OSA: Scholarship for Student Tutors
@@ -65,18 +104,5 @@ export class ReportingController {
       parseFloat(minHours || '0'),
       parseFloat(minGpa || '0')
     );
-  }
-
-  // ==========================================
-  // OAA: Department Metrics
-  // ==========================================
-  @Get('oaa/department-metrics')
-  @Roles(Role.OAA, Role.ADMIN)
-  @ApiOperation({ 
-    summary: 'Thống kê tổng quan theo Khoa',
-    description: 'Bao gồm: Số lượng Tutor/Student, Tỷ lệ đáp ứng, Tổng số buổi đã dạy.'
-  })
-  async getDepartmentMetrics() {
-    return this.reportingService.getDepartmentOverviewReport();
   }
 }
