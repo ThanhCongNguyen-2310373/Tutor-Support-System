@@ -12,7 +12,7 @@ import Chatbot from "./Components/Chatbot/Chatbot";
 import { useWebSocket } from "./hooks/useWebSocket";
 
 import Login from "./Pages/Login/Login";
-import RegisterAccount from "./Pages/RegisterAccount/RegisterAccount";
+
 
 //Notification
 import NotificationSystem from "./Pages/NotificationSystem/NotificationSystem";
@@ -79,7 +79,7 @@ function AppContent() {
           <Routes>
             {/* Trang mặc định: Login */}
             <Route path="/" element={<Login />} />
-            <Route path="/register-account" element={<RegisterAccount />} />
+            
 
             {/* Dashboards cố định cho từng role */}
             <Route path="/dashboard/student" element={<StudentDashboard />} />
@@ -116,7 +116,7 @@ function AppContent() {
             {/*Pairing  */}
             <Route path="/pairing" element={<PairingApproval />} />
             {/* Notification */}
-            <Route path="/noti" element={<NotificationSystem/>}/>
+            <Route path="/dashboard/:role/notification" element={<NotificationSystem />} />
             {/* OSA */}
             <Route path="/drl" element={<DRLAssessment/>}/>
 

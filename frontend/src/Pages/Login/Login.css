@@ -7,6 +7,8 @@
   box-sizing:border-box;
 }
 
+
+
 /* Toàn màn hình */
 .login{
   width:100vw;
@@ -294,6 +296,14 @@
     0 10px 20px rgba(0,0,0,.18),
     0 0 0 4px rgba(255,255,255,.9) inset;
 }
+
+/* Lỗi nhỏ dưới input trong form đăng ký */
+.login-field-error{
+  margin-top:4px;
+  font-size:13px;
+  color:#dc2626;
+}
+
 
 /* =========================
    Responsive

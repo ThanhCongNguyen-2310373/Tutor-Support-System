@@ -1,66 +1,249 @@
-/* Bố cục giống StudentDashboard nhưng dùng prefix td- */
+/* =========================
+   LAYOUT CHUNG
+   ========================= */
+.admin-dashboard-container {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  min-height: calc(100vh - var(--footer-h, 72px));
+  padding: 24px 24px 40px;
+  box-sizing: border-box;
+  /* nền xanh rất nhẹ, kiểu giống Student/Tutor */
+  background: radial-gradient(circle at 0 0, #d6ebff 0, #f4f9ff 40%, #f9fafb 100%);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-.td{
-  padding: 16px 0 109px;
+/* =========================
+   SIDEBAR
+   ========================= */
+.admin-sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #007ad2 0%, #005c9c 100%);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 24px 20px 28px;
+  position: sticky;
+  top: 88px; /* chỉnh theo navbar */
+  box-shadow: 0 10px 24px rgba(0, 74, 135, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 4px;
+  letter-spacing: 0.04em;
+}
+
+.sidebar-subtitle {
+  font-size: 0.9rem;
+  color: #e2f3ff;
+  text-align: center;
+  margin: 0;
+}
+
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px;
+  border-radius: 16px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 122, 210, 0.28);
+  transition: all 0.22s ease;
+  color: #0b1f4a;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+.sidebar-item::after {
+  content: "›";
+  font-size: 1.25rem;
+  opacity: 0.7;
+  color: #007ad2;
+}
+
+.sidebar-item:hover {
+  border-color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e7f2ff 45%,
+    #d5e8ff 100%
+  );
+  transform: translateX(4px) translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 74, 135, 0.20);
+}
+
+.sidebar-item:active {
+  transform: translateX(2px) translateY(0);
+  box-shadow: 0 3px 12px rgba(0, 74, 135, 0.24);
+}
+
+.sidebar-text {
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+/* =========================
+   MAIN CONTENT
+   ========================= */
+.admin-main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Card lớn giống style Dashboard nhưng thêm viền xanh */
+.logo-wrapper {
+  width: min(1040px, 100%);
+  background: linear-gradient(
+    135deg,
+    #ffffff 0,
+    #f4f9ff 38%,
+    #e0f1ff 75%,
+    #c8e3ff 100%
+  );
+  border-radius: 26px;
+  border: 1px solid #c3ddff;
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.10),
+    0 0 0 1px rgba(0, 122, 210, 0.06);
+  padding: 26px 32px 32px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Tiêu đề */
-.td-title-wrap{
-  width: min(700px, 92vw);       /* gọn hơn một chút; muốn to hơn đổi 700→820 */
-  background: #fff;
-  margin-bottom: 8px;
-}
-.td-title{
-  margin: 8px 0;
-  text-align: center;
-  color: #1c3e9c;
-  font-weight: 800;
-  font-size: clamp(22px, 3vw, 36px);
-  letter-spacing: 1px;
+/* Accent viền trên màu xanh đậm */
+.logo-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border-top: 4px solid #007ad2;
+  pointer-events: none;
 }
 
-/* Panel */
-.td-panel{
-  width: min(600px, 92vw);
-  border: 6px solid #0a66d1;
-  border-radius: 4px;
-  background: #fff;
-  padding: 18px 12px 24px;
+/* Khu vực slide ảnh */
+.admin-slider {
+  position: relative;
+  width: min(640px, 85vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  border: 2px solid rgba(0, 122, 210, 0.6);
 }
 
-/* Khối thẻ chỉ dùng flex */
-.td-grid{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  column-gap: 28px;
-  row-gap: 20px;
+/* overlay xanh nhẹ trên ảnh cho đồng bộ màu */
+.admin-slider::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 10% 0%,
+    rgba(0, 122, 210, 0.26) 0,
+    transparent 42%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
-/* Link bao card (nếu sau này thêm nhiều thẻ) */
-.td-card-link{
-  text-decoration: none;
-  display: block;
-  flex: 0 1 260px;               /* khớp kích thước Card hiện tại */
+/* Ảnh fade chồng lên nhau */
+.admin-big-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.03);
+  filter: saturate(1.08);
+  transition: opacity 0.9s ease-in-out, transform 0.9s ease-in-out;
 }
 
-/* Card giữa panel */
-.td-card-center{
-  flex-basis: 100%;
-  display: flex;
-  justify-content: center;
+.admin-big-logo.active {
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* Responsive */
-@media (max-width: 760px){
-  .td-grid{
-    column-gap: 16px;
-    row-gap: 16px;
+/* Text welcome với màu xanh */
+.welcome-text {
+  font-size: clamp(24px, 2.7vw, 32px);
+  font-weight: 900;
+  color: #004b94;
+  margin: 12px 0 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  color: #1f2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 1024px) {
+  .admin-dashboard-container {
+    flex-direction: column;
+    padding: 18px 16px 32px;
   }
-  .td-card-link{
-    flex: 1 1 240px;
+
+  .admin-sidebar {
+    width: 100%;
+    position: static;
+  }
+
+  .sidebar-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .sidebar-item {
+    flex: 1 1 210px;
+  }
+
+  .logo-wrapper {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-wrapper {
+    padding: 18px 16px 24px;
+    border-radius: 20px;
+  }
+
+  .admin-slider {
+    width: 100%;
+  }
+
+  .welcome-text {
+    font-size: 1.45rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
   }
 }

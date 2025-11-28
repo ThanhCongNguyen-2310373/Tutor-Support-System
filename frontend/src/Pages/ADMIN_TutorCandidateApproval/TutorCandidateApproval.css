@@ -1,144 +1,160 @@
-/* src/Pages/TutorCandidateApproval/TutorCandidateApproval.css */
+/* =========================
+   LAYOUT CHUNG
+   ========================= */
 
 .tutor-approval-container {
-  padding: 24px;
-  background: #f9fafb;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--footer-h, 72px));
+  padding: 24px 24px 40px;
+  box-sizing: border-box;
+  background: #f4f6fb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.tutor-approval-header {
+  width: 100%;
+  max-width: 1180px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 
 .tutor-approval-header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1f2937;
-  text-align: center;
-  margin-bottom: 24px;
+  font-size: 40px;
+  font-weight: 900;
+  color: #007ad2;
+  margin: 0;
 }
 
+/* Card chính */
+
 .tutor-approval-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 1180px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
   overflow: hidden;
 }
 
-/* Thanh filter + search */
+/* =========================
+   TOOLBAR: FILTER + SEARCH
+   ========================= */
+
+/* Thanh trên cùng: 1 hàng ngang, không wrap trên desktop */
 .tutor-approval-toolbar {
-  padding: 16px;
+  padding: 16px 20px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 16px;
+  background: #e8f1ff;
+  flex-wrap: nowrap;
 }
 
-.filter-group,
-.search-group {
+/* 3 filter bên trái: nằm ngang */
+.filter-group {
   display: flex;
+  flex-direction: row !important;   /* bắt buộc nằm ngang */
+  align-items: flex-end;
   gap: 12px;
-  align-items: center;
-  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
-/* Ô filter giống mockup */
+/* Box từng filter */
 .filter-box {
-  background: white;
-  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border: 1px solid #cbd5f5;
   border-radius: 8px;
-  padding: 8px 12px;
-  min-width: 140px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.filter-box:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  padding: 6px 10px;
+  min-width: 200px;                 /* tăng chiều dài */
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .filter-label {
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #1e40af;
-  margin-bottom: 4px;
+  color: #007ad2;
+  margin-bottom: 2px;
 }
 
-.filter-dropdown {
-  position: relative;
-}
-
+/* select bên trong, không cắt chữ */
 .filter-input {
   border: none;
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: #1f2937;
+  color: #111827;
   width: 100%;
-  cursor: pointer;
-  padding-right: 24px;
+  padding: 10px 12px;     /* tăng padding trên/dưới */
+  min-height: 42px;       /* đảm bảo ô đủ cao */
+  line-height: 1.2;
+  box-sizing: border-box;
 }
 
-.dropdown-icon {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6b7280;
-  font-size: 16px;
-  pointer-events: none;
+
+/* Nhóm search bên phải: Tìm kiếm + Refresh nằm ngang */
+.search-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;                /* đẩy về phía bên phải */
 }
 
-/* Search box */
-.search-box {
-  position: relative;
-  width: 280px;
-}
-
+/* Ô tìm kiếm */
 .search-input {
-  width: 100%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #d1d5db;
+  width: 260px;
+   padding: 8px 10px 8px 6px;
   border-radius: 8px;
+  border: 1px solid #cbd5f5;
   font-size: 14px;
   outline: none;
+  background: #ffffff;
+  box-sizing: border-box;
 }
 
-.search-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6b7280;
-  font-size: 18px;
-  pointer-events: none;
+.search-input:focus {
+  border-color: #007ad2;
+  box-shadow: 0 0 0 2px rgba(0, 122, 210, 0.2);
 }
 
-.btn-refresh {
-  background: #1e40af;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+/* Nút Refresh */
+.search-group button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #007ad2;
+  background: #007ad2;
+  color: #ffffff;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
 }
 
-.btn-refresh:hover {
-  background: #1d4ed8;
+.search-group button:hover {
+  background: #005c9c;
+  box-shadow: 0 4px 10px rgba(0, 122, 210, 0.25);
+  transform: translateY(-1px);
 }
 
-.btn-refresh::before {
-  content: "Refresh";
-  font-size: 18px;
+.search-group button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 122, 210, 0.2);
 }
 
-/* Bảng */
+/* =========================
+   TABLE
+   ========================= */
+
 .tutor-approval-table-container {
   max-height: 520px;
   overflow-y: auto;
@@ -147,28 +163,36 @@
 .tutor-approval-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.tutor-approval-table th,
+.tutor-approval-table td {
+  padding: 10px 8px;
+  font-size: 14px;
 }
 
 .tutor-approval-table th {
-  background: #1e40af;
-  color: white;
-  padding: 12px 8px;
+  background: #007ad2;
+  color: #ffffff;
   text-align: left;
   font-weight: 600;
-  font-size: 14px;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 5;
 }
 
 .tutor-approval-table td {
-  padding: 12px 8px;
   border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
+  color: #111827;
+}
+
+.tutor-approval-table tbody tr:hover {
+  background: #f1f5ff;
 }
 
 .tutor-approval-table tr.selected {
-  background: #dbeafe;
+  background: #e0edff;
 }
 
 .name-cell {
@@ -193,103 +217,138 @@
 }
 
 .action-view {
-  background: #3b82f6;
-  color: white;
-  border: none;
+  background: #ffffff;
+  color: #007ad2;
+  border: 1px solid #bcd6ff;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
-/* Nút hành động */
+.action-view:hover {
+  background: #e8f1ff;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.action-view:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12);
+}
+
+/* =========================
+   BULK ACTIONS
+   ========================= */
+
 .tutor-approval-actions {
-  padding: 16px;
+  padding: 12px 16px 16px;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 10px;
   border-top: 1px solid #e5e7eb;
 }
 
 .btn-reject,
 .btn-approve {
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
   font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
 }
 
 .btn-reject {
-  background: #fee2e2;
-  color: #dc2626;
+  background: #fef2f2;
+  color: #b91c1c;
   border: 1px solid #fecaca;
 }
 
 .btn-reject:hover:not(:disabled) {
-  background: #fecaca;
+  background: #fee2e2;
 }
 
 .btn-approve {
-  background: #1e40af;
-  color: white;
-  border: none;
+  background: #007ad2;
+  color: #ffffff;
+  border: 1px solid #007ad2;
 }
 
 .btn-approve:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #005c9c;
 }
 
 .btn-reject:disabled,
 .btn-approve:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
-/* Modal */
+/* =========================
+   MODAL
+   ========================= */
+
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
 
+.detail-modal {
+  width: 100%;
+  max-width: 720px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 24px 18px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.25);
+}
+
 .confirm-modal {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  width: 420px;
+  background: #ffffff;
+  padding: 22px 24px 20px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.25);
 }
 
 .confirm-modal h3 {
-  margin: 0 0 16px;
-  color: #1e40af;
+  margin: 0 0 12px;
+  color: #007ad2;
   font-size: 20px;
+  font-weight: 700;
 }
 
 .confirm-modal p {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: #374151;
   line-height: 1.5;
+  font-size: 14px;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .btn-cancel,
 .btn-confirm {
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
   font-weight: 600;
-  min-width: 90px;
+  font-size: 14px;
+  min-width: 88px;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .btn-cancel {
@@ -298,121 +357,161 @@
   border: 1px solid #d1d5db;
 }
 
-.btn-confirm {
-  background: #1e40af;
-  color: white;
-  border: none;
+.btn-cancel:hover {
+  background: #e5e7eb;
 }
 
-/* Toast */
+.btn-confirm {
+  background: #007ad2;
+  color: #ffffff;
+  border: 1px solid #007ad2;
+}
+
+.btn-confirm:hover {
+  background: #005c9c;
+}
+
+/* =========================
+   TOAST
+   ========================= */
+
 .notification-toast {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 340px;
-  background: white;
+  width: 320px;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
   overflow: hidden;
-  z-index: 1000;
-  animation: slideIn 0.3s ease;
+  z-index: 1100;
+  animation: slideIn 0.25s ease-out;
+  border: 1px solid #e5e7eb;
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .toast-header {
-  background: #1e40af;
-  color: white;
-  padding: 12px 16px;
+  background: #007ad2;
+  color: #ffffff;
+  padding: 10px 14px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .toast-body {
-  padding: 16px;
-  color: #1f2937;
+  padding: 12px 14px 14px;
+  color: #111827;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-.notification-toast.error .toast-header { background: #dc2626; }
-.notification-toast.success .toast-header { background: #16a34a; }
-.notification-toast.warning .toast-header { background: #d97706; }
-
-/* Căn chỉnh toolbar giống mẫu */
-.tutor-approval-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #e6f0ff;
-  padding: 8px 12px;
-  border: 1px solid #c7d2fe;
-  border-radius: 6px;
+.notification-toast.error .toast-header {
+  background: #dc2626;
 }
 
-/* Filter box */
-.filter-box {
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #1e3a8a;
-  border-radius: 4px;
-  padding: 4px 8px;
-  min-width: 110px;
+.notification-toast.success .toast-header {
+  background: #16a34a;
 }
 
-.filter-label {
-  color: #1e3a8a;
-  font-weight: 600;
-  font-size: 13px;
-  margin-bottom: 2px;
+.notification-toast.warning .toast-header {
+  background: #d97706;
 }
 
-.filter-input {
-  border: none;
-  outline: none;
-  font-size: 14px;
-  color: #1f2937;
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1024px) {
+  .tutor-approval-toolbar {
+    flex-wrap: wrap;
+  }
 }
 
-/* Search box */
-.search-box {
-  display: flex;
-  flex: 1;
-  max-width: 500px;
-  align-items: center;
-  border: 1px solid #1e3a8a;
-  border-radius: 4px;
-  background: white;
-  padding: 4px 8px;
+@media (max-width: 900px) {
+  .tutor-approval-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-wrap: wrap;
+  }
+
+  .search-group {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .search-input {
+    width: 100%;
+  }
 }
 
-.search-input {
-  border: none;
-  outline: none;
-  font-size: 14px;
-  width: 180px;
+@media (max-width: 640px) {
+  .tutor-approval-container {
+    padding: 16px 12px 28px;
+  }
+
+  .tutor-approval-card {
+    border-radius: 12px;
+  }
+
+  .tutor-approval-header h1 {
+    font-size: 26px;
+  }
+
+  .tutor-approval-table th,
+  .tutor-approval-table td {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
 }
 
-/* Nút refresh tròn giống hình */
-.btn-refresh {
-  background: #c7d2fe;
-  border: 1px solid #1e3a8a;
-  color: #1e3a8a;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+/* ===== Giảm khoảng cách giữa tiêu đề và bảng ===== */
+.tutor-request-header {
+  margin-bottom: 12px; /* trước là 24px */
 }
 
-.btn-refresh:hover {
-  background: #a5b4fc;
+.tutor-request-card {
+  margin-top: 0;
 }
+
+/* ===== Kẻ thêm đường kẻ cho bảng ===== */
+
+/* Đảm bảo border dính nhau */
+.tutor-request-table {
+  border-collapse: collapse;
+}
+
+/* Đường dọc giữa các cột */
+.tutor-request-table th,
+.tutor-request-table td {
+  border-right: 2px solid #e0e8f4; /* kẻ cột màu xanh nhạt */
+}
+
+.tutor-request-table th:last-child,
+.tutor-request-table td:last-child {
+  border-right: none; /* cột cuối không cần kẻ */
+}
+
+/* Đường ngang giữa các hàng */
+.tutor-request-table tbody td {
+  border-bottom: 2px solid #e0e8f4;
+}
+
+/* Đường gạch dưới header cho nổi cột */
+.tutor-request-table thead th {
+  border-bottom: 2px solid #e0e8f4;
+}
+
