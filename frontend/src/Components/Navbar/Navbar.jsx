@@ -153,7 +153,7 @@ export default function Navbar() {
   student: "Student",
   tutor: "Tutor",
   admin: "Admin",
-  truongkhoa: "Trưởng khoa",
+  truongkhoa: "Trưởng bộ môn",
   oaa: "OAA",
 };
 const roleLabel = ROLE_LABEL[role] || role;

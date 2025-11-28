@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -62,6 +62,8 @@ import RoadmapManage from "./Pages/RoadmapManage/RoadmapManage";
 function AppContent() {
   // Initialize WebSocket connection (will only connect if token exists)
   useWebSocket();
+  const location = useLocation();
+  const hideChrome = ["/"].includes(location.pathname);
 
   return (
     <>
@@ -70,7 +72,7 @@ function AppContent() {
         <ToastContainer />
         
         {/* Navbar luôn ở trên */}
-        <Navbar />
+        {!hideChrome && <Navbar />}
 
         {/* Nội dung chính */}
         <main className="app-main">
@@ -138,7 +140,7 @@ function AppContent() {
         </main>
 
         {/* Footer dính đáy */}
-        <Footer />
+        {!hideChrome && <Footer />}
       </div>
 
       {/* AI Chatbot - floating button */}

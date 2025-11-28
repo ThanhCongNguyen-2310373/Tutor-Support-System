@@ -266,7 +266,13 @@
 }
 
 .status-pending { background: #422006; color: #fde047; border: 1px solid #ca8a04; }
-.status-confirmed { background: #022c22; color: #4ade80; border: 1px solid #16a34a; }
+.status-confirmed {
+  background: #16a34a;      /* nền xanh lá đậm */
+  color: #ffffff;           /* chữ trắng cho dễ đọc */
+  border: 1px solid #16a34a;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
 .status-completed { background: #172554; color: #93c5fd; border: 1px solid #2563eb; }
 .status-canceled { background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; }
 

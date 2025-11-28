@@ -195,18 +195,20 @@
 }
 
 /* --- Split Row (Khoa & Lớp) --- */
+/* Mỗi Field (Khoa, Lớp) là 1 hàng riêng, label rộng 160px giống các dòng khác */
 .pf-row-split {
   display: grid;
-  grid-template-columns: 1.5fr 1fr; /* Department gets more space than Class */
-  gap: 30px;
+  grid-template-columns: 1fr;   /* không chia 2 cột nữa */
+  gap: 16px;
   margin-bottom: 16px;
 }
 
 .pf-row-split .pf-field {
-  grid-template-columns: auto 1fr; /* Label takes only needed width */
+  grid-template-columns: 160px 1fr;  /* cùng độ rộng label như .pf-field thường */
   margin-bottom: 0;
-  gap: 12px;
+  gap: 16px;
 }
+
 
 /* --- Tutor Section Divider --- */
 .pf-section-divider {
