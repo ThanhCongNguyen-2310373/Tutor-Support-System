@@ -431,7 +431,7 @@ export const externalService = {
       const response = await apiClient.get(`/external/library/search?${params}`);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to search library' };
+      throw error.response || { message: 'Failed to search library' };
     }
   },
 
@@ -440,7 +440,7 @@ export const externalService = {
       const response = await apiClient.get(`/external/library/document-url/${id}`);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to get document URL' };
+      throw error.response || { message: 'Failed to get document URL' };
     }
   },
 
@@ -449,7 +449,7 @@ export const externalService = {
       const response = await apiClient.get('/external/library/recommendations');
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch recommendations' };
+      throw error.response || { message: 'Failed to fetch recommendations' };
     }
   },
 
@@ -461,7 +461,7 @@ export const externalService = {
       const response = await apiClient.get(`/external/library/popular?${params}`);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch popular documents' };
+      throw error.response || { message: 'Failed to fetch popular documents' };
     }
   },
 };

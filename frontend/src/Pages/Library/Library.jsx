@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Library.css";
 import bookIcon from "../../Components/Assets/book-solid-full.svg";
-import externalService from "../../api.js";
+import { externalService } from "../../api.js";
 import { showError } from "../../utils/errorHandler";
 
 export default function Library() {
