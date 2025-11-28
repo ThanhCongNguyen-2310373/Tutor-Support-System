@@ -11,7 +11,7 @@
   /* --- DARK BACKGROUND --- */
   background-image: 
     linear-gradient(rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.8)), /* Dark Overlay */
-    url('./student_dashboard_background.jpg'); 
+    url('./student_dashboard_background.png'); 
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
