@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import apiClient from "../../api.js"; // CHUẨN NHẤT, ĐÃ FIX 401
+import apiClient from "../../api.js"; 
 import { showSuccess, showError } from "../../utils/errorHandler";
 import "./TutorCandidateApproval.css";
 
@@ -28,7 +28,7 @@ export default function TutorCandidateApproval() {
     fetchApplications();
   }, []);
 
-  // LẤY DANH SÁCH ĐƠN – ĐÃ FIX 401, CHẠY MƯỢT
+
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -42,7 +42,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // --- Dynamic Filters ---
   const uniqueDepartments = useMemo(() => {
     const depts = candidates.map(c => c.student?.department).filter(Boolean);
     return [...new Set(depts)].sort();
@@ -53,7 +52,6 @@ export default function TutorCandidateApproval() {
     return [...new Set(classes)].sort();
   }, [candidates]);
 
-  // --- Handlers ---
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedCandidates(filteredCandidates.map(c => c.id));
@@ -68,7 +66,6 @@ export default function TutorCandidateApproval() {
     );
   };
 
-  // DUYỆT ĐƠN LẺ
   const handleSingleApprove = async (id) => {
     if (!window.confirm("Bạn có chắc muốn duyệt ứng viên này?")) return;
     try {
@@ -81,7 +78,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // TỪ CHỐI ĐƠN LẺ
   const handleSingleReject = async (id) => {
     if (!window.confirm("Bạn có chắc muốn từ chối ứng viên này?")) return;
     try {
@@ -94,7 +90,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // DUYỆT NHIỀU
   const confirmBulkApprove = async () => {
     setShowConfirmModal(false);
     try {
@@ -111,7 +106,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // TỪ CHỐI NHIỀU
   const handleBulkReject = async () => {
     if (!window.confirm(`Bạn có chắc muốn từ chối ${selectedCandidates.length} ứng viên?`)) return;
     try {
@@ -128,7 +122,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // Cảnh báo GPA thấp
   const handleBulkApproveTrigger = () => {
     const selected = candidates.filter(c => selectedCandidates.includes(c.id));
     const hasLowGpa = selected.some(c => c.gpa < 2.5);
@@ -160,7 +153,6 @@ export default function TutorCandidateApproval() {
     }
   };
 
-  // Filter Logic
   const filteredCandidates = candidates.filter(c => {
     const student = c.student || {};
     const matchesSearch =
