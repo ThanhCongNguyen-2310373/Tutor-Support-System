@@ -621,6 +621,47 @@ export const notiService = {
   }
 };
 
+export const academicService = {
+  // Lấy danh sách lộ trình
+  getRoadmaps: async () => {
+    try {
+      const response = await apiClient.get('/academic/roadmaps');
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Không thể tải lộ trình học' };
+    }
+  },
+
+  // TBM tạo mới
+  createRoadmap: async (data) => {
+    try {
+      const response = await apiClient.post('/academic/roadmaps', data);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Tạo lộ trình thất bại' };
+    }
+  },
+
+  // TBM cập nhật
+  updateRoadmap: async (id, data) => {
+    try {
+      const response = await apiClient.patch(`/academic/roadmaps/${id}`, data);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Cập nhật lộ trình thất bại' };
+    }
+  },
+
+  // TBM xóa
+  deleteRoadmap: async (id) => {
+    try {
+      const response = await apiClient.delete(`/academic/roadmaps/${id}`);
+      return response;
+    } catch (error) {
+      throw error.response?.data || { message: 'Xóa lộ trình thất bại' };
+    }
+  },
+};
 
 // ============================================================================
 // BACKWARD COMPATIBILITY EXPORTS
@@ -633,5 +674,6 @@ export const AI_API = aiService;
 export const managementAPI = managementService;
 export const notiAPI = notiService;
 export const reportsAPI = reportsService;
+export const academicAPI = academicService;
 
 export default apiClient;

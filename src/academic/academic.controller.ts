@@ -32,7 +32,7 @@ export class AcademicController {
 //## UC_TBM_01: TBM tạo lộ trình học ######
 //#########################################
   @Post('roadmaps')
-  @Roles(Role.COORDINATOR) // Trưởng Bộ Môn
+  @Roles(Role.COORDINATOR, Role.TBM) // Trưởng Bộ Môn
   @ApiOperation({ 
     summary: 'TBM tạo lộ trình học',
     description: 'Trưởng Bộ Môn tạo lộ trình học mới cho môn học' 
@@ -51,7 +51,7 @@ export class AcademicController {
 //## UC_TUT_03 & UC_STU_03: Xem danh sách lộ trình ##
 //###################################################
   @Get('roadmaps')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR)
+  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.TBM)
   @ApiOperation({ 
     summary: 'Xem danh sách lộ trình học',
     description: 'Tutor/Student xem tất cả lộ trình học' 
@@ -68,7 +68,7 @@ export class AcademicController {
 //## UC_TBM_01: Xem chi tiết #######
 //##################################
   @Get('roadmaps/:id')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR)
+  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.TBM)
   @ApiOperation({ 
     summary: 'Xem chi tiết lộ trình học',
     description: 'Xem thông tin chi tiết 1 lộ trình' 
@@ -86,7 +86,7 @@ export class AcademicController {
 //## UC_TBM_01: TBM cập nhật ########
 //###################################
   @Patch('roadmaps/:id')
-  @Roles(Role.COORDINATOR)
+  @Roles(Role.COORDINATOR, Role.TBM)
   @ApiOperation({ 
     summary: 'TBM cập nhật lộ trình học',
     description: 'Chỉ author có thể cập nhật' 
@@ -109,7 +109,7 @@ export class AcademicController {
 //## UC_TBM_01: TBM xóa ########
 //##############################
   @Delete('roadmaps/:id')
-  @Roles(Role.COORDINATOR)
+  @Roles(Role.COORDINATOR, Role.TBM)
   @ApiOperation({ 
     summary: 'TBM xóa lộ trình học',
     description: 'Chỉ author có thể xóa' 
