@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./DRLAssessment.css";
-import reportsService from "../../api/reports.service";
+import reportsAPI from "../../api"
 import { showError, showSuccess } from "../../utils/errorHandler";
 
 // Icons từ react-icons/fi
@@ -60,13 +60,13 @@ const getAbbreviation = (name) => {
       console.log('🔍 Fetching with filters:', filters);
       
       const [tutorsResponse, learnersResponse] = await Promise.all([
-        reportsService.getScholarshipTutors({
+        reportsAPI.getScholarshipTutors({
           start: filters.startDate,
           end: filters.endDate,
           minGpa: filters.tutorMinGpa,
           minHours: filters.tutorMinHours
         }),
-        reportsService.getScholarshipLearners({
+        reportsAPI.getScholarshipLearners({
           start: filters.startDate,
           end: filters.endDate,
           minGpa: filters.learnerMinGpa,

@@ -621,7 +621,8 @@ export const authAPI = authService;
 export const tutorsAPI = tutorsService;
 export const meetingsAPI = meetingsService;
 export const AI_API = aiService;
-export const managementAPI = managementService
-export const notiAPI = notiService
+export const managementAPI = managementService;
+export const notiAPI = notiService;
+export const reportsAPI = reportsService;
 
 export default apiClient;
