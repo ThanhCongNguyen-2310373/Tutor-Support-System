@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Trash2, Loader } from "lucide-react";
-import aiService from "../../api.js";
+import { AI_API } from "../../api.js";
 import { showError } from "../../utils/errorHandler";
 import "./Chatbot.css";
 
@@ -30,7 +30,7 @@ const Chatbot = () => {
 
   const loadChatHistory = async () => {
     try {
-      const response = await aiService.getChatHistory();
+      const response = await AI_API.getChatHistory();
       const history = response.data || [];
       
       if (history && history.length > 0) {
@@ -77,7 +77,7 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await aiService.chat(inputMessage);
+      const response = await AI_API.chat(inputMessage);
       const data = response.data || {};
 
       const botMessage = {
@@ -109,7 +109,7 @@ const Chatbot = () => {
     if (!window.confirm("Bạn có chắc muốn xóa lịch sử chat?")) return;
 
     try {
-      await aiService.clearChatHistory();
+      await AI_API.clearChatHistory();
       setMessages([
         {
           id: Date.now(),

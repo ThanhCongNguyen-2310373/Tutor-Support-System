@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 import { meetingsService, tutorsService, authService } from "../../../api.js";
 import ManageAvailability from "./ManageAvailability"; 
 import MyStudents from "./MyStudents";
@@ -175,7 +174,7 @@ export default function TutorDashboard() {
         if (Array.isArray(history)) {
            const myHistory = history.filter(item => {
              if (currentTutorId) return item.tutorId === currentTutorId;
-             return item.tutorId == currentUser?.id;
+             return item.tutorId === currentUser?.id;
            });
            myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
            setProgressHistory(myHistory);
@@ -202,7 +201,7 @@ export default function TutorDashboard() {
         const history = await tutorsService.getStudentProgress(selectedStudent.id);
         if (Array.isArray(history)) {
            const myHistory = history.filter(item => 
-             currentTutorId ? item.tutorId === currentTutorId : item.tutorId == currentUser?.id
+             currentTutorId ? item.tutorId === currentTutorId : item.tutorId === currentUser?.id
            );
            myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
            setProgressHistory(myHistory);

@@ -51,7 +51,7 @@ export default function MyStudents({ onClose }) {
       if (Array.isArray(history)) {
         const myHistory = history.filter((item) => {
           if (currentTutorId) return item.tutorId === currentTutorId;
-          return item.tutorId == currentUser?.id;
+          return item.tutorId === currentUser?.id;
         });
         myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setProgressHistory(myHistory);
@@ -69,7 +69,7 @@ export default function MyStudents({ onClose }) {
       const history = await tutorsService.getStudentProgress(selectedStudent.id);
       if (Array.isArray(history)) {
         const myHistory = history.filter((item) => 
-           currentTutorId ? item.tutorId === currentTutorId : item.tutorId == currentUser?.id
+           currentTutorId ? item.tutorId === currentTutorId : item.tutorId === currentUser?.id
         );
         myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setProgressHistory(myHistory);
