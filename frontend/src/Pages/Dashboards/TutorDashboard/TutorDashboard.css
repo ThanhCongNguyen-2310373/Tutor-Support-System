@@ -1,38 +1,123 @@
-/* Bố cục giống StudentDashboard nhưng dùng prefix td- */
-
-.td{
+/* ============================================================================
+   TUTOR DASHBOARD (TUTORDASH) - DARK MODE
+   ============================================================================ */
+.tutordash {
   padding: 16px 0 109px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  /* --- DARKEST BACKGROUND --- */
+  background-image: 
+    linear-gradient(rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.8)), /* black overlay */
+    url('./tutor_dashboard_background.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #f1f5f9; /* Global Light Text */
 }
 
-/* Tiêu đề */
-.td-title-wrap{
-  width: min(700px, 92vw);       /* gọn hơn một chút; muốn to hơn đổi 700→820 */
-  background: #fff;
+/* Title Section */
+.tutordash-title-wrap {
+  width: min(700px, 92vw);
+  background: rgba(30, 41, 59, 0.95); /* Dark Slate 800 */
   margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  border: 1px solid #334155;
 }
-.td-title{
+
+.tutordash-title {
   margin: 8px 0;
   text-align: center;
-  color: #1c3e9c;
-  font-weight: 800;
+  color: #f8fafc; /* Slate 50 */
+  font-weight: 900;
   font-size: clamp(22px, 3vw, 36px);
   letter-spacing: 1px;
 }
 
-/* Panel */
-.td-panel{
+/* Main Panel Containers */
+.tutordash-panel {
   width: min(600px, 92vw);
-  border: 6px solid #0a66d1;
-  border-radius: 4px;
-  background: #fff;
+  border: 2px solid #3b82f6; /* Bright Blue Border for visibility */
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.95); /* Slate 900 */
   padding: 18px 12px 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
-/* Khối thẻ chỉ dùng flex */
-.td-grid{
+.tutordash-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 12px;
+}
+
+.tutordash-section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #60a5fa; /* Lighter Blue for Dark Mode */
+  margin: 0;
+  margin-Bottom: 10px;
+}
+
+.tutordash-empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 32px;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   STATS SECTION
+   ============================================================================ */
+.tutordash-stats {
+  width: min(820px, 92vw);
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tutordash-stat-card {
+  flex: 1;
+  min-width: 150px;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(5px);
+}
+
+.tutordash-stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.tutordash-stat-label {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+/* Darker, richer gradients */
+.tutordash-stat-pending { background: linear-gradient(135deg, #b45309 0%, #78350f 100%); }
+.tutordash-stat-confirmed { background: linear-gradient(135deg, #047857 0%, #064e3b 100%); }
+.tutordash-stat-completed { background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%); }
+.tutordash-stat-rating { background: linear-gradient(135deg, #a16207 0%, #713f12 100%); }
+
+/* ============================================================================
+   QUICK ACTIONS (GRID)
+   ============================================================================ */
+.tutordash-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -40,360 +125,429 @@
   row-gap: 20px;
 }
 
-/* Link bao card (nếu sau này thêm nhiều thẻ) */
-.td-card-link{
+.tutordash-card-link {
   text-decoration: none;
   display: block;
-  flex: 0 1 260px;               /* khớp kích thước Card hiện tại */
+  flex: 0 1 260px;
 }
 
-/* Card giữa panel */
-.td-card-center{
-  flex-basis: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* Stats Cards */
-.td-stats {
-  width: min(820px, 92vw);
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.td-stat-card {
-  flex: 1;
-  min-width: 150px;
-  padding: 24px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  color: white;
-}
-
-.td-stat-pending {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
-.td-stat-confirmed {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.td-stat-completed {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-}
-
-.td-stat-rating {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
-.td-stat-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.td-stat-label {
-  font-size: 0.95rem;
-  opacity: 0.9;
-}
-
-/* Section */
-.td-section {
-  width: min(820px, 92vw);
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.td-section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1c3e9c;
-  margin-bottom: 16px;
-}
-
-.td-empty {
-  text-align: center;
-  color: #6b7280;
-  padding: 32px;
-}
-
-/* Meetings List */
-.td-meetings-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.td-meeting-card {
-  display: block;
-  padding: 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s;
-}
-
-.td-meeting-card:hover {
-  border-color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-.td-meeting-time {
-  font-size: 0.9rem;
-  color: #6b7280;
-  margin-bottom: 4px;
-}
-
-.td-meeting-student {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 4px;
-}
-
-.td-meeting-topic {
-  font-size: 0.95rem;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-
-.td-meeting-status {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.status-pending {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-confirmed {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.status-completed {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
-.status-canceled {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* Responsive */
-@media (max-width: 760px){
-  .td-grid{
-    column-gap: 16px;
-    row-gap: 16px;
-  }
-  .td-card-link{
-    flex: 1 1 240px;
-  }
-  .td-stats {
-    flex-direction: column;
-  }
-  .td-stat-card {
-    min-width: 100%;
-  }
-}
-
-/* Add to existing TutorDashboard.css */
-
-.td-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.td-view-all-btn {
-  background: #48CAE4;
-  border: 2px solid #cdd2e1;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #0b1e3f;
-}
-.td-view-all-btn:hover { background: #0096C7; }
-
-.td-quick-card {
-  border: 2px solid rgba(26, 42, 95, 0.3);
+.tutordash-quick-card {
+  border: 1px solid #475569;
   padding: 18px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   min-height: 80px;
-  background: #e7ebf9;
-  transition: transform .15s, box-shadow .15s, border-color .15s, background .15s;
+  background: #1e293b; /* Dark Card */
+  transition: all .15s;
+  color: #f1f5f9;
 }
-.td-quick-card:hover {
-  background: #d9dff5;
-  border-color: #1a3ba8;
-  box-shadow: 0 8px 24px rgba(26,59,168,0.3);
+
+.tutordash-quick-card:hover {
+  background: #334155; /* Lighter on hover */
+  border-color: #60a5fa;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
-.td-quick-icon { font-size: 1.8rem; }
-.td-quick-title { font-weight: 700; font-size: 1rem; color: #111827; }
 
-.td-meetings-list {
-  max-height: 60vh;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-.td-meetings-list::-webkit-scrollbar { width: 6px; }
-.td-meetings-list::-webkit-scrollbar-thumb { background: #9ea4b5; border-radius: 3px; }
+.tutordash-quick-icon { font-size: 1.8rem; color: #60a5fa !important; }
+.tutordash-quick-title { font-weight: 800; font-size: 1rem; color: #f1f5f9; }
 
-.td-meeting-card {
-  cursor: pointer;
-  background: #fcfdff;
-}
-
-/* Modal styles */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-.modal-content {
-  background: #fefefe;
-  border: 3px solid #1a3ba8;
-  border-radius: 12px;
-  width: min(900px, 100%);
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
-.modal-detail { width: min(650px, 100%); }
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 2px solid #d4d8e6;
-}
-.modal-header h2 { margin: 0; font-size: 1.25rem; color: #0b1e3f; font-weight: 700; }
-.modal-close {
-  background: none; border: none; font-size: 1.6rem; cursor: pointer; color: #6b7280;
-  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; transition: .12s;
-}
-.modal-close:hover { background: #eef2ff; color: #1f2937; }
-.modal-tabs {
-  display: flex; gap: 8px; padding: 12px 24px; border-bottom: 2px solid #d4d8e6; overflow-x: auto;
-}
-.modal-tabs button {
-  background: transparent; border: 2px solid #cdd2e1; padding: 8px 16px; border-radius: 6px;
-  font-size: .9rem; font-weight: 500; cursor: pointer; color: #0b1e3f; transition: .12s; white-space: nowrap;
-}
-.modal-tabs button:hover { background: #eef2ff; border-color: #9ca3af; }
-.modal-tabs button.tab-active { background: #1a3ba8; color: #fff; border-color: #1a3ba8; }
-.modal-body {
-  padding: 20px 24px; overflow-y: auto; flex: 1; max-height: calc(85vh - 160px);
-}
-.detail-section {
-  margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #d4d8e6;
-}
-.detail-section:last-of-type { border-bottom: none; }
-.detail-label {
-  font-size: .85rem; font-weight: 600; color: #6b7280; text-transform: uppercase;
-  letter-spacing: .5px; margin-bottom: 6px;
-}
-.detail-value { font-size: 1.05rem; color: #0b1e3f; font-weight: 500; word-break: break-word; }
-.detail-link { color: #1a3ba8; text-decoration: none; font-size: 1.05rem; word-break: break-all; }
-.detail-link:hover { text-decoration: underline; }
-.detail-actions {
-  margin-top: 24px; padding-top: 20px; border-top: 2px solid #d4d8e6;
-  display: flex; gap: 12px; justify-content: flex-end;
-}
-
-.td-btn-confirm, .td-btn-cancel {
-  border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
-  cursor: pointer; transition: all .12s; padding: 20px 40px; color: #fff;
-}
-.td-btn-confirm { background: #16a34a; }
-.td-btn-confirm:hover:not(:disabled) { background: #15803d; transform: translateY(-1px); }
-.td-btn-cancel { background: #dc2626; }
-.td-btn-cancel:hover:not(:disabled) { background: #b91c1c; transform: translateY(-1px); }
-.td-btn-confirm:disabled, .td-btn-cancel:disabled { opacity: .6; cursor: not-allowed; }
-
-/* Box grid for confirmed meetings */
-.td-meetings-grid {
+/* ============================================================================
+   MEETINGS: DASHBOARD BOXES (GRID VIEW)
+   ============================================================================ */
+.tutordash-meetings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 }
 
-.td-meeting-box {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.tutordash-meeting-box {
+  background: linear-gradient(135deg, #172554 0%, #0f172a 100%); /* Deep Navy to Black */
   color: white;
   padding: 20px;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #1e3a8a;
 }
 
-.td-meeting-box:hover {
+.tutordash-meeting-box:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+  border-color: #60a5fa;
 }
 
-.td-box-time {
+.tutordash-box-time {
   font-size: 0.9rem;
-  opacity: 0.9;
+  opacity: 0.8;
   margin-bottom: 8px;
-  font-weight: 500;
+  font-weight: 600;
+  color: #93c5fd;
 }
 
-.td-box-student {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+.tutordash-topic-big {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 8px 0;
+  line-height: 1.2;
+  color: #f8fafc;
 }
 
-.td-box-topic {
+.tutordash-student-count {
+  font-size: 0.95rem;
+  opacity: 1;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+/* ============================================================================
+   MEETINGS: LIST VIEW
+   ============================================================================ */
+.tutordash-meetings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.tutordash-meeting-card {
+  display: block;
+  padding: 16px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #f1f5f9;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: #1e293b; /* Dark Card */
+}
+
+.tutordash-meeting-card:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background: #334155;
+}
+
+.tutordash-meeting-time {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.tutordash-meeting-topic-list {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+
+.tutordash-meeting-student-count {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* Status Badges */
+.tutordash-meeting-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
   font-size: 0.85rem;
-  opacity: 0.85;
-  line-height: 1.3;
+  font-weight: 700;
 }
 
-/* Modal page iframe */
-.modal-page {
-  width: min(95vw, 1200px);
-  height: 85vh;
+.status-pending { background: #422006; color: #fde047; border: 1px solid #ca8a04; }
+.status-confirmed { background: #022c22; color: #4ade80; border: 1px solid #16a34a; }
+.status-completed { background: #172554; color: #93c5fd; border: 1px solid #2563eb; }
+.status-canceled { background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; }
+
+/* ============================================================================
+   MODALS (td-modal-*) - NO WHITE
+   ============================================================================ */
+.tutordash-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85); /* Very Dark Overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(5px);
 }
 
-.modal-iframe {
-  width: 100%;
-  height: 100%;
+.tutordash-modal-content {
+  background: #0f172a; /* Slate 900 */
+  border: 1px solid #334155;
+  border-radius: 12px;
+  width: min(900px, 100%);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  color: #f1f5f9;
+}
+
+.tutordash-modal-detail {
+  width: min(650px, 100%);
+}
+
+.tutordash-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #334155;
+  background: #1e293b; /* Slightly lighter header */
+  border-radius: 11px 11px 0 0;
+}
+
+.tutordash-modal-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #f8fafc;
+  font-weight: 800;
+}
+
+.tutordash-modal-close {
+  background: #334155;
   border: none;
-  border-radius: 0 0 8px 8px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #cbd5e1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: .12s;
 }
 
+.tutordash-modal-close:hover { background: #475569; color: #fff; }
+
+/* Modal Tabs */
+.tutordash-modal-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #334155;
+  overflow-x: auto;
+  background: #0f172a;
+}
+
+.tutordash-modal-tabs button {
+  background: #1e293b;
+  border: 1px solid #475569;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: .15s;
+  white-space: nowrap;
+}
+
+.tutordash-modal-tabs button:hover { background: #334155; color: #fff; }
+.tutordash-modal-tabs button.tutordash-tab-active { background: #2563eb; color: #fff; border-color: #3b82f6; }
+
+.tutordash-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(85vh - 160px);
+  background: #0f172a; /* Slate 900 body */
+}
+
+/* Detail Sections */
+.detail-section {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #334155;
+}
+.detail-section:last-of-type { border-bottom: none; }
+
+.detail-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #94a3b8; /* Muted text */
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+
+.detail-value { font-size: 1.1rem; color: #f1f5f9; font-weight: 600; }
+.detail-link { color: #60a5fa; text-decoration: none; font-size: 1.1rem; font-weight: 600; }
+.detail-link:hover { text-decoration: underline; color: #93c5fd; }
+
+.detail-actions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #334155;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* ============================================================================
+   BUTTONS & INPUTS
+   ============================================================================ */
+.tutordash-view-all-btn {
+  background: #0369a1;
+  border: 1px solid #0ea5e9;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  transition: all 0.2s;
+}
+.tutordash-view-all-btn:hover { background: #0ea5e9; }
+
+.tutordash-btn-confirm, .tutordash-btn-cancel, .tutordash-btn-complete {
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+  padding: 20px 40px;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.tutordash-btn-confirm { background: #15803d; }
+.tutordash-btn-confirm:hover:not(:disabled) { background: #22c55e; }
+
+.tutordash-btn-cancel { background: #b91c1c; }
+.tutordash-btn-cancel:hover:not(:disabled) { background: #ef4444; }
+
+.tutordash-btn-complete { background: #1d4ed8; }
+.tutordash-btn-complete:hover:not(:disabled) { background: #3b82f6; }
+
+.tutordash-btn-confirm:disabled, .tutordash-btn-cancel:disabled, .tutordash-btn-complete:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  background: #475569;
+}
+
+/* Student Chips */
+.tutordash-student-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.tutordash-student-chip {
+  background: #172554;
+  border: 1px solid #3b82f6;
+  border-radius: 24px;
+  padding: 8px 16px;
+  color: #93c5fd;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.tutordash-student-chip:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* Note Input */
+.tutordash-note-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-top: 8px;
+  display: block;
+  background: #1e293b; /* Dark Input */
+  color: #f1f5f9;
+}
+
+.tutordash-note-input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  background: #0f172a;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+/* History List */
+.tutordash-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.tutordash-history-item {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.tutordash-history-date { font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; font-weight: 700; }
+.tutordash-history-note { font-size: 1rem; color: #e2e8f0; white-space: pre-wrap; }
+
+/* ============================================================================
+   CUSTOM SCROLLBARS (Dark & Visible)
+   ============================================================================ */
+.tutordash-meetings-list::-webkit-scrollbar,
+.tutordash-history-list::-webkit-scrollbar,
+.tutordash-modal-body::-webkit-scrollbar,
+.tutordash-modal-tabs::-webkit-scrollbar {
+  width: 20px; 
+  height: 20px;
+}
+
+.tutordash-meetings-list::-webkit-scrollbar-track,
+.tutordash-history-list::-webkit-scrollbar-track,
+.tutordash-modal-body::-webkit-scrollbar-track,
+.tutordash-modal-tabs::-webkit-scrollbar-track {
+  background: #0f172a; /* Match modal bg */
+  border-radius: 10px;
+}
+
+.tutordash-meetings-list::-webkit-scrollbar-thumb,
+.tutordash-history-list::-webkit-scrollbar-thumb,
+.tutordash-modal-body::-webkit-scrollbar-thumb,
+.tutordash-modal-tabs::-webkit-scrollbar-thumb {
+  background: #475569; /* Visible grey thumb */
+  border-radius: 10px;
+  border: 5px solid #0f172a; /* Padding effect */
+}
+
+.tutordash-meetings-list::-webkit-scrollbar-thumb:hover,
+.tutordash-history-list::-webkit-scrollbar-thumb:hover,
+.tutordash-modal-body::-webkit-scrollbar-thumb:hover,
+.tutordash-modal-tabs::-webkit-scrollbar-thumb:hover {
+  background: #64748b; /* Lighter on hover */
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
 @media (max-width: 760px) {
-  .td-meetings-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-  }
+  .tutordash-grid { column-gap: 16px; row-gap: 16px; }
+  .tutordash-card-link { flex: 1 1 240px; }
+  .tutordash-stats { flex-direction: column; }
+  .tutordash-stat-card { min-width: 100%; }
+  .tutordash-meetings-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 }
