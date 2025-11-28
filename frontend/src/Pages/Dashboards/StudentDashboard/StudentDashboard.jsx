@@ -23,7 +23,7 @@ export default function StudentDashboard() {
   const [actionLoading, setActionLoading] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
+  // const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState("");
 
   const [visibleCount, setVisibleCount] = useState(5);
@@ -80,7 +80,7 @@ export default function StudentDashboard() {
       setShowDetailModal(true);
       setShowRating(false);
       setRating(0);
-      setHoveredRating(0);
+      // setHoveredRating(0);
       setComment("");
       if (!keepListOpen) setShowListModal(false);
     } catch (error) {
@@ -117,7 +117,7 @@ export default function StudentDashboard() {
       alert("Đã gửi đánh giá thành công");
       setShowRating(false);
       setRating(0);
-      setHoveredRating(0);
+      // setHoveredRating(0);
       setComment("");
     } catch (error) {
       alert("Lỗi: " + (error.message || "Không thể gửi đánh giá"));
@@ -131,10 +131,10 @@ export default function StudentDashboard() {
     return m.status === activeTab.toUpperCase();
   });
 
-  const getRatingText = (score) => {
-    const texts = ["Chọn số sao", "Rất tệ", "Tệ", "Bình thường", "Tốt", "Xuất sắc"];
-    return texts[score] || "";
-  };
+  // const getRatingText = (score) => {
+  //   const texts = ["Chọn số sao", "Rất tệ", "Tệ", "Bình thường", "Tốt", "Xuất sắc"];
+  //   return texts[score] || "";
+  // };
 
   const MeetingCard = ({ meeting, onClick }) => (
     <div onClick={onClick} className="studentdash-meeting-card" role="button" tabIndex={0}>

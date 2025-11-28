@@ -1,6 +1,6 @@
 // src/Pages/Tutors/ManageAvailability.jsx
 import React, { useState, useEffect } from "react";
-import { tutorsService, tutorsAPI } from "../../api";
+import { tutorsService} from "../../api";
 import { showSuccess, showError } from "../../utils/errorHandler";
 import "./ManageAvailability.css";
 

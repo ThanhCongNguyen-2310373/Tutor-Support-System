@@ -8,12 +8,12 @@ export default function TutorRequestPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequests, setSelectedRequests] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
-    faculty: '',
-    semester: '',
-    class: '',
-  });
+  const [searchTerm] = useState('');
+  // const [filters, setFilters] = useState({
+  //   faculty: '',
+  //   semester: '',
+  //   class: '',
+  // });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -33,12 +33,12 @@ export default function TutorRequestPage() {
 
   useEffect(() => {
     fetchPotentialTutors();
-  }, [filters]);
+  }, []);
 
   const fetchPotentialTutors = async () => {
     try {
       setLoading(true);
-      const data = await managementService.getPotentialTutors(filters);
+      const data = await managementService.getPotentialTutors();
       // Backend trả về mảng sinh viên tiềm năng
       setRequests(
         data.map((s) => ({
