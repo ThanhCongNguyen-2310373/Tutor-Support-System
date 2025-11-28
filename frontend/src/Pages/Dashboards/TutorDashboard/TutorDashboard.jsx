@@ -1,5 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { meetingsService, tutorsService, authService } from "../../../api.js";
+
+import LibraryModal from "./LibraryModal";
 import ManageAvailability from "./ManageAvailability"; 
 import MyStudents from "./MyStudents";
 import "./TutorDashboard.css";
@@ -26,6 +29,7 @@ export default function TutorDashboard() {
 
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
   const [showMyStudents, setShowMyStudents] = useState(false);
+  const [showLibraryModal, setShowLibraryModal] = useState(false);
 
   const currentUser = authService.getCurrentUser();
 
@@ -174,7 +178,7 @@ export default function TutorDashboard() {
         if (Array.isArray(history)) {
            const myHistory = history.filter(item => {
              if (currentTutorId) return item.tutorId === currentTutorId;
-             return item.tutorId === currentUser?.id;
+             return item.tutorId == currentUser?.id;
            });
            myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
            setProgressHistory(myHistory);
@@ -201,7 +205,7 @@ export default function TutorDashboard() {
         const history = await tutorsService.getStudentProgress(selectedStudent.id);
         if (Array.isArray(history)) {
            const myHistory = history.filter(item => 
-             currentTutorId ? item.tutorId === currentTutorId : item.tutorId === currentUser?.id
+             currentTutorId ? item.tutorId === currentTutorId : item.tutorId == currentUser?.id
            );
            myHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
            setProgressHistory(myHistory);
@@ -279,7 +283,15 @@ export default function TutorDashboard() {
       <div className="tutordash-panel" style={{ marginTop: 24 }}>
         <h2 className="tutordash-section-title">Hành động nhanh</h2>
         <div className="tutordash-grid">
-          
+
+		{/* --- NEW: Library Link --- */}
+		<div onClick={() => setShowLibraryModal(true)} className="tutordash-card-link" style={{cursor: 'pointer'}}>
+		  <div className="tutordash-quick-card" style={{ borderColor: "#FF7051" }}>
+			<div className="tutordash-quick-icon" style={{ color: "#FF7051" }}>📚</div>
+			<div className="tutordash-quick-title">Thư viện HCMUT</div>
+		  </div>
+		</div>        
+
           <div onClick={() => setShowAvailabilityModal(true)} className="tutordash-card-link" style={{cursor: 'pointer'}}>
             <div className="tutordash-quick-card" style={{ borderColor: "#667eea" }}>
               <div className="tutordash-quick-icon" style={{ color: "#667eea" }}>📅</div>
@@ -478,6 +490,10 @@ export default function TutorDashboard() {
 
       {showMyStudents && (
         <MyStudents onClose={() => setShowMyStudents(false)} />
+      )}
+
+	  {showLibraryModal && (
+        <LibraryModal onClose={() => setShowLibraryModal(false)} />
       )}
 
     </div>
