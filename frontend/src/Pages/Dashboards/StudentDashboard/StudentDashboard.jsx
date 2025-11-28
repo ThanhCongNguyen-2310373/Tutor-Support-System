@@ -117,8 +117,20 @@ export default function StudentDashboard() {
       alert("Đã gửi đánh giá thành công");
       setShowRating(false);
       setRating(0);
-      // setHoveredRating(0);
       setComment("");
+      
+      // Refresh meeting detail để hiển thị rating vừa gửi
+      const updatedMeeting = await meetingsService.getMeetingById(selectedMeeting.id);
+      setSelectedMeeting(updatedMeeting);
+      
+      // Refresh danh sách meetings nếu modal list đang mở
+      if (showListModal) {
+        const all = await meetingsService.getMyMeetings();
+        setAllMeetings(all || []);
+      }
+      
+      // Refresh dashboard data
+      await fetchDashboardData();
     } catch (error) {
       alert("Lỗi: " + (error.message || "Không thể gửi đánh giá"));
     } finally {
@@ -136,14 +148,28 @@ export default function StudentDashboard() {
   //   return texts[score] || "";
   // };
 
-  const MeetingCard = ({ meeting, onClick }) => (
-    <div onClick={onClick} className="studentdash-meeting-card" role="button" tabIndex={0}>
-      <div className="studentdash-meeting-time">{new Date(meeting.startTime).toLocaleString("vi-VN")}</div>
-      <div className="studentdash-meeting-topic">{meeting.topic || "Không có chủ đề"}</div>
-      <div className="studentdash-meeting-tutor">Giảng viên: {meeting.tutor?.user?.fullName || "—"}</div>
-      <span className={`studentdash-meeting-status status-${(meeting.status || "").toLowerCase()}`}>{meeting.status}</span>
-    </div>
-  );
+  const MeetingCard = ({ meeting, onClick }) => {
+    // Lấy user hiện tại để kiểm tra đã rating chưa
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const hasRated = meeting.status === "COMPLETED" && 
+                     meeting.ratings?.some(r => r.studentId === currentUser.id);
+    
+    return (
+      <div onClick={onClick} className="studentdash-meeting-card" role="button" tabIndex={0}>
+        <div className="studentdash-meeting-time">{new Date(meeting.startTime).toLocaleString("vi-VN")}</div>
+        <div className="studentdash-meeting-topic">{meeting.topic || "Không có chủ đề"}</div>
+        <div className="studentdash-meeting-tutor">Giảng viên: {meeting.tutor?.user?.fullName || "—"}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span className={`studentdash-meeting-status status-${(meeting.status || "").toLowerCase()}`}>{meeting.status}</span>
+          {meeting.status === "COMPLETED" && (
+            <span className={`studentdash-rating-badge ${hasRated ? 'rated' : 'not-rated'}`}>
+              {hasRated ? '✓ Đã đánh giá' : '⚠ Chưa đánh giá'}
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="studentdash">
@@ -232,45 +258,114 @@ export default function StudentDashboard() {
       )}
 
       {/* Existing Detail Modal */}
-      {showDetailModal && selectedMeeting && (
-        <div className="studentdash-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowDetailModal(false); }}>
-          <div className="studentdash-modal-content studentdash-modal-detail" onClick={(e) => e.stopPropagation()}>
-            <div className="studentdash-modal-header">
-              <h2>Chi tiết buổi học</h2>
-              <button className="studentdash-modal-close" onClick={() => setShowDetailModal(false)}>✕</button>
-            </div>
-            <div className="studentdash-modal-body">
-              {/* Detail Fields... (Abbreviated for brevity, logic remains the same) */}
-              <div className="detail-section">
-                <div className="detail-label">Chủ đề</div><div className="detail-value">{selectedMeeting.topic || "Không có"}</div>
+      {showDetailModal && selectedMeeting && (() => {
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const hasRated = selectedMeeting.ratings?.some(r => r.studentId === currentUser.id);
+        const myRating = selectedMeeting.ratings?.find(r => r.studentId === currentUser.id);
+        
+        return (
+          <div className="studentdash-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowDetailModal(false); }}>
+            <div className="studentdash-modal-content studentdash-modal-detail" onClick={(e) => e.stopPropagation()}>
+              <div className="studentdash-modal-header">
+                <h2>Chi tiết buổi học</h2>
+                <button className="studentdash-modal-close" onClick={() => setShowDetailModal(false)}>✕</button>
               </div>
-              <div className="detail-section">
-                <div className="detail-label">Giảng viên</div><div className="detail-value">{selectedMeeting.tutor?.user?.fullName || "—"}</div>
-              </div>
-              {/* ... ratings, status, buttons ... */}
-              {selectedMeeting.status === "PENDING" && (
-                <div className="detail-actions"><button onClick={handleCancelMeeting} disabled={actionLoading} className="studentdash-btn studentdash-btn-cancel">Hủy buổi học</button></div>
-              )}
-              {selectedMeeting.status === "COMPLETED" && (
-                <div className="detail-actions"><button onClick={() => setShowRating(!showRating)} className="studentdash-btn studentdash-btn-rate">{showRating ? "Ẩn đánh giá" : "Đánh giá"}</button></div>
-              )}
-              {showRating && selectedMeeting.status === "COMPLETED" && (
-                <form onSubmit={handleSubmitRating} className="rating-box">
-                   {/* Rating Form... */}
-                   <div className="rating-field">
-                    <label>Đánh giá:</label>
-                    <div className="star-rating">
-                      {[1,2,3,4,5].map(s => <button key={s} type="button" onClick={()=>setRating(s)} className={s<=rating?"star-active":"star-inactive"}>★</button>)}
+              <div className="studentdash-modal-body">
+                {/* Detail Fields... (Abbreviated for brevity, logic remains the same) */}
+                <div className="detail-section">
+                  <div className="detail-label">Chủ đề</div><div className="detail-value">{selectedMeeting.topic || "Không có"}</div>
+                </div>
+                <div className="detail-section">
+                  <div className="detail-label">Giảng viên</div><div className="detail-value">{selectedMeeting.tutor?.user?.fullName || "—"}</div>
+                </div>
+                <div className="detail-section">
+                  <div className="detail-label">Thời gian</div>
+                  <div className="detail-value">{new Date(selectedMeeting.startTime).toLocaleString("vi-VN")}</div>
+                </div>
+                <div className="detail-section">
+                  <div className="detail-label">Trạng thái</div>
+                  <span className={`studentdash-meeting-status status-${(selectedMeeting.status || "").toLowerCase()}`}>
+                    {selectedMeeting.status}
+                  </span>
+                </div>
+                
+                {/* Hiển thị rating đã có (nếu có) */}
+                {selectedMeeting.status === "COMPLETED" && hasRated && myRating && (
+                  <div className="detail-section" style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', border: '1px solid #86efac' }}>
+                    <div className="detail-label" style={{ color: '#15803d', marginBottom: '8px' }}>✓ Đã đánh giá</div>
+                    <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                      {[1,2,3,4,5].map(s => (
+                        <span key={s} style={{ fontSize: '20px', color: s <= myRating.score ? '#fbbf24' : '#d1d5db' }}>★</span>
+                      ))}
+                      <span style={{ marginLeft: '8px', color: '#059669', fontWeight: 'bold' }}>
+                        {myRating.score}/5
+                      </span>
                     </div>
-                   </div>
-                   <textarea value={comment} onChange={e=>setComment(e.target.value)} className="rating-textarea" placeholder="Nhập nhận xét..." />
-                   <button type="submit" disabled={actionLoading} className="studentdash-btn studentdash-btn-submit-rating">Gửi</button>
-                </form>
-              )}
+                    {myRating.comment && (
+                      <div style={{ color: '#065f46', fontSize: '14px', fontStyle: 'italic' }}>
+                        "{myRating.comment}"
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {/* Buttons */}
+                {selectedMeeting.status === "PENDING" && (
+                  <div className="detail-actions">
+                    <button onClick={handleCancelMeeting} disabled={actionLoading} className="studentdash-btn studentdash-btn-cancel">
+                      Hủy buổi học
+                    </button>
+                  </div>
+                )}
+                
+                {/* Chỉ hiển thị nút đánh giá nếu COMPLETED và CHƯA đánh giá */}
+                {selectedMeeting.status === "COMPLETED" && !hasRated && (
+                  <div className="detail-actions">
+                    <button onClick={() => setShowRating(!showRating)} className="studentdash-btn studentdash-btn-rate">
+                      {showRating ? "Ẩn đánh giá" : "Đánh giá"}
+                    </button>
+                  </div>
+                )}
+                
+                {/* Form đánh giá - chỉ hiển thị nếu CHƯA đánh giá */}
+                {showRating && selectedMeeting.status === "COMPLETED" && !hasRated && (
+                  <form onSubmit={handleSubmitRating} className="rating-box">
+                     {/* Rating Form... */}
+                     <div className="rating-field">
+                      <label>Đánh giá:</label>
+                      <div className="star-rating">
+                        {[1,2,3,4,5].map(s => (
+                          <button 
+                            key={s} 
+                            type="button" 
+                            onClick={()=>setRating(s)} 
+                            className={s<=rating?"star-active":"star-inactive"}
+                          >
+                            ★
+                          </button>
+                        ))}
+                      </div>
+                     </div>
+                     <textarea 
+                       value={comment} 
+                       onChange={e=>setComment(e.target.value)} 
+                       className="rating-textarea" 
+                       placeholder="Nhập nhận xét..." 
+                     />
+                     <button 
+                       type="submit" 
+                       disabled={actionLoading || rating === 0} 
+                       className="studentdash-btn studentdash-btn-submit-rating"
+                     >
+                       {actionLoading ? 'Đang gửi...' : 'Gửi đánh giá'}
+                     </button>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* NEW: Find Tutor Modal */}
       {showFindTutor && (

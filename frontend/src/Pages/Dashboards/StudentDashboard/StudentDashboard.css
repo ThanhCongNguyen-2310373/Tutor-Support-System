@@ -198,6 +198,28 @@
 .status-completed { background: #172554; color: #93c5fd; border: 1px solid #2563eb; }
 .status-canceled { background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; }
 
+/* Rating Badge */
+.studentdash-rating-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.studentdash-rating-badge.rated {
+  background: #064e3b;
+  color: #6ee7b7;
+  border: 1px solid #10b981;
+}
+
+.studentdash-rating-badge.not-rated {
+  background: #78350f;
+  color: #fcd34d;
+  border: 1px solid #f59e0b;
+}
+
 /* ============================================================================
    MODALS (studentdash-modal-*)
    ============================================================================ */
