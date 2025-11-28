@@ -350,73 +350,95 @@
   }
 }
 
-/* ========== Modal (Notification) ========== */
+/* ==================== FIX POPUP VỊ TRÍ CHUẨN GIỮA MÀN HÌNH ==================== */
 .oaa-modal-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.3);
-  border-radius: 8px;
-  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
 }
 
 .oaa-modal {
   background: white;
-  padding: 24px;
-  border-radius: 8px;
-  width: 320px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 420px;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.oaa-modal-content {
+  padding: 32px 24px;
   text-align: center;
 }
 
 .oaa-modal-icon {
-  font-size: 36px;
-  margin-bottom: 12px;
+  font-size: 56px;
+  margin-bottom: 16px;
 }
 
 .oaa-modal-icon.error {
-  color: #dc2626;
+  color: #ef4444;
 }
 
 .oaa-modal-icon.success {
-  color: #16a34a;
+  color: #10b981;
 }
 
 .oaa-modal-title {
+  font-size: 24px;
   font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 8px;
+  margin: 0 0 12px 0;
+  color: #1f2937;
 }
 
 .oaa-modal-message {
-  color: #6b7280;
-  margin-bottom: 16px;
+  font-size: 16px;
+  color: #4b5563;
+  margin: 0 0 24px 0;
 }
 
 .oaa-modal-actions {
   display: flex;
   justify-content: center;
-  gap: 8px;
 }
 
 .oaa-modal-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
+  padding: 10px 32px;
   border: none;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .oaa-modal-btn.close {
-  background: #e5e7eb;
-  color: #374151;
+  background: #3b82f6;
+  color: white;
 }
 
-.oaa-modal-btn.retry {
-  background: #007AD2;
-  color: white;
+.oaa-modal-btn.close:hover {
+  background: #2563eb;
+}
+
+/* Animation mượt */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ========== Report Preview ========== */

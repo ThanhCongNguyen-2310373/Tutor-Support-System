@@ -170,11 +170,9 @@ export default function OAAReport() {
             <button className="oaa-btn-outline" onClick={handleGoBack}>
               ← Quay lại
             </button>
-            <h1 className="oaa-title">TẠO BÁOÁO CÁO PHÂN BỔ NGUỒN LỰC</h1>
+            <h1 className="oaa-title">TẠO BÁO CÁO PHÂN BỔ NGUỒN LỰC</h1>
             <div className="oaa-header-actions">
-              <button className="oaa-btn-outline" title="Chỉnh sửa">✏️</button>
               <button className="oaa-btn-outline" title="Lưu kết quả" onClick={handleSave}>💾</button>
-              <button className="oaa-btn-outline" title="Sao chép">Copy</button>
             </div>
           </div>
 
@@ -186,42 +184,11 @@ export default function OAAReport() {
         </div>
 
         <div className="oaa-tabs">
-          <div className="oaa-tabs-header">
-            <button
-              className={`oaa-tab-button ${activeTab === "theo-hoc-ki" ? "active" : ""}`}
-              onClick={() => setActiveTab("theo-hoc-ki")}
-            >
-              Theo học kì
-            </button>
-            <button
-              className={`oaa-tab-button ${activeTab === "theo-khoa" ? "active" : ""}`}
-              onClick={() => setActiveTab("theo-khoa")}
-            >
-              Theo khoa
-            </button>
-            <button
-              className={`oaa-tab-button ${activeTab === "toan-truong" ? "active" : ""}`}
-              onClick={() => setActiveTab("toan-truong")}
-            >
-              Toàn trường
-            </button>
-          </div>
-
           <div style={{ padding: "24px" }}>
             {/* Học kỳ */}
             <div className="oaa-form-section">
-              <h3 className="oaa-section-title">Học kỳ *</h3>
               <div className="oaa-form-row">
                 <div className="oaa-form-group">
-                  <select
-                    className="oaa-select"
-                    value={formData.semester}
-                    onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-                  >
-                    <option value="2025-1">Học kỳ 1 - 2024/2025</option>
-                    <option value="2025-2">Học kỳ 2 - 2024/2025</option>
-                    <option value="2024-2">Học kỳ 2 - 2023/2024</option>
-                  </select>
                 </div>
               </div>
             </div>
@@ -558,17 +525,6 @@ function ReportPreview({ data }) {
             <p>• Vui lòng cập nhật thêm dữ liệu để có phân tích chi tiết</p>
           </>
         )}
-      </div>
-
-      <div className="oaa-report-actions">
-        <div className="oaa-report-actions-left">
-          <button className="oaa-btn-outline">Xem chi tiết</button>
-        </div>
-        <div className="oaa-report-actions-right">
-          <button className="oaa-btn-secondary">Biểu đồ nâng cao</button>
-          <button className="oaa-btn-danger">Xuất PDF</button>
-          <button className="oaa-btn-success">Xuất Excel</button>
-        </div>
       </div>
     </div>
   );

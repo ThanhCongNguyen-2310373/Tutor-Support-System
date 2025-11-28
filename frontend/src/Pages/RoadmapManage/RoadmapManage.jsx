@@ -42,7 +42,7 @@ export default function RoadmapManage() {
     try {
       setLoading(true);
       const response = await academicAPI.getRoadmaps();
-      setRoadmaps(response || []);
+      setRoadmaps(response.data || []);
     } catch (err) {
       showError("Không thể tải được danh sách lộ trình");
       console.error(err);

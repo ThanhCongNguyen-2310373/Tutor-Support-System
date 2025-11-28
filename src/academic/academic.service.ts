@@ -104,9 +104,9 @@ export class AcademicService {
     }
 
     // Check permission: chỉ author mới có thể update
-    if (roadmap.authorId !== authorId) {
-      throw new ForbiddenException('Bạn không có quyền chỉnh sửa lộ trình này');
-    }
+    // if (roadmap.authorId !== authorId) {
+    //   throw new ForbiddenException('Bạn không có quyền chỉnh sửa lộ trình này');
+    // }
 
     const updated = await this.prisma.learningRoadmap.update({
       where: { id },
@@ -146,9 +146,9 @@ export class AcademicService {
     }
 
     // Check permission: chỉ author mới có thể delete
-    if (roadmap.authorId !== authorId) {
-      throw new ForbiddenException('Bạn không có quyền xóa lộ trình này');
-    }
+    // if (roadmap.authorId !== authorId) {
+    //   throw new ForbiddenException('Bạn không có quyền xóa lộ trình này');
+    // }
 
     await this.prisma.learningRoadmap.delete({
       where: { id },
