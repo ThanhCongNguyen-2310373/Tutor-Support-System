@@ -99,7 +99,7 @@ export default function RegisterAccount() {
 
         <form onSubmit={handleSubmit} className="register-account-form">
           <div className="form-group">
-            <label htmlFor="fullName">Họ và Tên</label>
+            <label htmlFor="fullName">Họ và Tên:</label>
             <input
               type="text"
               id="fullName"
@@ -113,7 +113,7 @@ export default function RegisterAccount() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="studentId">MSSV/ID</label>
+            <label htmlFor="studentId">MSSV/ID:</label>
             <input
               type="text"
               id="studentId"
@@ -127,7 +127,7 @@ export default function RegisterAccount() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email:</label>
             <input
               type="email"
               id="email"
@@ -141,7 +141,7 @@ export default function RegisterAccount() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mật khẩu</label>
+            <label htmlFor="password">Mật khẩu:</label>
             <input
               type="password"
               id="password"
@@ -155,7 +155,7 @@ export default function RegisterAccount() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+            <label htmlFor="confirmPassword">Xác nhận mật khẩu:</label>
             <input
               type="password"
               id="confirmPassword"
@@ -171,7 +171,7 @@ export default function RegisterAccount() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="role">Vai trò</label>
+            <label htmlFor="role">Vai trò:</label>
             <select
               id="role"
               name="role"

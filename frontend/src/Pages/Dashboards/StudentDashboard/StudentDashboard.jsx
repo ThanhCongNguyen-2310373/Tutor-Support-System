@@ -212,16 +212,16 @@ export default function StudentDashboard() {
         <div className="studentdash-grid">
           {/* Library Link (Still a normal link) */}
           <Link to="/dashboard/student/library" className="studentdash-card-link">
-            <div className="studentdash-quick-card" style={{ borderColor: "#FF7051" }}>
-              <div className="studentdash-quick-icon" style={{ color: "#FF7051" }}>📚</div>
+            <div className="studentdash-quick-card" style={{ borderColor: "#007AD2" }}>
+              <div className="studentdash-quick-icon" style={{ color: "#007AD2" }}>📚</div>
               <div className="studentdash-quick-title">Thư viện HCMUT</div>
             </div>
           </Link>
 
           {/* Find Tutor Popup Trigger */}
           <div onClick={() => setShowFindTutor(true)} className="studentdash-card-link" style={{cursor: 'pointer'}}>
-            <div className="studentdash-quick-card" style={{ borderColor: "#2F8E70" }}>
-              <div className="studentdash-quick-icon" style={{ color: "#2F8E70" }}>👨‍🎓</div>
+            <div className="studentdash-quick-card" style={{ borderColor: "#007AD2" }}>
+              <div className="studentdash-quick-icon" style={{ color: "#007AD2" }}>👨‍🎓</div>
               <div className="studentdash-quick-title">Tìm giảng viên</div>
             </div>
           </div>

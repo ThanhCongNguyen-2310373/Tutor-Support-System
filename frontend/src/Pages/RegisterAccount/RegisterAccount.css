@@ -1,100 +1,201 @@
+/* =========================
+   RegisterAccount.css
+   Tông xanh dương đậm / nhạt
+   ========================= */
+
+:root {
+  --primary: #007ad2;        /* xanh dương HCMUT */
+  --primary-dark: #0056a3;
+  --primary-soft: #e8f3ff;   /* xanh rất nhạt */
+  --text: #0b1e36;
+  --radius: 14px;
+}
+
+/* Nền trang */
 .register-account-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 72px); /* chừa chỗ cho header/footer nếu có */
+  padding: 40px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  background: linear-gradient(
+    180deg,
+    #f4f8ff 0%,
+    #ffffff 35%,
+    #f0f6ff 100%
+  );
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  color: var(--text);
 }
 
+/* Khung chính */
 .register-account-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  width: 100%;
-  max-width: 500px;
+  width: min(520px, 100%);
+  background: #ffffff;
+  border-radius: var(--radius);
+  border: 2px solid var(--primary);
+  box-shadow: 0 12px 40px rgba(0, 74, 143, 0.22);
+  padding: 28px 32px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Thanh xanh phía trên, giống khung login */
+.register-account-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 90px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  z-index: 0;
+}
+
+/* Tiêu đề + subtitle đặt trên thanh xanh */
+.register-account-title,
+.register-account-subtitle {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #ffffff;
 }
 
 .register-account-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #2d3748;
-  margin-bottom: 10px;
-  text-align: center;
+  margin: 4px 0 4px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .register-account-subtitle {
-  font-size: 14px;
-  color: #718096;
-  text-align: center;
-  margin-bottom: 30px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  opacity: 0.9;
 }
 
+/* Nền trắng cho phần form, bo tròn */
 .register-account-form {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  padding: 18px 18px 6px;
+  background: #ffffff;
+  border-radius: calc(var(--radius) - 4px);
+  box-shadow: 0 0 0 1px rgba(0, 122, 210, 0.12);
+  
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+
 }
 
+/* Group input */
+/* Mỗi dòng: [label] [input] thẳng hàng */
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr); /* 130px là rộng label, có thể tăng/giảm */
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: center;
 }
 
+/* Cột label bên trái, cùng một độ rộng */
 .form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #2d3748;
+  font-size: 18px;          /* to hơn */
+  font-weight: 700;         /* đậm hơn */
+  color: #0056a3;           /* xanh đậm cho dễ nhìn */
+  letter-spacing: 0.2px;    /* giãn nhẹ cho đẹp */
+  
 }
 
+/* Ô input/select nằm hết ở cột bên phải, cùng 1 đường thẳng */
 .form-group input,
 .form-group select {
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
+  grid-column: 2 / 3;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Text lỗi cũng nằm dưới ô input, vẫn trong cột bên phải */
+.error-text {
+  grid-column: 2 / 3;
+  font-size: 12px;
+  color: #e53e3e;
+}
+
+
+/* Input + select */
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
   border-radius: 8px;
+  border: 1px solid #cbd5e0;
   font-size: 14px;
-  transition: all 0.2s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  background-color: #f9fbff;
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder {
+  color: #a0aec0;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 122, 210, 0.18);
+  background-color: #ffffff;
 }
 
+/* Lỗi input */
 .form-group input.error {
-  border-color: #f56565;
+  border-color: #e53e3e;
+  background-color: #fff5f5;
 }
 
 .error-text {
   font-size: 12px;
-  color: #f56565;
-  margin-top: -4px;
+  color: #e53e3e;
 }
 
+/* Select role */
 .role-select {
   cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #4a5568 50%),
+    linear-gradient(135deg, #4a5568 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
 }
 
+/* Nút đăng ký */
 .register-account-btn {
-  padding: 14px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  margin-top: 12px;
+  width: 100%;
+  padding: 11px 20px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 }
 
 .register-account-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 74, 143, 0.35);
+}
+
+.register-account-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0, 74, 143, 0.25);
 }
 
 .register-account-btn:disabled {
@@ -102,15 +203,20 @@
   cursor: not-allowed;
 }
 
+/* Footer nhỏ dưới form */
 .register-account-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(15, 73, 146, 0.16);
   text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #718096;
+  font-size: 13px;
+  color: #4a5568;
 }
 
 .login-link {
-  color: #667eea;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 600;
 }
@@ -119,12 +225,21 @@
   text-decoration: underline;
 }
 
+/* Responsive */
 @media (max-width: 600px) {
+  .register-account-container {
+    padding: 24px 10px;
+  }
+
   .register-account-card {
-    padding: 30px 20px;
+    padding: 20px 18px 22px;
   }
 
   .register-account-title {
-    font-size: 24px;
+    font-size: 19px;
+  }
+
+  .register-account-subtitle {
+    font-size: 12px;
   }
 }
