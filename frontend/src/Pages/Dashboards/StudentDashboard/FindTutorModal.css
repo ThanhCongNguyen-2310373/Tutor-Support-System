@@ -61,12 +61,12 @@
   font-weight: 800;
 }
 
-.ft-back-btn,
-.ft-close-btn {
-  background: rgba(4, 30, 66, 0.18);
+/* Back giữ style cũ, chỉ dùng riêng cho nút quay lại */
+.ft-back-btn {
+  background: #ffffff;
   border: none;
   cursor: pointer;
-  color: #e5edff;
+  color: var(--ft-primary);
   width: 34px;
   height: 34px;
   border-radius: 999px;
@@ -75,12 +75,35 @@
   justify-content: center;
   font-size: 1.1rem;
   transition: .18s;
+  font-size: 20px;
 }
-.ft-back-btn:hover,
-.ft-close-btn:hover {
-  background: rgba(4, 30, 66, 0.35);
+
+.ft-back-btn:hover {
+   background: var(--ft-primary);
   color: #ffffff;
 }
+
+/* Close giống studentdash-modal-close */
+.ft-close-btn {
+  background: #ffffff;
+  border: 2px solid var(--ft-primary);
+  cursor: pointer;
+  color: var(--ft-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: .12s;
+}
+
+.ft-close-btn:hover {
+  background: var(--ft-primary);
+  color: #ffffff;
+}
+
 
 /* Body */
 .ft-body {
@@ -263,7 +286,7 @@
   font-size: 0.9rem;
   margin-bottom: 14px;
   display: -webkit-box;
-  /* -webkit-line-clamp: 2; */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex: 1;
@@ -371,24 +394,25 @@
   background: #16a34a;
 }
 
-/* Booking Form – VIỀN XANH ĐẬM */
 .ft-booking-form {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  left: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* căn giữa cả ngang lẫn dọc */
+  width: min(600px, 90vw);
+
   background: #ffffff;
   border: 2px solid var(--ft-primary);
   border-radius: 14px;
   padding: 18px 20px;
-  box-shadow: 0 -15px 40px rgba(0, 74, 130, 0.35);
-  animation: slideUp 0.3s ease;
-  max-width: 600px;
-  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(0, 74, 130, 0.35);
+  /* bỏ animation cũ để không phá transform */
 }
+
 .ft-booking-title {
   margin: 0 0 10px 0;
   color: var(--ft-primary-dark);
+  text-align: center;
 }
 .ft-topic-input {
   width: 100%;

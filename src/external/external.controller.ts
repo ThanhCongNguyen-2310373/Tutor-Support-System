@@ -10,7 +10,6 @@ import { Roles } from '../auth/roles.decorator';
 import { Role } from '@prisma/client';
 import {
   LibrarySearchDto,
-  GetDocumentUrlRequest,
 } from './dto/library-search.dto';
 import { SyncUserRequest } from './dto/sync-user.dto';
 
@@ -98,60 +97,16 @@ export class ExternalController {
 
   // ==================== LIBRARY Endpoints ====================
 
-  @Get('library/health')
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Check HCMUT_LIBRARY service health (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Health status' })
-  async checkLibraryHealth() {
-    return this.libraryService.healthCheck();
+  @Get('library/books')
+  @ApiOperation({ 
+    summary: 'Browse or Search Library',
+    description: 'If query is empty, returns default engineering books. Otherwise searches by title/topic.' 
+  })
+  @ApiResponse({ status: 200, description: 'List of books with pagination' })
+  async getLibraryBooks(@Query() searchDto: LibrarySearchDto) {
+    return this.libraryService.getBooks(searchDto);
   }
 
-  @Get('library/search')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
-  @ApiOperation({ summary: 'Search documents in HCMUT_LIBRARY' })
-  @ApiResponse({ status: 200, description: 'Search results' })
-  async searchDocuments(@Query() searchDto: LibrarySearchDto) {
-    return this.libraryService.searchDocuments(searchDto);
-  }
-
-  @Post('library/document-url')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
-  @ApiOperation({ summary: 'Get download URL for a document' })
-  @ApiResponse({ status: 200, description: 'Document download URL' })
-  async getDocumentUrl(@Body() request: GetDocumentUrlRequest) {
-    const url = await this.libraryService.getDocumentUrl(request);
-    return { documentId: request.documentId, url };
-  }
-
-  @Get('library/document/:id')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
-  @ApiOperation({ summary: 'Get document details by ID' })
-  @ApiResponse({ status: 200, description: 'Document details' })
-  async getDocumentById(@Param('id') id: string) {
-    return this.libraryService.getDocumentById(id);
-  }
-
-  @Get('library/recommendations')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
-  @ApiOperation({ summary: 'Get document recommendations for a topic' })
-  @ApiResponse({ status: 200, description: 'Recommended documents' })
-  async getRecommendations(
-    @Query('topic') topic: string,
-    @Query('limit') limit?: number,
-  ) {
-    return this.libraryService.recommendForTopic(topic, limit || 10);
-  }
-
-  @Get('library/popular')
-  @Roles(Role.STUDENT, Role.TUTOR, Role.COORDINATOR, Role.ADMIN)
-  @ApiOperation({ summary: 'Get popular documents from library' })
-  @ApiResponse({ status: 200, description: 'Popular documents' })
-  async getPopularDocuments(
-    @Query('category') category?: string,
-    @Query('limit') limit?: number,
-  ) {
-    return this.libraryService.getPopularDocuments(category, limit || 20);
-  }
 
   // ==================== Health Check All Services ====================
 
@@ -160,17 +115,15 @@ export class ExternalController {
   @ApiOperation({ summary: 'Check health of all external services (Admin only)' })
   @ApiResponse({ status: 200, description: 'Health status of all services' })
   async checkAllHealth() {
-    const [sso, datacore, library] = await Promise.all([
+    const [sso, datacore] = await Promise.all([
       this.ssoService.healthCheck(),
       this.datacoreService.healthCheck(),
-      this.libraryService.healthCheck(),
     ]);
 
     return {
       services: {
         HCMUT_SSO: sso,
         HCMUT_DATACORE: datacore,
-        HCMUT_LIBRARY: library,
       },
       timestamp: new Date().toISOString(),
     };

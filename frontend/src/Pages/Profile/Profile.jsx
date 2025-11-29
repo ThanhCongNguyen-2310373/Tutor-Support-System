@@ -60,20 +60,10 @@ export default function Profile() {
             )}
           </div>
           <div style={{ marginTop: "1rem", textAlign: "center" }}>
-            <span
-              className={`status-badge ${
-                user.role === "TUTOR" || user.role === "ADMIN"
-                  ? "status-approved"
-                  : "status-pending"
-              }`}
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: "20px",
-                fontWeight: "bold",
-              }}
-            >
-              {user.role}
-            </span>
+<span className="status-badge">
+  {user.role}
+</span>
+
           </div>
         </div>
 

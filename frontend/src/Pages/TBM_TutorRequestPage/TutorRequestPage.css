@@ -1,5 +1,15 @@
 /* src/Pages/TutorRequestPage/TutorRequestPage.css */
 
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;   /* Ẩn scroll ngang toàn trang */
+}
+
+
 .tutor-request-container {
   width: 100%;
   min-height: 100vh;
@@ -9,13 +19,22 @@
 
 .tutor-request-header {
   margin-bottom: 24px;
+  text-align: center;
 }
 
 .tutor-request-header h1 {
-  color: #2c3e50;
-  font-size: 28px;
+  color: #007AD2; 
+  
+  font-size: 40px;
   font-weight: 600;
   margin: 0;
+}
+
+.tutor-request-header p {
+  margin-top: 6px;
+  color: black;            /* Màu xanh luôn cho dòng mô tả */
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .tutor-request-card {
@@ -559,3 +578,222 @@ input[type="checkbox"] {
     min-width: auto;
   }
 }
+
+
+/* ============ TONE MÀU CHUNG ============ */
+:root {
+  --tr-primary: #007AD2;
+  --tr-primary-soft: #f4f9ff;
+  --tr-primary-light: #e4f1ff;
+  --tr-primary-border: #b7ddff;
+}
+
+/* Card thu nhỏ lại, nằm giữa, nền xanh nhẹ */
+.tutor-request-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tutor-request-header {
+  width: 100%;
+  max-width: 1180px;
+  text-align: center;
+}
+
+.tutor-request-header h1 {
+  color: var(--tr-primary);
+  font-weight: 700;
+}
+
+.tutor-request-header p {
+  color: var(--tr-primary);
+  font-weight: 500;
+}
+
+.tutor-request-card {
+  width: 100%;
+  max-width: 1180px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7fbff 40%, #ffffff 100%);
+  border-radius: 16px;
+  border: 1px solid var(--tr-primary-border);
+  box-shadow: 0 10px 30px rgba(0, 74, 129, 0.1);
+}
+
+/* ============ BẢNG: MÀU SẮC & THU NHỎ ============ */
+
+/* Không cho scroll ngang trên màn hình lớn */
+.tutor-request-table-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Cho phép dùng scroll ngang lại khi màn hình nhỏ */
+@media (max-width: 992px) {
+  .tutor-request-table-container {
+    overflow-x: auto;
+  }
+}
+
+/* Bảng co theo card, xuống dòng khi chữ dài */
+.tutor-request-table {
+  table-layout: fixed;
+}
+
+.tutor-request-table th,
+.tutor-request-table td {
+  word-wrap: break-word;
+  white-space: normal;
+  padding: 10px 12px;
+}
+
+/* Định lại độ rộng từng cột để khỏi phình ngang */
+.tutor-request-table th:nth-child(1),
+.tutor-request-table td:nth-child(1) {
+  width: 4%;
+}
+
+.tutor-request-table th:nth-child(2),
+.tutor-request-table td:nth-child(2) {
+  width: 14%; /* Họ tên */
+}
+
+.tutor-request-table th:nth-child(3),
+.tutor-request-table td:nth-child(3) {
+  width: 10%; /* MSSV */
+}
+
+.tutor-request-table th:nth-child(4),
+.tutor-request-table td:nth-child(4) {
+  width: 30%; /* Khoa */
+}
+
+.tutor-request-table th:nth-child(5),
+.tutor-request-table td:nth-child(5) {
+  width: 12%; /* Lớp */
+}
+
+.tutor-request-table th:nth-child(6),
+.tutor-request-table td:nth-child(6) {
+  width: 8%;  /* GPA */
+  text-align: center;
+}
+
+.tutor-request-table th:nth-child(7),
+.tutor-request-table td:nth-child(7) {
+  width: 12%; /* Môn đề xuất */
+  text-align: center;
+}
+
+/* Header bảng: nền gradient xanh + chữ trắng căn giữa */
+.tutor-request-table thead {
+  background: linear-gradient(90deg, #007ad2, #0094ff);
+}
+
+.tutor-request-table th {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  border-bottom: none;
+}
+
+.tutor-request-table th:first-child {
+  text-align: left;
+}
+
+/* Hàng lẻ / chẵn khác màu, hover nổi rõ hơn */
+.tutor-request-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.tutor-request-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.tutor-request-table tbody tr:hover {
+  background-color: #e8f3ff;
+}
+
+/* Hàng được chọn: nền xanh nhạt + viền trái */
+.tutor-request-table tbody tr.selected {
+  background-color: #d5e9ff;
+  box-shadow: inset 3px 0 0 var(--tr-primary);
+}
+
+/* Cột Họ tên đậm hơn một chút */
+.tutor-request-table td:nth-child(2) {
+  font-weight: 600;
+  color: #0b1e36;
+}
+
+/* ============ NÚT CHỌN MÔN ============ */
+
+.subject-btn {
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #007ad2, #0094ff);
+  border-radius: 999px;
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.subject-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 122, 210, 0.4);
+}
+
+.subject-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 74, 129, 0.4);
+}
+/* ===== HEADER & KHOẢNG CÁCH VỚI BẢNG ===== */
+
+.tutor-request-header {
+  margin-bottom: 4px;          /* sát hơn với bảng */
+}
+
+.tutor-request-card {
+  margin-top: 0;
+}
+
+/* ===== KHUNG BẢNG + BORDER TRÁI / PHẢI ===== */
+
+.tutor-request-table-container {
+  margin-top: 4px;
+  border-left: 2px solid #e0e8f4;
+  border-right: 2px solid #e0e8f4;
+  border-radius: 8px;
+  overflow: hidden;            /* để header xanh dính với border */
+}
+
+/* Đảm bảo border dính nhau */
+.tutor-request-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Lưới mỏng cho tất cả ô */
+.tutor-request-table th,
+.tutor-request-table td {
+  border-bottom: 1px solid #e0e8f4;
+  border-right: 1px solid #e0e8f4;
+}
+
+/* Kẻ thêm đường bên trái cho cột đầu tiên */
+.tutor-request-table th:first-child,
+.tutor-request-table td:first-child {
+  border-left: 1px solid #e0e8f4;
+}
+
+/* Header có gạch chân nhẹ phân tách */
+.tutor-request-table thead th {
+  border-bottom: 2px solid #e0e8f4;
+}
+

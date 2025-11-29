@@ -1,173 +1,224 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { notificationsService } from '../../api';
+// src/store/slices/notificationsSlice.js
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { notificationsService, notiService } from "../../api.js";
+
+const extractData = (res) =>
+  res && res.data !== undefined ? res.data : res || [];
+
+// Tìm notification theo nhiều kiểu id khác nhau
+const findNotificationIndexById = (list, id) => {
+  const idStr = String(id);
+  return list.findIndex((n) => {
+    const nid = n.id ?? n.notificationId ?? n._id;
+    return String(nid) === idStr;
+  });
+};
+
+/* ================== ASYNC THUNKS ================== */
+
+// Lấy danh sách thông báo
+export const fetchNotifications = createAsyncThunk(
+  "notifications/fetchNotifications",
+  async ({ page = 1, limit = 50 } = {}, { rejectWithValue }) => {
+    try {
+      const res = await notificationsService.getAll(page, limit);
+      const data = extractData(res);
+      return data;
+    } catch (error) {
+      console.error("fetchNotifications error", error);
+      return rejectWithValue(
+        error.response?.data || "Không thể tải thông báo"
+      );
+    }
+  }
+);
+
+// Lấy số chưa đọc
+export const fetchUnreadCount = createAsyncThunk(
+  "notifications/fetchUnreadCount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await notificationsService.getUnreadCount();
+      const data = extractData(res);
+      if (typeof data === "number") return data;
+      return data.unreadCount ?? 0;
+    } catch (error) {
+      console.error("fetchUnreadCount error", error);
+      return rejectWithValue(
+        error.response?.data || "Không thể tải số thông báo chưa đọc"
+      );
+    }
+  }
+);
+
+// Một notification: thử PATCH, nếu lỗi thì fallback sang POST
+export const markAsRead = createAsyncThunk(
+  "notifications/markAsRead",
+  async (notificationId, { rejectWithValue }) => {
+    try {
+      try {
+        await notificationsService.markAsRead(notificationId); // PATCH
+      } catch (err) {
+        // nếu server cũ dùng POST thì xài notiService
+        await notiService.markAsRead(notificationId);
+      }
+      return notificationId;
+    } catch (error) {
+      console.error("markAsRead error", error);
+      return rejectWithValue(
+        error.response?.data || "Không thể đánh dấu đã đọc"
+      );
+    }
+  }
+);
+
+// Tất cả notification
+export const markAllNotificationsAsRead = createAsyncThunk(
+  "notifications/markAllNotificationsAsRead",
+  async (_, { rejectWithValue }) => {
+    try {
+      try {
+        await notificationsService.markAllAsRead(); // PATCH
+      } catch (err) {
+        await notiService.markAllAsRead(); // POST fallback
+      }
+      return true;
+    } catch (error) {
+      console.error("markAllNotificationsAsRead error", error);
+      return rejectWithValue(
+        error.response?.data || "Không thể đánh dấu tất cả đã đọc"
+      );
+    }
+  }
+);
+
+/* ================== SLICE ================== */
 
 const initialState = {
   notifications: [],
   unreadCount: 0,
   loading: false,
   error: null,
-  page: 1,
-  hasMore: true,
 };
 
 const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState,
   reducers: {
-    fetchNotificationsStart: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    fetchNotificationsSuccess: (state, action) => {
-      state.loading = false;
-      state.notifications = action.payload.notifications;
-      state.page = action.payload.page;
-      state.hasMore = action.payload.hasMore;
-    },
-    fetchNotificationsFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    appendNotifications: (state, action) => {
-      state.notifications = [...state.notifications, ...action.payload.notifications];
-      state.page = action.payload.page;
-      state.hasMore = action.payload.hasMore;
-    },
-    setUnreadCount: (state, action) => {
-      state.unreadCount = action.payload;
-    },
-    markNotificationAsRead: (state, action) => {
-      const notification = state.notifications.find(n => n.id === action.payload);
-      if (notification && !notification.read) {
-        notification.read = true;
-        state.unreadCount = Math.max(0, state.unreadCount - 1);
-      }
-    },
-    markAllAsRead: (state) => {
-      state.notifications = state.notifications.map(n => ({ ...n, read: true }));
-      state.unreadCount = 0;
-    },
-    addNotification: (state, action) => {
-      state.notifications = [action.payload, ...state.notifications];
-      if (!action.payload.read) {
+    // Dùng khi có thông báo realtime từ WebSocket
+    addNotification(state, action) {
+      const notif = action.payload;
+      if (!notif) return;
+
+      state.notifications.unshift(notif);
+
+      const isRead = notif.read ?? notif.isRead;
+      if (!isRead) {
         state.unreadCount += 1;
       }
     },
-    incrementUnreadCount: (state) => {
+
+    // Được import ở useWebSocket.js
+    incrementUnreadCount(state) {
       state.unreadCount += 1;
     },
-    clearError: (state) => {
+
+    clearNotifications(state) {
+      state.notifications = [];
+      state.unreadCount = 0;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
-    // Fetch notifications
-    builder.addCase(fetchNotifications.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(fetchNotifications.fulfilled, (state, action) => {
-      state.loading = false;
-      state.notifications = action.payload.notifications;
-      state.page = action.payload.page;
-      state.hasMore = action.payload.hasMore;
-    });
-    builder.addCase(fetchNotifications.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    });
-    
-    // Fetch unread count
-    builder.addCase(fetchUnreadCount.fulfilled, (state, action) => {
-      state.unreadCount = action.payload;
-    });
-    
-    // Mark as read
-    builder.addCase(markAsRead.fulfilled, (state, action) => {
-      const notification = state.notifications.find(n => n.id === action.payload);
-      if (notification && !notification.read) {
-        notification.read = true;
-        state.unreadCount = Math.max(0, state.unreadCount - 1);
-      }
-    });
-    
-    // Mark all as read
-    builder.addCase(markAllNotificationsAsRead.fulfilled, (state) => {
-      state.notifications = state.notifications.map(n => ({ ...n, read: true }));
-      state.unreadCount = 0;
-    });
+    builder
+      // ------ FETCH LIST ------
+      .addCase(fetchNotifications.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchNotifications.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+
+        const payload = action.payload;
+        const list = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.items)
+          ? payload.items
+          : [];
+
+        state.notifications = list;
+
+        // Tính lại số chưa đọc
+        const unread = list.filter((item) => {
+          const isRead = item.read ?? item.isRead;
+          return !isRead;
+        }).length;
+        state.unreadCount = unread;
+      })
+      .addCase(fetchNotifications.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload ||
+          "Không thể tải thông báo. Vui lòng thử lại sau.";
+      })
+
+      // ------ FETCH UNREAD COUNT ------
+      .addCase(fetchUnreadCount.fulfilled, (state, action) => {
+        if (typeof action.payload === "number") {
+          state.unreadCount = action.payload;
+        }
+      })
+
+      // ------ MARK ONE AS READ ------
+      .addCase(markAsRead.fulfilled, (state, action) => {
+        const id = action.payload;
+        const idx = findNotificationIndexById(state.notifications, id);
+        if (idx !== -1) {
+          const target = state.notifications[idx];
+          target.read = true;
+          target.isRead = true;
+        }
+        if (state.unreadCount > 0) {
+          state.unreadCount -= 1;
+        }
+      })
+      .addCase(markAsRead.rejected, (state, action) => {
+        state.error = action.payload || "Không thể đánh dấu đã đọc";
+      })
+
+      // ------ MARK ALL AS READ ------
+      .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
+        state.notifications = state.notifications.map((n) => ({
+          ...n,
+          read: true,
+          isRead: true,
+        }));
+        state.unreadCount = 0;
+      })
+      .addCase(markAllNotificationsAsRead.rejected, (state, action) => {
+        state.error = action.payload || "Không thể đánh dấu tất cả đã đọc";
+      });
   },
 });
 
+/* ================== SELECTORS ================== */
+
+export const selectNotifications = (state) =>
+  state.notifications.notifications;
+
+export const selectNotificationsLoading = (state) =>
+  state.notifications.loading;
+
+export const selectUnreadCount = (state) =>
+  state.notifications.unreadCount;
+
+/* ================== EXPORTS ================== */
+
 export const {
-  fetchNotificationsStart,
-  fetchNotificationsSuccess,
-  fetchNotificationsFailure,
-  appendNotifications,
-  setUnreadCount,
-  markNotificationAsRead,
-  markAllAsRead,
   addNotification,
+  clearNotifications,
   incrementUnreadCount,
-  clearError,
 } = notificationsSlice.actions;
-
-// Thunks for async actions using createAsyncThunk
-export const fetchNotifications = createAsyncThunk(
-  'notifications/fetchAll',
-  async ({ page = 1, limit = 20 }, { rejectWithValue }) => {
-    try {
-      const response = await notificationsService.getAll(page, limit);
-      return {
-        notifications: response.data || response,
-        page,
-        hasMore: response.data ? response.hasMore : false,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message || 'Failed to fetch notifications');
-    }
-  }
-);
-
-export const fetchUnreadCount = createAsyncThunk(
-  'notifications/fetchUnreadCount',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await notificationsService.getUnreadCount();
-      return response.count || 0;
-    } catch (error) {
-      console.error('Failed to fetch unread count:', error);
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const markAsRead = createAsyncThunk(
-  'notifications/markAsRead',
-  async (notificationId, { rejectWithValue }) => {
-    try {
-      await notificationsService.markAsRead(notificationId);
-      return notificationId;
-    } catch (error) {
-      return rejectWithValue(error.message || 'Failed to mark as read');
-    }
-  }
-);
-
-export const markAllNotificationsAsRead = createAsyncThunk(
-  'notifications/markAllAsRead',
-  async (_, { rejectWithValue }) => {
-    try {
-      await notificationsService.markAllAsRead();
-      return true;
-    } catch (error) {
-      return rejectWithValue(error.message || 'Failed to mark all as read');
-    }
-  }
-);
-
-export const selectNotifications = (state) => state.notifications.notifications;
-export const selectUnreadCount = (state) => state.notifications.unreadCount;
-export const selectNotificationsLoading = (state) => state.notifications.loading;
 
 export default notificationsSlice.reducer;

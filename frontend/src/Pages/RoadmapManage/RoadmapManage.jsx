@@ -191,7 +191,7 @@ export default function RoadmapManage() {
 
       <div className="add-btn-container">
         <button className="add-btn" onClick={() => handleOpenPopup()}>
-          + Thêm lộ trình mới
+          Thêm lộ trình mới
         </button>
       </div>
 

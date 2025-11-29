@@ -6,40 +6,44 @@
 
 /* Back Button */
 .ms-back-btn-icon {
-  background: #334155;
-  border: 1px solid #475569;
-  font-size: 1.5rem;
+  background: #e5edff;
+  border: 1px solid #c7d2fe;
+  font-size: 1.4rem;
   cursor: pointer;
-  color: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 6px;
-  transition: .2s;
+  color: #1d4ed8;
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: 0.16s;
   font-weight: 700;
 }
-.ms-back-btn-icon:hover { background: #475569; border-color: #64748b; }
+.ms-back-btn-icon:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
 
 /* --- CLASS GRID LAYOUT --- */
 .ms-class-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 18px;
 }
 
 .ms-class-box {
-  background: #1e293b; /* Dark Card */
-  border: 2px solid #334155;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  background: #ffffff;
+  border: 1px solid #d7e3ff;
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
   display: flex;
   flex-direction: column;
-  transition: .2s;
+  transition: 0.16s;
 }
 
 .ms-class-box:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-  background: #0f172a;
+  border-color: #007ad2;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
+  background: #f8fbff;
 }
 
 .ms-class-header {
@@ -47,50 +51,51 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .ms-class-topic {
   font-weight: 800;
-  font-size: 1.15rem;
-  color: #f1f5f9;
+  font-size: 1.05rem;
+  color: #0b1e36;
   line-height: 1.3;
 }
 
 .ms-class-time {
   font-size: 0.9rem;
-  color: #94a3b8;
-  font-weight: 700;
-  margin-bottom: 8px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .ms-divider {
-  height: 2px;
-  background: #334155;
-  margin: 12px 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 10px 0;
 }
 
 /* Student List inside Class Box */
 .ms-student-list-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .ms-student-row {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s;
-  background: #0f172a;
-  border: 1px solid #334155;
+  transition: background 0.16s, border-color 0.16s, transform 0.16s;
+  background: #f3f6ff;
+  border: 1px solid #d4e4ff;
 }
 
 .ms-student-row:hover {
-  background: #1e3a8a; /* Deep Blue hover */
-  border-color: #3b82f6;
+  background: #2563eb;
+  border-color: #2563eb;
+  transform: translateY(-1px);
 }
 
 .ms-student-avatar-small {
@@ -104,32 +109,767 @@
   justify-content: center;
   font-weight: 700;
   font-size: 1rem;
-  margin-right: 12px;
+  margin-right: 10px;
 }
 
 .ms-student-name-row {
   flex: 1;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #0b1e36;
+}
+
+.ms-student-row:hover .ms-student-name-row {
+  color: #ffffff;
 }
 
 .ms-student-arrow {
-  color: #64748b;
-  font-size: 1.4rem;
+  color: #94a3b8;
+  font-size: 1.3rem;
   font-weight: 800;
+}
+
+.ms-student-row:hover .ms-student-arrow {
+  color: #e5edff;
 }
 
 .ms-no-student {
   font-style: italic;
-  color: #64748b;
+  color: #94a3b8;
   font-size: 0.95rem;
   text-align: center;
-  padding: 12px;
+  padding: 10px;
   font-weight: 500;
 }
 
-/* Detail View */
+/* Detail View – dùng lại .detail-section từ TutorDashboard, chỉ chỉnh border */
 .ms-detail-view .detail-section {
-  border-color: #334155;
+  border-color: #e2e8f0;
 }
+
+
+/* src/Pages/Tutors/ManageAvailability.css */
+
+.ma-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ma-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.ma-header h1 {
+  font-size: 2rem;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.ma-btn-add {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ma-btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.ma-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.ma-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ma-day-column {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.ma-day-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.ma-slots-list {
+  padding: 0.75rem;
+  min-height: 200px;
+}
+
+.ma-no-slots {
+  text-align: center;
+  padding: 2rem 0.5rem;
+  color: #a0aec0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.ma-slot-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.ma-slot-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+}
+
+.ma-slot-time {
+  font-weight: 500;
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.ma-btn-delete {
+  background: #fc8181;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ma-btn-delete:hover {
+  background: #f56565;
+  transform: scale(1.1);
+}
+
+/* Modal Styles */
+.ma-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.ma-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+}
+
+.ma-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.ma-modal-header h2 {
+  font-size: 1.5rem;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.ma-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #a0aec0;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.ma-modal-close:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+.ma-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ma-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.ma-form-group select,
+.ma-form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.ma-form-group select:focus,
+.ma-form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ma-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.ma-btn-cancel {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ma-btn-cancel:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.ma-btn-submit {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ma-btn-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .ma-calendar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ma-calendar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ma-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .ma-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .ma-btn-add {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .ma-calendar {
+    grid-template-columns: 1fr;
+  }
+
+  .ma-container {
+    padding: 1rem;
+  }
+
+  .ma-modal {
+    padding: 1.5rem;
+  }
+}
+
+
+/* src/Pages/Tutors/MyStudents.css */
+
+.ms-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.ms-header h1 {
+  font-size: 2rem;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.ms-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.ms-stat-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.ms-stat-badge strong {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.ms-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+.ms-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ms-empty p {
+  color: #a0aec0;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.ms-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.ms-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.ms-card:hover {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.ms-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ms-student-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ms-student-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.ms-student-details h3 {
+  font-size: 1.1rem;
+  color: #1a202c;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.ms-student-email {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.ms-btn-progress {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.ms-btn-progress:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.ms-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ms-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.ms-stat-label {
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+
+.ms-stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.ms-card-footer {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ms-major-badge {
+  background: #e6fffa;
+  color: #319795;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Modal Styles */
+.ms-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.ms-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+}
+
+.ms-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.ms-modal-header h2 {
+  font-size: 1.5rem;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.ms-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #a0aec0;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.ms-modal-close:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+.ms-student-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.ms-student-avatar-large {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ms-student-summary h3 {
+  font-size: 1.1rem;
+  color: #1a202c;
+  margin-bottom: 0.25rem;
+}
+
+.ms-student-summary p {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.ms-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ms-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.ms-required {
+  color: #f56565;
+}
+
+.ms-form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.ms-form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.ms-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.ms-btn-cancel {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ms-btn-cancel:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.ms-btn-submit {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ms-btn-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ms-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .ms-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .ms-list {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .ms-btn-progress {
+    width: 100%;
+  }
+
+  .ms-card-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-container {
+    padding: 1rem;
+  }
+
+  .ms-modal {
+    padding: 1.5rem;
+  }
+}
+
+
+

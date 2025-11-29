@@ -1,5 +1,3 @@
-/* src/Pages/Profile/Profile.css */
-
 /* --- Container Layout --- */
 .pf {
   padding: 20px 0 40px;
@@ -26,26 +24,25 @@
   background: #fff;
   padding: 24px;
 
-  /* Grid Layout: Left (Avatar) - Right (Info) */
-  display: grid;
-  grid-template-columns: 320px 1fr;
+  /* FLEX: 2 cột cùng chiều cao */
+  display: flex;
   gap: 32px;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* --- Left Column: Avatar & Role --- */
 .pf-left {
+  flex: 0 0 320px;          /* giống grid-template-columns: 320px */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  position: relative;       /* để đặt badge absolute */
 }
 
 .pf-avatar {
+  flex: 1 1 auto;           /* luôn kéo cao bằng cột bên phải */
   width: 100%;
-  max-width: 260px;
-  aspect-ratio: 3 / 4; /* Portrait Aspect Ratio */
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
@@ -58,18 +55,17 @@
 .pf-avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures photo fills box nicely */
+  object-fit: cover; /* Ảnh thật vẫn fill khung, không méo */
 }
 
-/* ====== PLACEHOLDER AVATAR (PERSON ICON XANH NHẠT) ====== */
-
+/* PLACEHOLDER AVATAR (person xanh nhạt) */
 .pf-avatar-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #dbeafe; /* xanh nhạt */
+  background: #dbeafe;
 }
 
 .pf-avatar-circle {
@@ -80,7 +76,6 @@
   position: relative;
 }
 
-/* Đầu */
 .pf-avatar-head {
   position: absolute;
   top: 20%;
@@ -92,7 +87,6 @@
   background: #eff6ff;
 }
 
-/* Thân */
 .pf-avatar-body {
   position: absolute;
   bottom: 15%;
@@ -104,34 +98,37 @@
   background: #eff6ff;
 }
 
-/* Role Badge (TUTOR / STUDENT) */
+/* Đưa dòng chứa badge ra khỏi flow để avatar chiếm full chiều cao */
+.pf-left > div:last-child {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-top: 0 !important;
+  text-align: center !important;
+}
+
+/* Badge chung cho mọi role */
 .status-badge {
   padding: 8px 24px;
-  border-radius: 99px;
+  border-radius: 999px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  background-color: #fff7d6;   /* nền vàng nhạt giống student */
+  color: #b58100;              /* chữ vàng đậm */
+  border: 1px solid #ffe2a8;   /* viền vàng nhạt */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
-.status-approved {
-  /* Tutor Style */
-  background-color: #dbeafe; /* Light Blue */
-  color: #1e40af; /* Dark Blue Text */
-  border: 1px solid #bfdbfe;
-}
 
-.status-pending {
-  /* Student Style */
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
 
 /* --- Right Column: Form Fields --- */
 .pf-right {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -139,22 +136,22 @@
 
 /* Form Container Background */
 .pf-form {
-  background: #eff6ff; /* Very light blue bg */
+  background: #eff6ff;
   border-radius: 8px;
   padding: 24px 28px;
   border: 1px solid #dbeafe;
+  flex: 1 1 auto;      /* cao bằng avatar */
 }
 
 /* Standard Field Row */
 .pf-field {
   display: grid;
-  grid-template-columns: 160px 1fr; /* Fixed Label Width */
+  grid-template-columns: 160px 1fr;
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
 }
 
-/* Last field needs no margin */
 .pf-field:last-child {
   margin-bottom: 0;
 }
@@ -165,19 +162,16 @@
   font-size: 0.95rem;
 }
 
-/* Input Styles (Read Only Look) */
 .pf-input {
   width: 100%;
   height: 40px;
   border-radius: 6px;
-  border: 1px solid #bfdbfe; /* Soft Blue Border */
+  border: 1px solid #bfdbfe;
   background: #ffffff;
   padding: 0 12px;
   font-weight: 600;
   color: #1f2937;
   font-size: 1rem;
-
-  /* Handle long text */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -189,28 +183,26 @@
 }
 
 .pf-input.is-readonly {
-  background-color: #ffffff; /* Keep white for cleanliness */
-  pointer-events: none; /* Prevent clicking */
-  color: #111827; /* Dark text for readability */
+  background-color: #ffffff;
+  pointer-events: none;
+  color: #111827;
 }
 
 /* --- Split Row (Khoa & Lớp) --- */
-/* Mỗi Field (Khoa, Lớp) là 1 hàng riêng, label rộng 160px giống các dòng khác */
 .pf-row-split {
   display: grid;
-  grid-template-columns: 1fr;   /* không chia 2 cột nữa */
+  grid-template-columns: 1fr;
   gap: 16px;
   margin-bottom: 16px;
 }
 
 .pf-row-split .pf-field {
-  grid-template-columns: 160px 1fr;  /* cùng độ rộng label như .pf-field thường */
+  grid-template-columns: 160px 1fr;
   margin-bottom: 0;
   gap: 16px;
 }
 
-
-/* --- Tutor Section Divider --- */
+/* --- Tutor Section Divider & Tags giữ nguyên như cũ... */
 .pf-section-divider {
   height: 1px;
   background-color: #bfdbfe;
@@ -224,22 +216,21 @@
   margin-bottom: 16px;
 }
 
-/* --- Expertise Tags --- */
 .pf-tags-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding-top: 4px; /* Slight adjust for alignment */
+  padding-top: 4px;
 }
 
 .pf-tag {
   display: inline-block;
-  background-color: #e0f2fe; /* Light Cyan/Blue */
-  color: #0284c7; /* Deep Cyan Text */
+  background-color: #e0f2fe;
+  color: #0284c7;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 6px 14px;
-  border-radius: 20px; /* Pill Shape */
+  border-radius: 20px;
   border: 1px solid #bae6fd;
   white-space: nowrap;
 }
@@ -247,20 +238,35 @@
 /* --- Responsive Design --- */
 @media (max-width: 900px) {
   .pf-panel {
-    grid-template-columns: 1fr; /* Stack vertically */
+    flex-direction: column;
     gap: 24px;
     padding: 16px;
   }
 
   .pf-left {
-    flex-direction: row; /* Avatar left, Name/Role right on tablet? Or keep stack */
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
-    gap: 20px;
   }
 
   .pf-avatar {
+    flex: 0 0 auto;
     width: 180px;
-    margin: 0;
+    height: auto;
+  }
+
+  .pf-left > div:last-child {
+    position: static;
+    margin-top: 12px !important;
+  }
+
+  .pf-right {
+    flex: 0 0 auto;
+  }
+
+  .pf-form {
+    flex: 0 0 auto;
   }
 }
 
@@ -274,12 +280,12 @@
   }
 
   .pf-field {
-    grid-template-columns: 1fr; /* Stack Label on top of Input */
+    grid-template-columns: 1fr;
     gap: 6px;
   }
 
   .pf-row-split {
-    grid-template-columns: 1fr; /* Stack Khoa and Lop vertically */
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 

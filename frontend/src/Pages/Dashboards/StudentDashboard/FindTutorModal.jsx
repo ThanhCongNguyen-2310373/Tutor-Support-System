@@ -26,7 +26,8 @@ export default function FindTutorModal({ onClose }) {
     subjects: "",
     preferredExperience: 3,
     minRating: 4,
-    maxHourlyRate: 100000,
+    // Default value kept as placeholder for backend logic
+    maxHourlyRate: 100000, 
     availability: "weekdays"
   });
 
@@ -260,17 +261,8 @@ export default function FindTutorModal({ onClose }) {
                   </div>
                 </div>
 
-                {/* Row 2: Price & Availability */}
+                {/* Row 2: Availability Only (Price removed) */}
                 <div className="ft-form-row">
-                  <div className="ft-form-group">
-                    <label>Học phí tối đa (VND/h)</label>
-                    <input 
-                      type="number" 
-                      className="ft-input" 
-                      value={aiCriteria.maxHourlyRate}
-                      onChange={(e) => setAiCriteria({...aiCriteria, maxHourlyRate: e.target.value})}
-                    />
-                  </div>
                   <div className="ft-form-group">
                     <label>Thời gian rảnh</label>
                     <select 

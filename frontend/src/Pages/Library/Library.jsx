@@ -1,120 +1,145 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import "./Library.css";
-import bookIcon from "../../Components/Assets/book-solid-full.svg";
+// Ensure correct path to your assets
+import bookIcon from "../../Components/Assets/book-solid-full.svg"; 
 import { externalService } from "../../api.js";
 import { showError } from "../../utils/errorHandler";
 
 export default function Library() {
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [popularBooks, setPopularBooks] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("search"); // search | popular | recommendations
+  const [activeTab, setActiveTab] = useState("popular");
+
+  // Dynamic Topics Configuration
+  const [popularTopic] = useState("Technology"); 
+  
+  // "Recommendations" will pick a random topic on mount
+  const [recTopic, setRecTopic] = useState("Algorithms");
+
+  // List of technical topics to randomize recommendations
+  const techTopics = useMemo(() => [
+    "Machine Learning", "Cybersecurity", "Cloud Computing", 
+    "Software Architecture", "Data Science", "Blockchain"
+  ], []);
 
   useEffect(() => {
-    fetchInitialData();
-  }, []);
+    // Pick a random topic when component mounts
+    const randomTopic = techTopics[Math.floor(Math.random() * techTopics.length)];
+    setRecTopic(randomTopic);
+  }, [techTopics]);
 
-  const fetchInitialData = async () => {
+  // Unified fetch function
+  const fetchBooks = useCallback(async (currentTab, searchQuery = "") => {
+    setLoading(true);
+    // Clear current books immediately to show loading state cleanly
+    setBooks([]); 
+
     try {
-      const [popular, recommended] = await Promise.all([
-        externalService.getPopularDocuments(10),
-        externalService.getRecommendations(),
-      ]);
-      setPopularBooks(popular.data || []);
-      setRecommendations(recommended.data || []);
-    } catch (error) {
-      console.error("Failed to fetch library data:", error);
-    }
-  };
+      let response;
 
-  const handleSearch = async (e) => {
+      if (currentTab === "popular") {
+        response = await externalService.searchLibrary({
+          subject: popularTopic, // Dynamic Topic
+          page: 1,
+          limit: 12
+        });
+      } 
+      else if (currentTab === "recommendations") {
+        response = await externalService.searchLibrary({
+          subject: recTopic, // Dynamic Topic
+          page: 1,
+          limit: 12
+        });
+      } 
+      else if (currentTab === "search") {
+        if (!searchQuery.trim()) {
+          setLoading(false);
+          return;
+        }
+        response = await externalService.searchLibrary({
+          query: searchQuery,
+          page: 1,
+          limit: 20
+        });
+      }
+
+      const result = response|| [];
+      setBooks(result);
+
+    } catch (error) {
+      console.error("Library fetch error:", error);
+      showError("Không thể tải dữ liệu thư viện");
+    } finally {
+      setLoading(false);
+    }
+  }, [popularTopic, recTopic]);
+
+  // Trigger fetch when Tab changes
+  useEffect(() => {
+    if (activeTab !== "search") {
+      fetchBooks(activeTab);
+    }
+  }, [activeTab, fetchBooks]);
+
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!query.trim()) {
       showError("Vui lòng nhập từ khóa tìm kiếm");
       return;
     }
-
-    try {
-      setLoading(true);
-      setActiveTab("search");
-      const response = await externalService.searchLibrary(query);
-      setSearchResults(response.data || []);
-    } catch (error) {
-      showError("Không thể tìm kiếm tài liệu");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    fetchBooks("search", query);
   };
 
-  const handleOpenDocument = async (docId) => {
-    try {
-      const response = await externalService.getDocumentUrl(docId);
-      if (response.data?.url) {
-        window.open(response.data.url, "_blank");
-      } else {
-        showError("Không thể mở tài liệu");
-      }
-    } catch (error) {
-      showError("Không thể lấy link tài liệu");
-      console.error(error);
+  const handleReadBook = (book) => {
+    if (book.fileUrl) {
+      window.open(book.fileUrl, "_blank");
+    } else {
+      showError("Tài liệu này không có bản xem trước");
     }
   };
-
-  const getCurrentData = () => {
-    switch (activeTab) {
-      case "popular":
-        return popularBooks;
-      case "recommendations":
-        return recommendations;
-      default:
-        return searchResults;
-    }
-  };
-
-  const data = getCurrentData();
 
   return (
     <div className="lib">
       <div className="lib-header">
-        <h1>Thư Viện HCMUT</h1>
+        <h1>Thư Viện Số HCMUT</h1>
+        <p className="lib-subtitle">Khám phá hàng triệu tài liệu học tập và nghiên cứu</p>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tabs */}
       <div className="lib-tabs">
+        <button
+          className={`lib-tab ${activeTab === "popular" ? "active" : ""}`}
+          onClick={() => setActiveTab("popular")}
+        >
+          Phổ biến
+        </button>
+        <button
+          className={`lib-tab ${activeTab === "recommendations" ? "active" : ""}`}
+          onClick={() => setActiveTab("recommendations")}
+        >
+          Gợi ý ({recTopic})
+        </button>
         <button
           className={`lib-tab ${activeTab === "search" ? "active" : ""}`}
           onClick={() => setActiveTab("search")}
         >
           Tìm kiếm
         </button>
-        <button
-          className={`lib-tab ${activeTab === "popular" ? "active" : ""}`}
-          onClick={() => setActiveTab("popular")}
-        >
-          Phổ biến ({popularBooks.length})
-        </button>
-        <button
-          className={`lib-tab ${activeTab === "recommendations" ? "active" : ""}`}
-          onClick={() => setActiveTab("recommendations")}
-        >
-          Đề xuất ({recommendations.length})
-        </button>
       </div>
 
       {/* Search Bar */}
       {activeTab === "search" && (
-        <form className="lib-search-bar" onSubmit={handleSearch}>
+        <form className="lib-search-bar" onSubmit={handleSearchSubmit}>
           <input
             className="lib-search-input"
-            placeholder="Tìm kiếm tài liệu, sách, bài báo..."
+            placeholder="Nhập tên sách, tác giả hoặc ISBN..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            autoFocus
           />
           <button type="submit" className="lib-search-btn" disabled={loading}>
-            {loading ? "Đang tìm..." : "Tìm kiếm"}
+            {loading ? "..." : "Tìm"}
           </button>
         </form>
       )}
@@ -122,39 +147,48 @@ export default function Library() {
       {/* Content */}
       <div className="lib-panel">
         {loading ? (
-          <div className="lib-loading">Đang tải...</div>
-        ) : data.length === 0 ? (
+          <div className="lib-loading">
+            <div className="spinner"></div> Đang tải dữ liệu...
+          </div>
+        ) : books.length === 0 ? (
           <div className="lib-empty">
             {activeTab === "search"
-              ? "Nhập từ khóa và nhấn Tìm kiếm để xem kết quả"
-              : `Chưa có tài liệu ${
-                  activeTab === "popular" ? "phổ biến" : "đề xuất"
-                }`}
+              ? "Hãy nhập từ khóa để tìm kiếm tài liệu"
+              : "Không tìm thấy tài liệu nào"}
           </div>
         ) : (
           <div className="lib-grid">
-            {data.map((doc) => (
+            {books.map((doc) => (
               <div key={doc.id} className="lib-item">
-                <div className="lib-doc-card" onClick={() => handleOpenDocument(doc.id)}>
-                  <div className="lib-doc-icon">
-                    <img src={bookIcon} alt="book" />
+                <div className="lib-doc-card" onClick={() => handleReadBook(doc)}>
+                  
+                  {/* Badge: Available/Borrowed */}
+                  <div className={`status-badge ${doc.availableCopies > 0 ? 'available' : 'unavailable'}`}>
+                     {doc.availableCopies > 0 ? 'Có sẵn' : 'Hết sách'}
                   </div>
-                  <h3 className="lib-doc-title">{doc.title}</h3>
-                  {doc.author && <p className="lib-doc-author">{doc.author}</p>}
-                  {doc.year && <p className="lib-doc-year">{doc.year}</p>}
-                  {doc.availability && (
-                    <span
-                      className={`lib-doc-status ${
-                        doc.availability === "available"
-                          ? "available"
-                          : "unavailable"
-                      }`}
-                    >
-                      {doc.availability === "available"
-                        ? "Có sẵn"
-                        : "Đang mượn"}
-                    </span>
-                  )}
+
+                  <div className="lib-doc-image-wrapper">
+                    {doc.coverImageUrl ? (
+                      <img 
+                        src={doc.coverImageUrl} 
+                        alt={doc.title} 
+                        className="lib-doc-cover"
+                        onError={(e) => {
+                          e.target.onerror = null; 
+                          e.target.src = bookIcon;
+                        }}
+                      />
+                    ) : (
+                      <img src={bookIcon} alt="icon" className="lib-doc-icon-img" />
+                    )}
+                  </div>
+
+                  <div className="lib-doc-info">
+                    <h3 className="lib-doc-title" title={doc.title}>{doc.title}</h3>
+                    <p className="lib-doc-author">{doc.author || "Unknown Author"}</p>
+                    <p className="lib-doc-year">{doc.publishYear || "N/A"}</p>
+                  </div>
+                  
                 </div>
               </div>
             ))}
