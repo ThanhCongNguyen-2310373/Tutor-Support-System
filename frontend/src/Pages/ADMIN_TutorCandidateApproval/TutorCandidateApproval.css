@@ -37,7 +37,6 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  flex-direction: row;
 }
 
 /* Ô filter giống mockup */
