@@ -27,22 +27,13 @@ import OSADashboard from "./Pages/Dashboards/OSADashboard/OSADashboard";
 
 // Library
 import Library  from "./Pages/Library/Library";
-// Register
-import Register from "./Pages/Register/Register";
-import CourseDetail from "./Pages/Register/CourseDetail";
-import RegisterSuccess from "./Pages/Register/RegisterSuccess";
-// Feedback
-import FeedbackList from "./Pages/Feedback/FeedbackList";
-import FeedbackDetail from "./Pages/Feedback/FeedbackDetail";
+
+
 // Profile 
 import Profile from "./Pages/Profile/Profile";
-//Session
-import ManageSessions from "./Pages/Sessions/ManageSessions";
-import SessionDetail from "./Pages/Sessions/SessionDetail";
-import ConfirmedSchedule from "./Pages/Sessions/ConfirmedSchedule";
-//Tutor Features
-import ManageAvailability from "./Pages/Tutors/ManageAvailability";
-import MyStudents from "./Pages/Tutors/MyStudents";
+
+
+
 
 
 //OAA Report
@@ -51,12 +42,14 @@ import OAAReport from "./Pages/OAAReportDashBoard/OAAReport";
 import TutorCandidateApproval from "./Pages/ADMIN_TutorCandidateApproval/TutorCandidateApproval";
 // TBM Tutor Request
 import TutorRequestPage from "./Pages/TBM_TutorRequestPage/TutorRequestPage";
-//Pairing
-import PairingApproval from "./Pages/PairingApproval/PairingApproval";
+
 //DRLAssesment
 import DRLAssessment from "./Pages/DRLAssessment/DRLAssessment";
 //Roadmap manage
 import RoadmapManage from "./Pages/RoadmapManage/RoadmapManage";
+
+//AdminReportOAA
+import AdminReportOAA from "./Pages/Admin_Report_OAA/AdminReport";
 
 // Component to initialize WebSocket
 function AppContent() {
@@ -92,29 +85,18 @@ function AppContent() {
             {/* Library */}
             <Route path="/dashboard/student/library" element={<Library />} />
 
-            {/* Register */}
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/:id" element={<CourseDetail />} />
-            <Route path="/register/success" element={<RegisterSuccess />} />
 
-            {/* Feedback */}
-            <Route path="/feedback" element={<FeedbackList />} />
-            <Route path="/feedback/:id" element={<FeedbackDetail />} />
+
+
 
             {/* Profile động theo role (QUAN TRỌNG) */}
             <Route path="/dashboard/:role/profile" element={<Profile />} />
-            {/* ManageSessions */}
-            <Route path="/sessions" element={<ManageSessions />} />
-            <Route path="/sessions/:id" element={<SessionDetail />} />
-            <Route path="/sessions/schedule" element={<ConfirmedSchedule />} />
+
             
-            {/* Tutor Features */}
-            <Route path="/dashboard/tutor/availability" element={<ManageAvailability />} />
-            <Route path="/dashboard/tutor/students" element={<MyStudents />} />
+
             
-            {/*Triết*/}
-            {/*Pairing  */}
-            <Route path="/pairing" element={<PairingApproval />} />
+  
+
             {/* Notification */}
             <Route path="/dashboard/:role/notification" element={<NotificationSystem />} />
             {/* OSA */}
@@ -124,12 +106,16 @@ function AppContent() {
             {/*Trí*/}
             {/* OAA Report*/}
             <Route path="/dashboard/oaa/report" element={<OAAReport />} />
+            <Route path="/dashboard/admin/report" element={<AdminReportOAA />} />
             {/* Admin Approval */}
             <Route path="/dashboard/admin/tutor-approval" element={<TutorCandidateApproval />} />
             {/* TBM Tutor Request */}
             <Route path="/dashboard/truongkhoa/tutor-requests" element={<TutorRequestPage />} />
             {/* Roadmap manage */}
             <Route path="/dashboard/truongkhoa/roadmap-manage" element={<RoadmapManage />} />
+
+
+
 
 
             {/* Bắt mọi route lạ */}

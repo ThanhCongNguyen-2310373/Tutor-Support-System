@@ -108,28 +108,23 @@
   text-align: center !important;
 }
 
-/* Role Badge */
+/* Badge chung cho mọi role */
 .status-badge {
   padding: 8px 24px;
-  border-radius: 99px;
+  border-radius: 999px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.08em;
+  text-align: center;
+
+  background-color: #fff7d6;   /* nền vàng nhạt giống student */
+  color: #b58100;              /* chữ vàng đậm */
+  border: 1px solid #ffe2a8;   /* viền vàng nhạt */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
-.status-approved {
-  background-color: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
-}
 
-.status-pending {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
 
 /* --- Right Column: Form Fields --- */
 .pf-right {

@@ -46,6 +46,7 @@ export default function Navbar() {
   const isTruongKhoaTutorReq =
     pathname === "/dashboard/truongkhoa/tutor-requests";
   const isOaaReport          = pathname === "/dashboard/oaa/report";
+  const isAdminReport        = pathname === "/dashboard/admin/report";
   const isDRL                = pathname === "/drl";
 
   // Lấy role ưu tiên theo URL (nếu đang ở /dashboard)
@@ -65,7 +66,7 @@ export default function Navbar() {
   // Các trang phụ thuộc base
   const isLibrary        = pathname === `${base}/library`;
   const isNotification   = pathname === `${base}/notification`;
-  const isRoadmapManage  = pathname === `${base}/roadmap-manage`; // 👈 /dashboard/truongkhoa/roadmap-manage
+  const isRoadmapManage  = pathname === `${base}/roadmap-manage`; // /dashboard/truongkhoa/roadmap-manage
 
   // Nhận diện trang SESSIONS (hỗ trợ cả /sessions và /dashboard/:role/sessions)
   const isSessionsStandalone =
@@ -105,8 +106,10 @@ export default function Navbar() {
     active = "tutorRequests";
   } else if (isOaaReport) {
     active = "oaaReport";
+  } else if (isAdminReport) {
+    active = "oaaReport"; // admin/report dùng chung key
   } else if (isRoadmapManage) {
-    active = "roadmapManage";          // 👈 active cho lộ trình học tập
+    active = "roadmapManage";
   } else if (isDRL) {
     active = "drl";
   } else if (pathname.startsWith(`${base}/features`)) {
@@ -117,7 +120,7 @@ export default function Navbar() {
 
   // ===== Tab giữa: đổi nhãn/đích theo trang hiện tại =====
   let middleLabel = "Chức năng";
-  let middleTo    = base;       // bấm "Chức năng" => về /dashboard/<role>
+  let middleTo    = base;       // mặc định = dashboard home
   let middleKey   = "features";
 
   if (isLibrary) {
@@ -152,8 +155,11 @@ export default function Navbar() {
     middleLabel = "Báo cáo phân bổ";
     middleTo    = "/dashboard/oaa/report";
     middleKey   = "oaaReport";
+  } else if (isAdminReport) {
+    middleLabel = "Báo cáo phân bổ";
+    middleTo    = "/dashboard/admin/report";
+    middleKey   = "oaaReport";
   } else if (isRoadmapManage) {
-    // 👇 Khi đang ở /dashboard/truongkhoa/roadmap-manage
     middleLabel = "Lộ trình học tập";
     middleTo    = `${base}/roadmap-manage`;
     middleKey   = "roadmapManage";
@@ -191,6 +197,7 @@ export default function Navbar() {
         {showMenu && (
           <>
             <ul className="nav-menu">
+              {/* Trang chủ luôn có */}
               <li>
                 <Link
                   to={base}
@@ -200,20 +207,24 @@ export default function Navbar() {
                 </Link>
               </li>
 
-              <li>
-                <Link
-                  to={middleTo}
-                  className={`nav-link ${
-                    active === middleKey ? "is-active" : ""
-                  }`}
-                >
-                  {middleLabel}
-                </Link>
-              </li>
+              {/* Chỉ hiện tab giữa khi KHÔNG còn là "Chức năng" */}
+              {middleLabel !== "Chức năng" && (
+                <li>
+                  <Link
+                    to={middleTo}
+                    className={`nav-link ${
+                      active === middleKey ? "is-active" : ""
+                    }`}
+                  >
+                    {middleLabel}
+                  </Link>
+                </li>
+              )}
 
+              {/* Thông báo luôn có */}
               <li>
                 <Link
-                  to={`${base}/notification`} // giữ nguyên notification
+                  to={`${base}/notification`}
                   className={`nav-link nav-link-notification ${
                     active === "announcements" ? "is-active" : ""
                   }`}

@@ -38,7 +38,7 @@ export default function AdminDashboard() {
           </Link>
 
           <Link
-            to="/dashboard/oaa/report"
+            to="/dashboard/admin/report"
             className="sidebar-item"
           >
             <span className="sidebar-text">Báo cáo OAA</span>
