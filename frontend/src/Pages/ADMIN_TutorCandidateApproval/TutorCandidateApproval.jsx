@@ -17,7 +17,7 @@ export default function TutorCandidateApproval() {
   });
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [notification, setNotification] = useState({
+  const [setNotification] = useState({
     show: false,
     type: "",
     message: "",

@@ -115,6 +115,7 @@ export const loginUser = createAsyncThunk(
       const response = await authService.login(credentials);
       return response;
     } catch (error) {
+      console.log('[LOGIN ERROR DEBUG]:', error);
       return rejectWithValue(error.message || 'Login failed');
     }
   }
@@ -127,6 +128,7 @@ export const registerUser = createAsyncThunk(
       const response = await authService.register(userData);
       return response;
     } catch (error) {
+      console.log('[REGISTER ERROR DEBUG]:', error);
       return rejectWithValue(error.message || 'Registration failed');
     }
   }

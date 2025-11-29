@@ -82,7 +82,16 @@ export default function Login() {
       else navigate("/dashboard/student");
     } catch (err) {
       console.error("Login error:", err);
-      const errorMessage = err?.message || "Đăng nhập thất bại";
+      // unwrap() throws the error payload directly (string), not an object
+      let errorMessage = typeof err === 'string' ? err : (err?.message || "Đăng nhập thất bại");
+      
+      //console.log('[Login error message]:', errorMessage); // Debug log
+      
+      // Map English error messages to Vietnamese - check exact message from backend
+      if (errorMessage.includes('User not found') || errorMessage.includes('Incorrect password') || errorMessage.includes('Password is required')) {
+        errorMessage = "Email hoặc mật khẩu không chính xác";
+      }
+      
       setError(errorMessage);
       showError(errorMessage);
     }
@@ -119,8 +128,8 @@ export default function Login() {
 
     if (!regFormData.email.trim()) {
       errs.email = "Vui lòng nhập email";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regFormData.email)) {
-      errs.email = "Email không hợp lệ";
+    } else if (!/^[^\s@]+@hcmut\.edu\.vn$/.test(regFormData.email)) {
+      errs.email = "Email phải có định dạng @hcmut.edu.vn";
     }
 
     if (!regFormData.password) {
@@ -171,7 +180,18 @@ export default function Login() {
       setRegErrors({});
     } catch (err) {
       console.error("Register error:", err);
-      const msg = err?.message || "Đăng ký thất bại, vui lòng thử lại.";
+      // unwrap() throws the error payload directly (string), not an object
+      let msg = typeof err === 'string' ? err : (err?.message || "Đăng ký thất bại, vui lòng thử lại.");
+      
+      console.log('[Register error message]:', msg); // Debug log
+      
+      // Map English error messages to Vietnamese - check exact message from backend
+      if (msg.includes('already registered in the system') || msg.includes('User already registered')) {
+        msg = "Email đã được sử dụng";
+      } else if (msg.includes('not found in external system')) {
+        msg = "Thông tin người dùng không tồn tại trong hệ thống";
+      }
+      
       showError(msg);
     }
   };

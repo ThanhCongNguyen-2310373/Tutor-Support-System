@@ -71,7 +71,9 @@ export const authService = {
       const response = await apiClient.post('/auth/register', userData);
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Registration failed' };
+      const errorData = error.response?.data;
+      const message = errorData?.message || errorData?.error || 'Registration failed';
+      throw new Error(message);
     }
   },
 
@@ -87,7 +89,9 @@ export const authService = {
       
       return response;
     } catch (error) {
-      throw error.response?.data || { message: 'Login failed' };
+      const errorData = error.response?.data;
+      const message = errorData?.message || errorData?.error || 'Login failed';
+      throw new Error(message);
     }
   },
 

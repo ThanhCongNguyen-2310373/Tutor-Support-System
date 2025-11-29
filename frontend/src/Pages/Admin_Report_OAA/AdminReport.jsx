@@ -3,7 +3,7 @@ import apiClient from "../../api";
 import "./AdminReport.css";
 
 export default function OAAReport() {
-  const [activeTab, setActiveTab] = useState("theo-hoc-ki");
+  //const [activeTab, setActiveTab] = useState("theo-hoc-ki");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("error");
   const [isLoading, setIsLoading] = useState(false);
