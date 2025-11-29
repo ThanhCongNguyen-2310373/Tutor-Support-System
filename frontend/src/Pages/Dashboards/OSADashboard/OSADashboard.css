@@ -1,138 +1,228 @@
-/* Bố cục giống StudentDashboard nhưng dùng prefix td- */
+/* =========================
+   LAYOUT CHUNG – GIỐNG TK-PAGE + TK-CONTAINER
+   ========================= */
+.admin-dashboard-container {
+  min-height: calc(100vh - var(--footer-h, 72px));
+  padding: 40px 0 40px;
+  background: radial-gradient(circle at top left, #eaf5ff 0, #f4f9ff 40%, #e0f0ff 100%);
+  box-sizing: border-box;
 
-.td{
-  padding: 16px 0 109px;
+  /* giống tk-container */
+  width: min(1200px, 96vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 32px;
+  align-items: flex-start;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* =========================
+   SIDEBAR – GIỐNG .tk-left
+   ========================= */
+.admin-sidebar {
+  background: linear-gradient(145deg, #007ad2, #00539f);
+  border-radius: 26px;
+  padding: 24px 20px 26px;
+  box-shadow: 0 18px 40px rgba(0, 80, 160, 0.5);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-self: flex-start;
+
+  /* sticky giống trang trưởng khoa */
+  position: sticky;
+  top: 80px;
+}
+
+.sidebar-title {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 800;
+  text-align: left;
+  letter-spacing: 0.04em;
+
+  white-space: nowrap;
+}
+
+.sidebar-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #e0f2ff;
+  opacity: 0.95;
+}
+
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* item giống tk-action-btn */
+.sidebar-item {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #0b1e36;
+  font-weight: 600;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 122, 210, 0.24);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* mũi tên giống icon bên tk */
+.sidebar-item::after {
+  content: "›";
+  font-size: 18px;
+  font-weight: 900;
+  color: #007ad2;
+  margin-left: 10px;
+}
+
+.sidebar-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.22);
+  background: #f5fbff;
+  border-color: #ffffff;
+}
+
+.sidebar-item:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar-text {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================
+   MAIN CONTENT – GIỐNG TK-RIGHT
+   ========================= */
+.admin-main-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Card lớn – giống .tk-right-card */
+.logo-wrapper {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 36px;
+  padding: 32px 60px 36px;
+  box-shadow: 0 20px 50px rgba(0, 74, 148, 0.3);
+  border: 3px solid #0b7ae0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
-/* Tiêu đề */
-.td-title-wrap{
-  width: min(700px, 92vw);       /* gọn hơn một chút; muốn to hơn đổi 700→820 */
-  background: #fff;
-  margin-bottom: 8px;
-}
-.td-title{
-  margin: 8px 0;
-  text-align: center;
-  color: #1c3e9c;
-  font-weight: 800;
-  font-size: clamp(22px, 3vw, 36px);
-  letter-spacing: 1px;
+/* Khu vực slide ảnh – giống .tk-image-frame */
+.admin-slider {
+  width: 88%;
+  max-width: 900px;
+  height: 380px;
+  border-radius: 30px;
+  background: #edf5ff;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  position: relative;
 }
 
-/* Panel */
-.td-panel{
-  width: min(600px, 92vw);
-  border: 6px solid #0a66d1;
-  border-radius: 4px;
-  background: #fff;
-  padding: 18px 12px 24px;
-}
-
-/* Khối thẻ chỉ dùng flex */
-.td-grid{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  column-gap: 28px;
-  row-gap: 20px;
-}
-
-/* Link bao card (nếu sau này thêm nhiều thẻ) */
-.td-card-link{
-  text-decoration: none;
-  display: block;
-  flex: 0 1 260px;               /* khớp kích thước Card hiện tại */
-}
-
-/* Card giữa panel */
-.td-card-center{
-  flex-basis: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* OSA Scholarship Reports Styles */
-.osa-scholarship-section {
-  margin-top: 2rem;
-  padding: 0 1rem;
-}
-
-.osa-section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 1.5rem;
-}
-
-.osa-report-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.osa-card-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-}
-
-.osa-card-subtitle {
-  font-size: 0.9rem;
-  color: #718096;
-  margin-bottom: 1rem;
-}
-
-.osa-table-container {
-  overflow-x: auto;
-}
-
-.osa-table {
+/* Ảnh lớn – giống .tk-main-image */
+.admin-big-logo {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  border-collapse: collapse;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.9s ease-in-out, transform 0.9s ease-in-out;
 }
 
-.osa-table thead {
-  background: #f7fafc;
+.admin-big-logo.active {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.osa-table th {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  color: #4a5568;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.osa-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-  color: #2d3748;
-}
-
-.osa-table tbody tr:hover {
-  background: #f7fafc;
-}
-
-.osa-empty-message {
+/* Text dưới ảnh – map sang tk-welcome / tk-subtitle */
+.welcome-text {
+  margin: 28px 0 8px;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  color: #004a9f;
   text-align: center;
-  padding: 2rem;
-  color: #718096;
-  font-style: italic;
+  text-transform: uppercase;
 }
 
-/* Responsive */
-@media (max-width: 760px){
-  .td-grid{
-    column-gap: 16px;
-    row-gap: 16px;
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  text-align: center;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 992px) {
+  .admin-dashboard-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
-  .td-card-link{
-    flex: 1 1 240px;
+
+  .admin-sidebar {
+    max-width: 420px;
+    justify-self: center;
+    position: static; /* mobile không cần sticky cho dễ scroll */
+  }
+
+  .logo-wrapper {
+    padding: 22px 18px 26px;
+  }
+
+  .admin-slider {
+    width: 92%;
+    height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-dashboard-container {
+    padding: 12px 0 60px;
+  }
+
+  .admin-sidebar {
+    padding: 18px 16px 20px;
+  }
+
+  .logo-wrapper {
+    border-radius: 26px;
+    padding: 20px 16px 24px;
+  }
+
+  .admin-slider {
+    width: 100%;
+    height: 220px;
+  }
+
+  .welcome-text {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
   }
 }
