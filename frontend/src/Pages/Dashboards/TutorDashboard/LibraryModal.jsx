@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { externalService } from "../../../api.js";
 import "./LibraryModal.css";
 // You might need to adjust this path or use a generic icon if the SVG is missing

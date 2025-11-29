@@ -421,49 +421,20 @@ export const notificationsService = {
 // ============================================================================
 
 export const externalService = {
-  searchLibrary: async (query, page = 1, limit = 20) => {
+  searchLibrary: async (query, page = 1, limit = 10, subject = '') => {
     try {
-      const params = new URLSearchParams({
-        query,
-        page: page.toString(),
-        limit: limit.toString(),
-      });
-      const response = await apiClient.get(`/external/library/search?${params}`);
+      const params = new URLSearchParams();
+      if (query) params.append('query', query);
+      if (subject) params.append('subject', subject);
+      params.append('page', page.toString());
+      params.append('limit', limit.toString());
+
+      const response = await apiClient.get(`/external/library/books?${params}`);
       return response;
     } catch (error) {
       throw error.response || { message: 'Failed to search library' };
     }
-  },
-
-  getDocumentUrl: async (id) => {
-    try {
-      const response = await apiClient.get(`/external/library/document-url/${id}`);
-      return response;
-    } catch (error) {
-      throw error.response || { message: 'Failed to get document URL' };
-    }
-  },
-
-  getRecommendations: async () => {
-    try {
-      const response = await apiClient.get('/external/library/recommendations');
-      return response;
-    } catch (error) {
-      throw error.response || { message: 'Failed to fetch recommendations' };
-    }
-  },
-
-  getPopularDocuments: async (limit = 10) => {
-    try {
-      const params = new URLSearchParams({
-        limit: limit.toString(),
-      });
-      const response = await apiClient.get(`/external/library/popular?${params}`);
-      return response;
-    } catch (error) {
-      throw error.response || { message: 'Failed to fetch popular documents' };
-    }
-  },
+  }
 };
 
 // ============================================================================
