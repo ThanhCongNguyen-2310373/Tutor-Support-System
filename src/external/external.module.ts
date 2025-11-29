@@ -5,6 +5,7 @@ import { HcmutSsoService } from './hcmut-sso.service';
 import { HcmutDatacoreService } from './hcmut-datacore.service';
 import { HcmutLibraryService } from './hcmut-library.service';
 import { ExternalController } from './external.controller';
+import { HttpModule } from '@nestjs/axios';
 
 /**
  * External Module - Tích hợp với các hệ thống bên ngoài của HCMUT
@@ -18,7 +19,10 @@ import { ExternalController } from './external.controller';
  * (VD: AuthModule dùng HcmutSsoService, HcmutDatacoreService)
  */
 @Module({
-  imports: [CoreModule],
+  imports: [
+    CoreModule,
+    HttpModule,
+  ],
   controllers: [ExternalController],
   providers: [
     HcmutSsoService,

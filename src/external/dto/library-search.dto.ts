@@ -1,33 +1,56 @@
 // src/external/dto/library-search.dto.ts
 import { IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-/**
- * DTO for searching documents in HCMUT_LIBRARY
- */
 export class LibrarySearchDto {
-  @IsString()
-  query: string; // Từ khóa tìm kiếm
-
-  @IsString()
-  @IsOptional()
-  category?: string; // Thể loại: 'book', 'paper', 'thesis', 'course_material'
-
+  @ApiPropertyOptional({ 
+    description: 'Search term (title, author, ISBN)',
+    example: 'Clean Code' 
+  })
   @IsString()
   @IsOptional()
-  subject?: string; // Môn học liên quan
+  query?: string;
 
+  @ApiPropertyOptional({ 
+    description: 'Category filter (e.g., book, magazine)',
+    example: 'book' 
+  })
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @ApiPropertyOptional({ 
+    description: 'Subject filter (e.g., Computers, Science, Fiction)',
+    example: 'Computers' 
+  })
+  @IsString()
+  @IsOptional()
+  subject?: string;
+
+  @ApiPropertyOptional({ 
+    description: 'Page number (starts at 1)',
+    default: 1,
+    minimum: 1
+  })
   @IsInt()
   @Min(1)
   @IsOptional()
-  page?: number;
+  @Type(() => Number)
+  page?: number = 1;
 
+  @ApiPropertyOptional({ 
+    description: 'Items per page',
+    default: 10,
+    maximum: 40
+  })
   @IsInt()
   @Min(1)
-  @Max(100)
+  @Max(40)
   @IsOptional()
-  limit?: number;
+  @Type(() => Number)
+  limit?: number = 10;
 }
-
 /**
  * Document info from HCMUT_LIBRARY
  */
