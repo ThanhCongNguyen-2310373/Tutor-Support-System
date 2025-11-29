@@ -84,6 +84,7 @@ function AppContent() {
 
             {/* Library */}
             <Route path="/dashboard/student/library" element={<Library />} />
+            <Route path="/dashboard/tutor/library" element={<Library />} />
 
 
 

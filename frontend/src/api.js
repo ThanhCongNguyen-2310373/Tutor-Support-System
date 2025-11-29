@@ -421,16 +421,24 @@ export const notificationsService = {
 // ============================================================================
 
 export const externalService = {
-  searchLibrary: async (query, page = 1, limit = 10, subject = '') => {
+  /**
+   * Search Library
+   * Matches Swagger Params: query, category, subject, page, limit
+   */
+  searchLibrary: async ({ query = '', subject = '', category = '', page = 1, limit = 10 }) => {
     try {
       const params = new URLSearchParams();
+
+      // Only append if they have values to keep URL clean
       if (query) params.append('query', query);
       if (subject) params.append('subject', subject);
+      if (category) params.append('category', category);
+      
       params.append('page', page.toString());
       params.append('limit', limit.toString());
 
-      const response = await apiClient.get(`/external/library/books?${params}`);
-      return response;
+      const response = await apiClient.get(`/external/library/books?${params.toString()}`);
+      return response.documents;
     } catch (error) {
       throw error.response || { message: 'Failed to search library' };
     }

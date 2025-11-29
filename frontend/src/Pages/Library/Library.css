@@ -1,409 +1,249 @@
 /* ================================
-   KHUNG TRANG
+   CONTAINER
 ================================ */
-.lib{
-  padding: 56px 0 24px;
+.lib {
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 85vh;
+  background-color: #f4f6f8; /* Softer background */
 }
 
-/* ================================
-   THANH CÔNG CỤ TRÊN
-================================ */
-.lib-toolbar{
-  width: min(1200px, 94vw);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.lib-btn{
-  height: 56px;
-  padding: 0 40px;
-  border-radius: 8px;
-  border: 2px solid #5FA9FF;
-  background: #2f8bff;
-  color: #fff;
-  font-weight: 700;
-  font-size: 20px;
-  cursor: pointer;
-}
-.lib-btn:hover{ filter: brightness(0.97); }
-
-.lib-search-wrap{
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-.lib-search{
-  width: min(560px, 88%);
-  height: 48px;
-  border-radius: 24px;
-  border: 4px solid #161616;
-  outline: none;
-  padding: 0 16px;
-  font-weight: 700;
-  font-size: 20px;
-  text-align: center;
-}
-
-/* ================================
-   PANEL + LƯỚI 3 CỘT (FLEX)
-================================ */
-.lib-panel{
-  width: min(1200px, 94vw);
-  background: #fff;
-  padding: 14px;
-}
-
-.lib-grid{
-  display: flex;         /* chỉ dùng flex */
-  flex-wrap: wrap;       /* tạo 2 hàng */
-  gap: 24px;             /* khoảng cách cả hàng và cột */
-  justify-content: center;
-}
-
-/* Mỗi item đúng 1/3 chiều ngang (trừ 2 gap) */
-.lib-item{
-  box-sizing: border-box;
-  flex: 0 0 calc((100% - 2 * 24px) / 3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #fff;
-  padding: 10px 10px 12px;
-}
-
-/* Tinh chỉnh Card bên trong để khớp ô
-.lib .card-inner{ width: 100%; height: 240px; }
-.lib .card-icon{ width: 120px; height: 120px; }
-.lib .card-title{ font-size: 24px; } */
-
-/* Trạng thái rỗng */
-.lib-empty{
-  width: 100%;
-  text-align: center;
-  padding: 24px 0;
-  color: #405a7a;
-  font-weight: 600;
-}
-
-/* ================================
-   MODAL CHIA SẺ
-================================ */
-.share-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.35);
-  display: grid;
-  place-items: center;
-  z-index: 60;
-}
-
-.share-modal{
-  width: min(560px, 92vw);
-  background: #d9d9d9;
-  border: 3px solid #7a7a7a;
-  border-radius: 8px;
-  box-shadow: 0 12px 28px rgba(0,0,0,.25),
-              0 0 0 4px rgba(255,255,255,.7) inset;
-  padding: 14px 16px 16px;
-}
-
-.share-header{ margin-bottom: 8px; }
-.share-title{
-  font-weight: 800;
-  font-size: 18px;
-  color: #222;
-}
-.share-subtitle{
-  font-size: 14px;
-  color: #333;
-  margin-top: 4px;
-}
-
-/* Ô tìm kiếm người dùng */
-.share-search-wrap{
-  display: flex;
-  justify-content: center;
-  margin: 8px 0 10px;
-}
-.share-search{
-  width: min(440px, 88%);
-  height: 40px;
-  border-radius: 20px;
-  border: 4px solid #5f5f5f;
-  background: #ededed;
-  text-align: center;
-  font-weight: 800;
-  outline: none;
-  font-size: 28px;
-  
-}
-
-/* Danh sách người dùng */
-.share-list{
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 280px;
-  overflow: auto;
-  padding-right: 2px;
-}
-
-.share-row{
-  all: unset;
-  display: grid;
-  grid-template-columns: 40px 1fr 40px;
-  align-items: center;
-  gap: 10px;
-  background: #f6e9c6;
-  border: 2px solid #b9b9b9;
-  border-radius: 6px;
-  padding: 10px 12px;
-  cursor: pointer;
-}
-/* .share-row.is-selected{
-  outline: 3px solid #2f8bff;
-  outline-offset: 1px;
-} */
-
-/* Avatar + tên */
-.share-avatar{
-  width: 36px; height: 36px;
-  display: grid; place-items: center;
-  font-size: 22px;
-  background: #e8f0fe;
-  border: 2px solid #8aa4d8;
-  border-radius: 6px;
-}
-.share-name{ font-weight: 700; color: #1e2a3a; }
-
-/* Vòng tròn trạng thái (đổi theo chọn) */
-.share-status{
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  border: 3px solid #8e8e8e;
-  background: #fff;           /* mặc định: TRẮNG */
-  justify-self: end;
-}
-.share-status.on{
-  background: #43c66c;       /* đã chọn: XANH LÁ */
-  border-color: #2d9e52;
-}
-.share-status.off{
-  background: #fff;          /* chưa chọn: TRẮNG */
-  border-color: #8e8e8e;
-}
-
-/* Nút hành động dưới modal */
-.share-actions{
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 14px;
-}
-.btn-cancel, .btn-primary{
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 8px;
-  font-weight: 800;
-  border: 2px solid #007AD2;
-  cursor: pointer;
-}
-
-.btn-cancel{ background: #f1f1f1; color:black; }
-.btn-primary{
-  background: #2f8bff; color:#fff; border-color:#5FA9FF;
-}
-.btn-primary:disabled{
-  opacity: .55; cursor: not-allowed;
-}
-
-/* ================================
-   RESPONSIVE
-================================ */
-/* 2 cột */
-@media (max-width: 900px){
-  .lib-item{ flex: 0 1 45%; }
-  .lib .card-inner{ width: 100%; height: 230px; }
-  .lib .card-icon{ width: 108px; height: 108px; }
-}
-
-/* 1 cột (mobile) */
-@media (max-width: 560px){
-  .lib-item{ flex: 1 1 100%; }
-  .lib .card-inner{ width: 100%; height: 250px; }
-  .lib .card-icon{ width: 120px; height: 120px; }
-}
-
-/* ================================
-   NEW LIBRARY STYLES (Phase 4)
-================================ */
 .lib-header {
-  width: min(1200px, 94vw);
-  margin-bottom: 2rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
 }
 
 .lib-header h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #1a202c;
-  font-weight: 600;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
+.lib-subtitle {
+  color: #718096;
+  margin-top: 8px;
+  font-size: 1.1rem;
+}
+
+/* ================================
+   TABS
+================================ */
 .lib-tabs {
-  width: min(1200px, 94vw);
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 3rem;
+  background: white;
+  padding: 6px;
+  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .lib-tab {
-  padding: 0.75rem 1.5rem;
-  background: none;
+  padding: 10px 24px;
+  background: transparent;
   border: none;
-  color: #718096;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 40px;
+  color: #64748b;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
-  position: relative;
-  top: 2px;
+  font-size: 1rem;
 }
 
 .lib-tab:hover {
-  color: #667eea;
+  color: #2f8bff;
+  background: #f0f7ff;
 }
 
 .lib-tab.active {
-  color: #667eea;
-  border-bottom-color: #667eea;
-  font-weight: 600;
+  background: #2f8bff;
+  color: white;
+  box-shadow: 0 4px 12px rgba(47, 139, 255, 0.3);
 }
 
+/* ================================
+   SEARCH BAR
+================================ */
 .lib-search-bar {
-  width: min(1200px, 94vw);
+  width: min(700px, 90vw);
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 10px;
+  margin-bottom: 3rem;
+  position: relative;
 }
 
 .lib-search-input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  padding: 14px 24px;
+  border: 2px solid transparent;
+  border-radius: 12px;
   font-size: 1rem;
-  transition: all 0.2s ease;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+  outline: none;
 }
 
 .lib-search-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #2f8bff;
+  box-shadow: 0 4px 16px rgba(47, 139, 255, 0.15);
 }
 
 .lib-search-btn {
-  padding: 0.75rem 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0 30px;
+  background: #1a202c;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.1s;
 }
 
-.lib-search-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+.lib-search-btn:active {
+  transform: scale(0.96);
 }
 
-.lib-search-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* ================================
+   GRID & CARDS
+================================ */
+.lib-panel {
+  width: min(1200px, 94vw);
 }
 
-.lib-loading {
-  text-align: center;
-  padding: 3rem;
-  color: #718096;
-  font-size: 1.1rem;
+.lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px; /* More breathing room */
+  padding-bottom: 40px;
 }
 
 .lib-doc-card {
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 16px;
+  overflow: hidden; /* Clips image corners */
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.05);
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  position: relative;
 }
 
 .lib-doc-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
-  transform: translateY(-4px);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.lib-doc-icon {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 1rem;
+/* Status Badge (Top Right) */
+.status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 2;
+  backdrop-filter: blur(4px);
+}
+.status-badge.available {
+  background: rgba(220, 252, 231, 0.9);
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.status-badge.unavailable {
+  background: rgba(254, 226, 226, 0.9);
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
-.lib-doc-icon img {
+/* Image Wrapper */
+.lib-doc-image-wrapper {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  height: 240px; /* Fixed height for consistency */
+}
+
+.lib-doc-cover {
+  max-height: 100%;
+  width: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Shadow for the book itself */
+  transition: transform 0.3s;
+}
+
+.lib-doc-card:hover .lib-doc-cover {
+  transform: scale(1.05);
+}
+
+.lib-doc-icon-img {
+  width: 60px;
+  opacity: 0.3;
+}
+
+/* Info Section */
+.lib-doc-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .lib-doc-title {
-  font-size: 1.1rem;
-  color: #1a202c;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  font-weight: 700;
   line-height: 1.4;
+  margin: 0 0 6px 0;
+  
+  /* Truncate to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .lib-doc-author {
-  color: #718096;
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
 }
 
 .lib-doc-year {
-  color: #a0aec0;
-  font-size: 0.85rem;
-  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: auto; /* Pushes year to bottom */
+  padding-top: 12px;
 }
 
-.lib-doc-status {
-  display: inline-block;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-top: auto;
+/* Loading Spinner */
+.lib-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px;
+  color: #64748b;
 }
 
-.lib-doc-status.available {
-  background: #c6f6d5;
-  color: #22543d;
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2f8bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.lib-doc-status.unavailable {
-  background: #fed7d7;
-  color: #742a2a;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
