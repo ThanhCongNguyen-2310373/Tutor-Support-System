@@ -24,12 +24,13 @@
 /* HỘP LỚN CHỨA HEADER + 4 STAT */
 /* gradient toàn sắc độ xanh, màu chủ đạo #007AD2 */
 .top-section-card {
-  background: linear-gradient(
+  /* background: linear-gradient(
     135deg,
     #e1f3ff 0%,
     #f8fbff 45%,
     #edf2ff 100%
-  );
+  ); */
+  background: #ffffff;
   border-radius: 24px;
   padding: 24px 24px 20px;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
@@ -95,22 +96,36 @@
   gap: 14px;
 }
 
-/* border-top: mọi card đều có xanh dương, 3 card sau thêm chút accent */
+/* Mỗi card có màu nền riêng, bỏ viền top xanh dương */
+
 .stat-primary {
-  border-top: 4px solid #007ad2;
+  background: #e1f3ff;           /* xanh dương nhạt */
+  border: 1px solid #bfdbfe;
+  border-top: none;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
 }
+
 .stat-warning {
-  border-top: 4px solid #007ad2;
-  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.18) inset; /* vàng accent nhẹ */
+  background: #fef6d8;           /* vàng nhạt */
+  border: 1px solid #facc15;
+  border-top: none;
+  box-shadow: 0 14px 30px rgba(245, 158, 11, 0.12);
 }
+
 .stat-success {
-  border-top: 4px solid #007ad2;
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.18) inset; /* xanh lá accent */
+  background: #dcfce7;           /* xanh lá nhạt */
+  border: 1px solid #6ee7b7;
+  border-top: none;
+  box-shadow: 0 14px 30px rgba(16, 185, 129, 0.12);
 }
+
 .stat-danger {
-  border-top: 4px solid #007ad2;
-  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.18) inset; /* đỏ accent */
+  background: #fee2e2;           /* đỏ nhạt */
+  border: 1px solid #fecaca;
+  border-top: none;
+  box-shadow: 0 14px 30px rgba(239, 68, 68, 0.12);
 }
+
 
 .stat-icon {
   width: 48px;
@@ -356,3 +371,5 @@
     min-width: 0;
   }
 }
+
+

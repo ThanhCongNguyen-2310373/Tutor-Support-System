@@ -101,7 +101,7 @@ function AppContent() {
             {/* Notification */}
             <Route path="/dashboard/:role/notification" element={<NotificationSystem />} />
             {/* OSA */}
-            <Route path="/drl" element={<DRLAssessment/>}/>
+            <Route path="/dashboard/osa/xet_diem_ren_luyen" element={<DRLAssessment/>}/>
 
 
             {/*Trí*/}

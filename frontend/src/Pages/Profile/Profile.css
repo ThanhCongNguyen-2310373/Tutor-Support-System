@@ -101,11 +101,9 @@
 /* Đưa dòng chứa badge ra khỏi flow để avatar chiếm full chiều cao */
 .pf-left > div:last-child {
   position: absolute;
-  bottom: 0;
+  top: -20px;
   left: 0;
   right: 0;
-  margin-top: 0 !important;
-  text-align: center !important;
 }
 
 /* Badge chung cho mọi role */

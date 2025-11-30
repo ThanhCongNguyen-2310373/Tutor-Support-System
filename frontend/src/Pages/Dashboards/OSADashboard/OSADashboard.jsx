@@ -31,7 +31,7 @@ export default function OSADashboard() {
 
         <div className="sidebar-actions">
           <Link
-            to="/drl"
+            to="/dashboard/osa/xet_diem_ren_luyen"
             className="sidebar-item"
           >
             <span className="sidebar-text">Xét điểm rèn luyện</span>

@@ -47,7 +47,7 @@ export default function Navbar() {
     pathname === "/dashboard/truongkhoa/tutor-requests";
   const isOaaReport          = pathname === "/dashboard/oaa/report";
   const isAdminReport        = pathname === "/dashboard/admin/report";
-  const isDRL                = pathname === "/drl";
+  const isDRL                = pathname === "/dashboard/osa/xet_diem_ren_luyen";
 
   // Lấy role ưu tiên theo URL (nếu đang ở /dashboard)
   let urlRole = "";
@@ -163,11 +163,12 @@ export default function Navbar() {
     middleLabel = "Lộ trình học tập";
     middleTo    = `${base}/roadmap-manage`;
     middleKey   = "roadmapManage";
-  } else if (isDRL) {
-    middleLabel = "Xét điểm rèn luyện";
-    middleTo    = "/drl";
-    middleKey   = "drl";
-  }
+} else if (isDRL) {
+  middleLabel = "Xét điểm rèn luyện";
+  middleTo    = "/dashboard/osa/xet_diem_ren_luyen";
+  middleKey   = "drl";
+}
+
 
   // Logout: xóa dashRole và về trang login
   const handleLogout = (e) => {
@@ -186,6 +187,7 @@ export default function Navbar() {
     admin: "Admin",
     truongkhoa: "Trưởng bộ môn",
     oaa: "OAA",
+    osa: "OSA"
   };
   const roleLabel = ROLE_LABEL[role] || role;
 
