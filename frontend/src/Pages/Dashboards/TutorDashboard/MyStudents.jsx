@@ -39,6 +39,8 @@ export default function MyStudents({ onClose }) {
       }
     };
     initData();
+  // this line to suppress currentuser warning
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelectStudent = async (student) => {
