@@ -39,7 +39,7 @@ export default function MyStudents({ onClose }) {
       }
     };
     initData();
-  }, [currentUser]);
+  }, []);
 
   const handleSelectStudent = async (student) => {
     setSelectedStudent(student);
